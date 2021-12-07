@@ -1,0 +1,96 @@
+﻿@charset "UTF-8";
+
+.btn {
+	color: #333;
+	border: 1px solid #333;
+	background-color: #fff;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-weight: 500;
+	cursor:pointer;
+	font-size: 14px;
+	font-family: "맑은 고딕", 나눔고딕, 돋움, sans-serif;
+	vertical-align: baseline;
+}
+.btn:active, .btn:focus, .btn:hover {
+	background-color: #f8f9fa;
+	color:#333;
+}
+.btn[disabled], fieldset[disabled] .btn {
+	pointer-events: none;
+	cursor: not-allowed;
+	filter: alpha(opacity=65);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	opacity: .65;
+}
+
+.btn-dark {
+    background: #424951;
+	border:1px solid #2f3741;
+    color:#fff;
+}
+.btn-dark:hover, .btn-dark:active, .btn-dark:focus {
+    background: #333;
+   	border:1px solid #222;
+   	color:#fff;
+}
+
+.btn-primary {
+    background: #106eea;
+	border:1px solid #00a6eb;
+    color:#fff;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+    background: #3284f1;
+    border:1px solid #00a6eb;
+    color:#fff;
+}
+
+textarea:focus, input:focus{
+	outline: none;
+}
+
+.boxTF {
+	border: 1px solid #999;
+	padding: 5px 5px;
+	background-color: #fff;
+	border-radius: 4px;
+	font-family: "맑은 고딕", 나눔고딕, 돋움, sans-serif;
+	vertical-align: baseline;
+}
+.boxTF[readonly] {
+	background-color: #f8f9fa;
+	/* border: none;*/
+}
+
+.selectField {
+	border: 1px solid #999;
+	padding: 4px 5px;
+	border-radius: 4px;
+	font-family: "맑은 고딕", 나눔고딕, 돋움, sans-serif;
+	vertical-align: baseline;
+}
+
+.boxTA {
+    border:1px solid #999;
+    height:150px;
+    padding:3px 5px;
+    border-radius:4px;
+    background-color:#fff;
+	resize : none;
+	font-family: "맑은 고딕", 나눔고딕, 돋움, sans-serif;
+	vertical-align: baseline;
+}
+
+.border-0 {
+	border: none;
+}
+
+.form-control-plaintext {
+	display: block;
+    width: 100%;
+    padding: 0.375rem 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+}

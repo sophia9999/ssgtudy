@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<select id="loginMember" parameterType="String" resultType="com.ssg.study.member.Member">
+		SELECT membership, m.userId, nickName, pwd, stateCode, join_date, edit_date, last_date
+		FROM member m
+		JOIN member_detail md ON m.userId = md.userId
+		WHERE m.userId = #{userId} AND stateCode = 0
+	</select>
+	
+	<update id="updateLastLogin" parameterType="String">
+		UPDATE member SET last_date = SYSDATE, failure_cnt = 0
+		WHERE userId = #{userId}
+	</update>
+</mapper>
