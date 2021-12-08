@@ -7,15 +7,42 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
+                        	쓱터디
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                         </div>
+                       	
                     </div>
+                   
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">사용자</li>
+                        <li class="sidebar-title">
+                        	 <div>
+		                   		<c:choose>
+			                       	<c:when test="${not empty sessionScope.member}"> 
+			                       		${sessionScope.member.nickName}님 환영합니다. 
+			                       		<br>
+			                       		<a href="${pageContext.request.contextPath}/member/logout"> 
+			                       			<i class="icofont-logout"></i>
+			                       			<span class="m-auto">로그아웃</span>
+			                       		</a>
+			                       	</c:when>
+			                       	<c:otherwise>
+			                       		<a href="${pageContext.request.contextPath}/member/login"> 
+			                       			<i class="icofont-login"></i>
+			                       			<span>로그인</span>
+			                       		</a>
+			                       		&nbsp;&nbsp;
+			                       		<a href="${pageContext.request.contextPath}/member/join">
+											<i class="icofont-bell-alt"></i>
+											<span>회원가입</span>
+			                         		</a>
+			                       	</c:otherwise>
+		                      	</c:choose>
+		                    </div>
+                        </li>
 
                         <li class="sidebar-item has-sub active ">
                             <a href="index.html" class="sidebar-link">
@@ -24,22 +51,22 @@
                             </a>
                              <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="component-alert.html">전체페이지</a>
+                                    <a href="${pageContext.request.contextPath}/">메인페이지</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">최신글</a>
+                                    <a href="${pageContext.request.contextPath}/bbs/list">최신글</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">인기글</a>
+                                    <a href="${pageContext.request.contextPath}/bbs/list">인기글</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">공지글</a>
+                                    <a href="${pageContext.request.contextPath}/bbs/notice">공지글</a>
                                 </li>    
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">일정</a>
+                                    <a href="${pageContext.request.contextPath}/calendar/main">일정</a>
                                 </li>    
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">오늘의 포도알</a>
+                                    <a href="${pageContext.request.contextPath}/todaygrape/list">오늘의 포도알</a>
                                 </li>                         
                             </ul>
                         </li>
@@ -50,22 +77,22 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="component-alert.html">내가 쓴 글</a>
+                                    <a href="${pageContext.request.contextPath}/my/list">내가 쓴 글</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">내가 쓴 댓글</a>
+                                    <a href="${pageContext.request.contextPath}/my/replylist">내가 쓴 댓글</a>
                                 </li>      
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">내가 추천한 글</a>
+                                    <a href="${pageContext.request.contextPath}/my/recommend">내가 추천한 글</a>
                                 </li>    
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">나의 할 일</a>
+                                    <a href="${pageContext.request.contextPath}/my/todolist">나의 할 일</a>
                                 </li>   
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">나의 일정</a>
+                                    <a href="${pageContext.request.contextPath}/my/calendar">나의 일정</a>
                                 </li>    
                                 <li class="submenu-item ">
-                                    <a href="component-badge.html">정보수정</a>
+                                    <a href="${pageContext.request.contextPath}/member/member">정보수정</a>
                                 </li>    
                                 
                                 <li class="submenu-item ">
@@ -77,13 +104,13 @@
 		                                
 		                                	<ul class="submenu ">
 			                                <li class="submenu-item ">
-			                                    <a href="component-alert.html">받은쪽지함</a>
+			                                    <a href="${pageContext.request.contextPath}/msg/receive">받은쪽지함</a>
 			                                </li>
 			                                <li class="submenu-item ">
-			                                    <a href="component-badge.html">보낸쪽지함</a>
+			                                    <a href="${pageContext.request.contextPath}/msg/send">보낸쪽지함</a>
 			                                </li>      
 			                                <li class="submenu-item ">
-			                                    <a href="component-badge.html">쪽지보내기</a>
+			                                    <a href="${pageContext.request.contextPath}/msg/write">쪽지보내기</a>
 			                                </li>    
 					                                
 					                            
@@ -101,13 +128,13 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">자유게시판</a>
+                                    <a href="${pageContext.request.contextPath}/board/list">자유게시판</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">질문답변게시판</a>
+                                    <a href="${pageContext.request.contextPath}/bbs/list">질문답변게시판</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">공지사항</a>
+                                    <a href="${pageContext.request.contextPath}/notice/list">공지사항</a>
                                 </li>  
                                                     
                             </ul>
@@ -119,10 +146,10 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="layout-default.html">커뮤니티</a>
+                                    <a href="${pageContext.request.contextPath}/community/main">커뮤니티</a>
                                 </li>     
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">일정</a>
+                                    <a href="${pageContext.request.contextPath}/community/calendar">일정</a>
                                 </li>                        
                             </ul>
                         </li>
@@ -134,27 +161,22 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">스터디 등록</a>
+                                    <a href="${pageContext.request.contextPath}/study/enroll">스터디 등록</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">스터디 순위</a>
+                                    <a href="${pageContext.request.contextPath}/study/rank">스터디 순위</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">스터디 홍보 게시판</a>
+                                    <a href="${pageContext.request.contextPath}/study/ad">스터디 홍보 게시판</a>
                                 </li>  
-                          
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">스터디 홍보 게시판</a>
-                                </li>  
-                                
+
 	                                <li class="submenu-item ">
 			                          </li><li class="sidebar-item  has-sub">
 			                           <a href="#" class="sidebar-link">
 			                                <i class="bi bi-stack"></i>
 			                                <span>나의 스터디</span>
 			                           </a>
-			                                
-			                                	<ul class="submenu ">
+		                                	<ul class="submenu ">
 				                                <li class="submenu-item ">
 				                                    <a href="component-alert.html">스터디 공지사항</a>
 				                                </li>
@@ -167,9 +189,7 @@
 				                                 <li class="submenu-item ">
 				                                    <a href="component-badge.html">스터디 탈퇴</a>
 				                                </li>   
-						                                
-						                            
-	                                    		</ul>
+                                    		</ul>
 	                                </li>    
                                                     
                             </ul>
@@ -181,15 +201,8 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">친구목록</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">질문답변게시판</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">공지사항</a>
-                                </li>  
-                                                    
+                                    <a href="${pageContext.request.contextPath}/friends/list">친구목록</a>
+                                </li>       
                             </ul>
                         </li>
                         
@@ -200,32 +213,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">시험일정</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">질문답변게시판</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">공지사항</a>
-                                </li>  
-                                                    
-                            </ul>
-                        </li>
-                        
-                         <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-							<i class="icofont-bell-alt"></i>
-							<span>회원가입</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">자유게시판</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">질문답변게시판</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">공지사항</a>
+                                    <a href="${pageContext.request.contextPath}/calendar/test">시험일정</a>
                                 </li>  
                                                     
                             </ul>
@@ -240,13 +228,13 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">자유채팅방</a>
+                                    <a href="${pageContext.request.contextPath}/chat/free">자유채팅방</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">단체채팅방</a>
+                                    <a href="${pageContext.request.contextPath}/chat/team">단체채팅방</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">1:1채팅방</a>
+                                    <a href="${pageContext.request.contextPath}/chat/private">1:1채팅방</a>
                                 </li>  
                                                     
                             </ul>
@@ -259,16 +247,16 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">과목멸 모의고사</a>
+                                    <a href="${pageContext.request.contextPath}/test/subject">과목멸 모의고사</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">평가원 모의고사</a>
+                                    <a href="${pageContext.request.contextPath}/test/mock">평가원 모의고사</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">수능 문제풀이</a>
+                                    <a href="${pageContext.request.contextPath}/test/real">수능 문제풀이</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">푼 모의고사</a>
+                                    <a href="${pageContext.request.contextPath}/test/my">푼 모의고사</a>
                                 </li>  
                                                     
                             </ul>

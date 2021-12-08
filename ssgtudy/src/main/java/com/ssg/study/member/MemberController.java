@@ -32,13 +32,22 @@ public class MemberController {
 		if (dto == null || !userPwd.equals(dto.getPwd())) {
 			model.addAttribute("message", "아이디 또는 패스워드가 일치하지 않습니다.");
 			return "/member/login";
+		} 
+		
+		try { // 로그인 후 최근 로그인 일자 업데이트
+			service.updateLastLogin(dto.getUserId());
+		} catch (Exception e) {
 		}
+		
 
 		// 세션에 로그인 정보 저장
 		SessionInfo info = new SessionInfo();
 		
 		info.setUserId(dto.getUserId());
-		info.setUserName(dto.getNickName());
+		info.setUserName(dto.getUserName());
+		info.setNickName(dto.getNickName());
+		info.setMembership(dto.getMembership());
+		// 1은 일반회원 / 99는 관리자
 
 		session.setMaxInactiveInterval(30 * 60); // 세션유지시간 30분, 기본:30분
 
@@ -50,12 +59,22 @@ public class MemberController {
 		if (uri == null) {
 			uri = "redirect:/";
 		} else {
-			// uri = "redirect:" + uri;
-			uri = "redirect:/";
+			uri = "redirect:" + uri;
+			// uri = "redirect:/";
 		}
 
 		return uri;
 	}
 
+	@RequestMapping(value = "logout")
+	public String logout(HttpSession session) {
+		// 세션에 저장된 정보 지우기
+		session.removeAttribute("member");
 
+		// 세션에 저장된 모든 정보 지우고, 세션초기화
+		session.invalidate();
+
+		return "redirect:/";
+	}
+	
 }

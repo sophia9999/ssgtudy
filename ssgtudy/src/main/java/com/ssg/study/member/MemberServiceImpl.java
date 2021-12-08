@@ -29,4 +29,15 @@ public class MemberServiceImpl implements MemberService{
 		
 	}
 
+	@Override
+	public void updateLastLogin(String userId) throws Exception {
+		try {
+			dao.updateData("member.updateLastLogin", userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }

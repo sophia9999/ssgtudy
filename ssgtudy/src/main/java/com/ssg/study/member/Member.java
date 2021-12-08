@@ -12,8 +12,9 @@ public class Member {
 	
 	// member_detail
 	private String nickName;
+	private String userName;
 	private String tel;
-	private String membership;
+	private int membership;
 	private String birth;
 	private String email;
 	private String zip_code;
@@ -30,6 +31,12 @@ public class Member {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getPwd() {
 		return pwd;
@@ -79,10 +86,10 @@ public class Member {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	public String getMembership() {
+	public int getMembership() {
 		return membership;
 	}
-	public void setMembership(String membership) {
+	public void setMembership(int membership) {
 		this.membership = membership;
 	}
 	public String getBirth() {
