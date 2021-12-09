@@ -78,7 +78,8 @@
         </interceptor>
     </interceptors>	 
 
-    <!-- 예외처리 --><!-- 
+    <!-- 예외처리 -->
+    <!-- 
     <beans:bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <beans:property name="order" value="1" />
         <beans:property name="exceptionMappings">
