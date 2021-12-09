@@ -101,23 +101,20 @@
 										<i class="icofont-ui-messaging"></i>
 		                                <span>쪽지함</span>
 		                           </a>
-		                                
-		                                	<ul class="submenu ">
-			                                <li class="submenu-item ">
-			                                    <a href="${pageContext.request.contextPath}/msg/receive">받은쪽지함</a>
-			                                </li>
-			                                <li class="submenu-item ">
-			                                    <a href="${pageContext.request.contextPath}/msg/send">보낸쪽지함</a>
-			                                </li>      
-			                                <li class="submenu-item ">
-			                                    <a href="${pageContext.request.contextPath}/msg/write">쪽지보내기</a>
-			                                </li>    
-					                                
-					                            
-                                    		</ul>
+	                                	<ul class="submenu ">
+		                                <li class="submenu-item ">
+		                                    <a href="${pageContext.request.contextPath}/msg/receive">받은쪽지함</a>
+		                                </li>
+		                                <li class="submenu-item ">
+		                                    <a href="${pageContext.request.contextPath}/msg/send">보낸쪽지함</a>
+		                                </li>      
+		                                <li class="submenu-item ">
+		                                    <a href="${pageContext.request.contextPath}/msg/write">쪽지보내기</a>
+		                                </li>    
+				                                
+				                            
+                                   		</ul>
                                 </li>    
-                                
-                                    	     
                             </ul>
                         </li>
 
@@ -168,30 +165,12 @@
                                 </li>  
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/study/ad">스터디 홍보 게시판</a>
-                                </li>  
-
-	                                <li class="submenu-item ">
-			                          </li><li class="sidebar-item  has-sub">
-			                           <a href="#" class="sidebar-link">
-			                                <i class="bi bi-stack"></i>
-			                                <span>나의 스터디</span>
-			                           </a>
-		                                	<ul class="submenu ">
-				                                <li class="submenu-item ">
-				                                    <a href="component-alert.html">스터디 공지사항</a>
-				                                </li>
-				                                <li class="submenu-item ">
-				                                    <a href="component-badge.html">스터디 게시판</a>
-				                                </li>      
-				                                <li class="submenu-item ">
-				                                    <a href="component-badge.html">스터디 목표</a>
-				                                </li>   
-				                                 <li class="submenu-item ">
-				                                    <a href="component-badge.html">스터디 탈퇴</a>
-				                                </li>   
-                                    		</ul>
-	                                </li>    
-                                                    
+                                </li>
+                                <c:if test="${not empty sessionScope.member}">
+									<li class="submenu-item ">
+	                                    <a href="${pageContext.request.contextPath}/study/list">나의 스터디 리스트</a>
+	                                </li>   
+                                </c:if>                    
                             </ul>
                         </li>
                         
