@@ -2,6 +2,11 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
+	<resultMap type="HashMap" id="schoolMap">
+		<id column="schoolCode" property="schoolCode"/>
+		<id column="schoolName" property="schoolName"/>	
+	</resultMap>
+
 	<select id="loginMember" parameterType="String" resultType="com.ssg.study.member.Member">
 		SELECT membership, m.userId, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
 		FROM member m
@@ -13,4 +18,29 @@
 		UPDATE member SET last_date = SYSDATE, failure_cnt = 0
 		WHERE userId = #{userId}
 	</update>
+	
+	<select id="readSchool" resultMap="schoolMap">
+		SELECT schoolCode,schoolName FROM school
+	</select>
+	
+	<insert id="insertMember" parameterType="com.ssg.study.member.Member">
+		INSERT INTO member(userId, pwd, stateCode, join_date, edit_date, last_date, failure_cnt)
+   			 VALUES(#{userId},#{pwd}, 0, SYSDATE, SYSDATE, SYSDATE, 0)
+	</insert>
+	
+	<insert id="insertMember_detail" parameterType="com.ssg.study.member.Member">
+		INSERT INTO member_detail(userId, nickName, tel, membership, birth, zip_code, addr1, addr2, schoolCode, codeChange_Cnt, questCount, lottoUse,userName)
+   		 VALUES(#{userId}, #{nickName}, #{tel}, 1, #{birth}, #{zip_code}, #{addr1}, #{addr2}, #{schoolCode}, 0, 0, 0,#{userName})
+	</insert>
+	
+	
+	<select id="readuserId" parameterType="String" resultType="com.ssg.study.member.Member">
+		SELECT m.userId, pwd, stateCode, join_date, edit_date, last_date, failure_cnt 
+		     ,nickName, tel, membership, birth, zip_code, addr1, addr2, schoolCode,
+		     codeChange_Cnt, questCount, lottoUse
+		    FROM member m
+		    JOIN member_detail d ON d.userId = m.userId
+		WHERE m.userId = #{userId}
+	</select>
+	
 </mapper>

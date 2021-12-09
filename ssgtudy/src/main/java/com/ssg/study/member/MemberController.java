@@ -1,13 +1,22 @@
 package com.ssg.study.member;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
 
 
 @Controller("member.memberController")
@@ -16,6 +25,7 @@ public class MemberController {
 	@Autowired
 	private MemberService service;
 
+	
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String loginForm() {
 		return "/member/login";
@@ -76,5 +86,60 @@ public class MemberController {
 
 		return "redirect:/";
 	}
+	
+	@RequestMapping(value = "join", method = RequestMethod.GET)
+	public String joinForm(Model model) {
+		
+		
+		List<Map<String, String>> list = null;
+		try {
+			list = service.readSchool();
+		} catch (Exception e) {
+			
+		}
+		model.addAttribute("mode", "join");
+		model.addAttribute("list", list);
+		return "/member/member";
+	}
+	
+	@RequestMapping(value = "join", method = RequestMethod.POST)
+	public String joinForm(Member dto,
+							RedirectAttributes reattr) {
+		
+		try {
+			dto.setEmail(dto.getEmail1()+"@"+dto.getEmail2());
+			dto.setTel(dto.getTel1()+"-"+dto.getTel2()+"-"+dto.getTel3());
+			
+			service.insertMember(dto);
+		} catch (Exception e) {			
+		}
+		reattr.addFlashAttribute("mode", "join");
+		return "redirect:/member/complete";
+	}
+	
+	
+	@RequestMapping(value = "userIdck", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> idCheck(@RequestParam String userId) throws Exception {
+		
+		String idck = "null";
+		try {
+			Member dto = service.readMember(userId); 
+			if (dto != null) {
+				idck = "Nonull";
+			}
+		} catch (Exception e) {
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("idck", idck);
+		return map;
+	}
+	
+	@RequestMapping(value = "complete")
+		public String completeForm(@ModelAttribute("mode") String mode) {
+			if(mode == null)return "redirect:/";
+			
+			return "/member/complete";
+		}
 	
 }

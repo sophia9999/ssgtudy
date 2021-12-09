@@ -2,8 +2,25 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+<head>
 
-<style type="text/css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ssg</title>
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css//bold.css">
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/perfect-scrollbar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/app.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/auth.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/jquery/js/jquery.min.js"></script>
+	<style type="text/css">
 .body-container {
 	max-width: 800px;
 }
@@ -11,83 +28,79 @@
 
 <script type="text/javascript">
 function memberOk() {
-	var f = document.memberForm;
+	const f = document.memberForm;
 	var str;
 
 	str = f.userId.value;
 	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
 		alert("아이디를 다시 입력 하세요. ");
 		f.userId.focus();
-		return;
+		return false;
 	}
 
 	var mode = "${mode}";
-	if(mode === "member" && f.userIdValid.value === "false") {
-		str = "아이디 중복 검사가 실행되지 않았습니다.";
-		$("#userId").parent().find(".help-block").html(str);
+	if(mode === "join" && f.userIdValid.value === "false") {
+		alert("아이디 중복 검사가 실행되지 않았습니다.");
 		f.userId.focus();
-		return;
-	}
+		return false;
+	} 
 	
-	str = f.userPwd.value;
+	str = f.pwd.value;
 	if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str) ) { 
 		alert("패스워드를 다시 입력 하세요. ");
-		f.userPwd.focus();
-		return;
+		f.pwd.focus();
+		return false;
 	}
 
-	if( str != f.userPwd2.value ) {
-        alert("패스워드가 일치하지 않습니다. ");
-        f.userPwd.focus();
-        return;
-	}
 	
     str = f.userName.value;
     if( !/^[가-힣]{2,5}$/.test(str) ) {
         alert("이름을 다시 입력하세요. ");
         f.userName.focus();
-        return;
+        return false;
+    }
+    
+    str = f.nickName.value;
+    if( !/^[가-힣]{2,5}$/.test(str) ) {
+        alert("닉네임을 다시 입력하세요. ");
+        f.nickName.focus();
+        return false;
     }
 
     str = f.birth.value;
     if( !str ) {
         alert("생년월일를 입력하세요. ");
         f.birth.focus();
-        return;
+        return false;
     }
-    
-    str = f.tel1.value;
-    if( !str ) {
-        alert("전화번호를 입력하세요. ");
-        f.tel1.focus();
-        return;
-    }
-
-    str = f.tel2.value;
-    if( !/^\d{3,4}$/.test(str) ) {
-        alert("숫자만 가능합니다. ");
-        f.tel2.focus();
-        return;
-    }
-
-    str = f.tel3.value;
-    if( !/^\d{4}$/.test(str) ) {
-    	alert("숫자만 가능합니다. ");
-        f.tel3.focus();
-        return;
-    }
-    
+        
     str = f.email1.value.trim();
     if( !str ) {
         alert("이메일을 입력하세요. ");
         f.email1.focus();
         return;
     }
-
-    str = f.email2.value.trim();
+	
+    
+    
+    str = f.zip_code.value.trim();
     if( !str ) {
-        alert("이메일을 입력하세요. ");
-        f.email2.focus();
+        alert("우편번호을 입력하세요. ");
+        f.zip_code.focus();
+        return;
+    }
+    
+    str = f.addr1.value.trim();
+    if( !str ) {
+        alert("주소을 입력하세요. ");
+        f.addr1.focus();
+        return;
+    }
+
+    str = f.addr2.value.trim();
+    if( !str ) {
+        alert("상세 주소을 입력하세요. ");
+        f.addr2.focus();
         return;
     }
 
@@ -95,34 +108,17 @@ function memberOk() {
     f.submit();
 }
 
-function changeEmail() {
-    var f = document.memberForm;
-	    
-    var str = f.selectEmail.value;
-    if(str != "direct") {
-        f.email2.value = str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
-    }
-    else {
-        f.email2.value = "";
-        f.email2.readOnly = false;
-        f.email1.focus();
-    }
-}
+function idck(){
+	
+	const userId=$("#userId").val();
 
-function userIdCheck() {
-	// 아이디 중복 검사
-	var userId=$("#userId").val();
-
-	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(userId)) { 
-		var str = "아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.";
+	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(userId)) {
+		alert("잘못된 아이디형식 입니다");
 		$("#userId").focus();
-		$("#userId").parent().find(".help-block").html(str);
 		return;
 	}
 	
-	var url = "${pageContext.request.contextPath}/member/userIdCheck";
+	var url = "${pageContext.request.contextPath}/member/userIdck";
 	var query = "userId=" + userId;
 	$.ajax({
 		type:"POST"
@@ -130,187 +126,170 @@ function userIdCheck() {
 		,data:query
 		,dataType:"json"
 		,success:function(data) {
-			var passed = data.passed;
-
-			if(passed === "true") {
-				var str = "<span style='color:blue; font-weight: bold;'>" + userId + "</span> 아이디는 사용가능 합니다.";
-				$(".userId-box").find(".help-block").html(str);
+			var idck = data.idck;			
+			if(idck === "null") {
+				alert("사용가능한 아이디입니다");
 				$("#userIdValid").val("true");
+				$("#userId").prop('readonly',true);
 			} else {
-				var str = "<span style='color:red; font-weight: bold;'>" + userId + "</span> 아이디는 사용할수 없습니다.";
-				$(".userId-box").find(".help-block").html(str);
-				$("#userId").val("");
+				alert("중복된 아이디입니다");
 				$("#userIdValid").val("false");
 				$("#userId").focus();
 			}
+		},error:function(jqXHR) {
+			console.log(jqXHR);	    	
+			console.log(jqXHR.responseText);
 		}
 	});
 }
+
 </script>
+</head>
 
-<div class="container">
-	<div class="body-container">	
-		<div class="body-title">
-			<h3><i class="bi bi-person-square"></i> ${title} </h3>
-		</div>
-		
-	    <div class="alert alert-info" role="alert">
-	        <i class="bi bi-person-check-fill"></i> SPRING의 회원이 되시면 회원님만의 유익한 정보를 만날수 있습니다.
-	    </div>
-		    		
-		<div class="body-main">
 
-			<form name="memberForm" method="post">
-				<div class="row mb-3">
-					<label class="col-sm-2 col-form-label" for="userId">아이디</label>
-					<div class="col-sm-10 userId-box">
-						<div class="row">
-							<div class="col-5 pe-1">
-								<input type="text" name="userId" id="userId" class="form-control" value="${dto.userId}" 
-										${mode=="update" ? "readonly='readonly' ":""}
-										placeholder="아이디">
-							</div>
-							<div class="col-3 ps-1">
-								<c:if test="${mode=='member'}">
-									<button type="button" class="btn btn-light" onclick="userIdCheck();">아이디중복검사</button>
-								</c:if>
-							</div>
-						</div>
-						<c:if test="${mode=='member'}">
-							<small class="form-control-plaintext help-block">아이디는 5~10자 이내이며, 첫글자는 영문자로 시작해야 합니다.</small>
-						</c:if>
-					</div>
-				</div>
-			 
-				<div class="row mb-3">
-					<label class="col-sm-2 col-form-label" for="userPwd">패스워드</label>
-					<div class="col-sm-10">
-			            <input type="password" name="userPwd" id="userPwd" class="form-control" autocomplete="off" placeholder="패스워드">
-			            <small class="form-control-plaintext">패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.</small>
-			        </div>
-			    </div>
-			    
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="userPwd2">패스워드 확인</label>
-			        <div class="col-sm-10">
-			            <input type="password" name="userPwd2" id="userPwd2" class="form-control" autocomplete="off" placeholder="패스워드 확인">
-			            <small class="form-control-plaintext">패스워드를 한번 더 입력해주세요.</small>
-			        </div>
-			    </div>
-			 
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="userName">이름</label>
-			        <div class="col-sm-10">
-			            <input type="text" name="userName" id="userName" class="form-control" value="${dto.userName}" 
-			            		${mode=="update" ? "readonly='readonly' ":""}
-			            		placeholder="이름">
-			        </div>
-			    </div>
-			 
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="birth">생년월일</label>
-			        <div class="col-sm-10">
-			            <input type="date" name="birth" id="birth" class="form-control" value="${dto.birth}" placeholder="생년월일">
-			            <small class="form-control-plaintext">생년월일은 2000-01-01 형식으로 입력 합니다.</small>
-			        </div>
-			    </div>
-			
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="selectEmail">이메일</label>
-			        <div class="col-sm-10 row">
-						<div class="col-3 pe-0">
-							<select name="selectEmail" id="selectEmail" class="form-select" onchange="changeEmail();">
-								<option value="">선 택</option>
-								<option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
-								<option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
-								<option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
-								<option value="hotmail.com" ${dto.email2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
-								<option value="direct">직접입력</option>
-							</select>
-						</div>
-						
-						<div class="col input-group">
-							<input type="text" name="email1" class="form-control" maxlength="30" value="${dto.email1}" >
-						    <span class="input-group-text p-1" style="border: none; background: none;">@</span>
-							<input type="text" name="email2" class="form-control" maxlength="30" value="${dto.email2}" readonly="readonly">
-						</div>		
-	
-			        </div>
-			    </div>
-			    
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="tel1">전화번호</label>
-			        <div class="col-sm-10 row">
-						<div class="col-sm-3 pe-2">
-							<input type="text" name="tel1" id="tel1" class="form-control" value="${dto.tel1}" maxlength="3">
-						</div>
-						<div class="col-sm-1 px-1" style="width: 2%;">
-							<p class="form-control-plaintext text-center">-</p>
-						</div>
-						<div class="col-sm-3 px-1">
-							<input type="text" name="tel2" id="tel2" class="form-control" value="${dto.tel2}" maxlength="4">
-						</div>
-						<div class="col-sm-1 px-1" style="width: 2%;">
-							<p class="form-control-plaintext text-center">-</p>
-						</div>
-						<div class="col-sm-3 ps-1">
-							<input type="text" name="tel3" id="tel3" class="form-control" value="${dto.tel3}" maxlength="4">
-						</div>
-			        </div>
-			    </div>
-			
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="zip">우편번호</label>
-			        <div class="col-sm-5">
-			       		<div class="input-group">
-			           		<input type="text" name="zip" id="zip" class="form-control" placeholder="우편번호" value="${dto.zip}" readonly="readonly">
-		           			<button class="btn btn-light" type="button" style="margin-left: 3px;" onclick="daumPostcode();">우편번호 검색</button>
-			           	</div>
-					</div>
-			    </div>
-		
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="addr1">주소</label>
-			        <div class="col-sm-10">
-			       		<div>
-			           		<input type="text" name="addr1" id="addr1" class="form-control" placeholder="기본 주소" value="${dto.addr1}" readonly="readonly">
-			           	</div>
-			       		<div style="margin-top: 5px;">
-			       			<input type="text" name="addr2" id="addr2" class="form-control" placeholder="상세 주소" value="${dto.addr2}">
-						</div>
-					</div>
-			    </div>
-		
-			    <div class="row mb-3">
-			        <label class="col-sm-2 col-form-label" for="agree">약관 동의</label>
-					<div class="col-sm-8" style="padding-top: 5px;">
-						<input type="checkbox" id="agree" name="agree"
-							class="form-check-input"
-							checked="checked"
-							style="margin-left: 0;"
-							onchange="form.sendButton.disabled = !checked">
-						<label class="form-check-label">
-							<a href="#" class="text-decoration-none">이용약관</a>에 동의합니다.
-						</label>
-					</div>
-			    </div>
-			     
-			    <div class="row mb-3">
-			        <div class="text-center">
-			            <button type="button" name="sendButton" class="btn btn-primary" onclick="memberOk();"> ${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i></button>
-			            <button type="button" class="btn btn-danger" onclick="location.href='${pageContext.request.contextPath}/';"> ${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i></button>
-						<input type="hidden" name="userIdValid" id="userIdValid" value="false">
-			        </div>
-			    </div>
-			
-			    <div class="row">
-					<p class="form-control-plaintext text-center">${message}</p>
-			    </div>
-			</form>
+<body>
+	<div id="auth">
 
-		</div>
-	</div>
-</div>
+        <div class="row h-100">
+            <div class="col-lg-7 col-12">
+                <div id="auth-left">       
+                    <h1 class="auth-title">
+                    ${mode=="join" ? "Join up" : "member"}
+                    </h1>
+
+                    <form name="memberForm"  method="post">
+                        <div class="form-group position-relative has-icon-left mb-3">               
+                        	<div class="form-group position-relative has-icon-left input-group mb-3">								
+								<input type="text" name="userId" id="userId" class="form-control form-control-lg" placeholder="아이디">
+								<div class="form-control-icon">
+	                                <i class="bi bi-person"></i>
+	                            </div>
+	                            <c:if test="${mode=='join'}">
+									<button class="btn btn-outline-secondary" type="button" onclick="idck();" id="button-addon2">아이디 중복검사</button>	                                                    
+	                       		</c:if>
+                        	</div>
+                        
+                        </div>
+                         <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="password" name="pwd" class="form-control form-control-lg" placeholder="비밀번호">
+                            <div class="form-control-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+                        <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="text" name="userName" class="form-control form-control-lg" placeholder="이름">
+                            <div class="form-control-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+                         <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="text" name="nickName" class="form-control form-control-lg" placeholder="닉네임">
+                            <div class="form-control-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+                        
+                          <div class="form-group position-relative has-icon-left mb-3">
+                            <div class="input-group mb-3">
+                            	<select class="form-select form-control form-control-lg" name="tel1">
+	                                 <option value="010" >010</option>
+									<option value="070" >070</option>
+									<option value="011" >011</option>					
+	                            </select>  
+	                            <span class="input-group-text" >-</span>	                            
+	  							<input type="number" name="tel2" class="form-control form-control-lg" maxlength="4">                          
+	                            <span class="input-group-text" >-</span>
+								<input type="number" name="tel3" class="form-control form-control-lg" maxlength="4">                          								                                                        
+                             </div>
+                            
+                            <div class="form-control-icon">
+                                <i class="bi bi-Telephone"></i>
+                            </div>
+                        </div>
+                        
+                         <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="date" name="birth" class="form-control form-control-lg" placeholder="birth">
+                            <div class="form-control-icon">
+                                <i class="bi bi-Calendar-date"></i>
+                            </div>
+                        </div>
+                        
+                         <div class="form-group position-relative has-icon-left mb-3">
+                            <div class="input-group mb-3">
+	  							<input type="text" name="email1" class="form-control form-control-lg" placeholder="email">                          
+	                            <span class="input-group-text" id="basic-addon1">@</span>
+								<select class="form-select form-control form-control-lg" id="email2">
+	                                 <option value="naver.com" >네이버 메일</option>
+								<option value="gmail.com" >지 메일</option>
+								<option value="hanmail.net" >한 메일</option>
+								<option value="hotmail.com" >핫 메일</option>
+	                            </select>                                                          
+                             </div>
+                            
+                            <div class="form-control-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group position-relative has-icon-left input-group mb-3">								
+								<input type="text" name="zip_code" id="zip_code" class="form-control form-control-lg" readonly="readonly" placeholder="우편번호 검색">
+								<div class="form-control-icon">
+                                	<i class="bi bi-search"></i>
+                            	</div>
+								<button class="btn btn-outline-secondary" type="button" onclick="daumPostcode();" id="button-addon2">우편번호검색</button>	                                                    
+                        </div>
+                        
+                        <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="text" name="addr1" id="addr1" class="form-control form-control-lg" placeholder="주소">
+                            <div class="form-control-icon">
+                                <i class="bi bi-House-door"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group position-relative has-icon-left mb-3">
+                            <input type="text" name="addr2" id="addr2" class="form-control form-control-lg" placeholder="상세주소">
+                            <div class="form-control-icon">
+                                <i class="bi bi-House-door"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group position-relative has-icon-left mb-3">
+                        	<div class="input-group mb-3">
+                               
+                            	<select class="form-select form-control form-control-lg" id="schoolCode" >
+                                       <c:forEach var="vo" items="${list}">
+                                       	<option value="${vo.schoolCode}">${vo.schoolName}</option>
+                                       </c:forEach>
+                                 </select>
+                                 <div class="form-control-icon">
+	                                <i class="bi bi-Book"></i>
+	                            </div>
+                            </div>                                
+                        </div>
+                      
+                        <button type="button" class="btn btn-primary btn-block btn-lg shadow-lg mt-5" onclick="memberOk()">Sign Up</button>
+                  		<input type="hidden" name="userIdValid" id="userIdValid" value="false">
+		
+                    </form>
+                    <div class="text-center mt-5 text-lg fs-4">
+                    	<c:if test="${mode=='join'}">
+                        	<p class="text-gray-600">아이디가 있으십니까? <a href="${pageContext.request.contextPath}/member/login" class="font-bold">Log
+                            	    in</a>.</p>
+                    	</c:if>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div id="auth-right">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
@@ -347,7 +326,7 @@ function userIdCheck() {
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('zip_code').value = data.zonecode; //5자리 새우편번호 사용
                 document.getElementById('addr1').value = fullAddr;
 
                 // 커서를 상세주소 필드로 이동한다.
@@ -355,4 +334,6 @@ function userIdCheck() {
             }
         }).open();
     }
-</script>
+</script>    
+</body>
+	

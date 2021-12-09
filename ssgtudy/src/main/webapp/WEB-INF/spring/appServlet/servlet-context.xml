@@ -66,8 +66,9 @@
             <exclude-mapping path="/images/**"/>
             <exclude-mapping path="/member/login"/>
             <exclude-mapping path="/member/logout"/>
+            <exclude-mapping path="/member/join"/>
             <exclude-mapping path="/member/member"/>
-            <exclude-mapping path="/member/userIdCheck"/>
+            <exclude-mapping path="/member/userIdck"/>
             <exclude-mapping path="/member/complete"/>
             <exclude-mapping path="/member/pwdFind"/>
             <exclude-mapping path="/member/idFind"/>

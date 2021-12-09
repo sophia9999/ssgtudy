@@ -1,5 +1,8 @@
 package com.ssg.study.member;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,11 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public void insertMember(Member dto) throws Exception {
 		
+		try {
+			dao.insertData("member.insertMember", dto);
+			dao.insertData("member.insertMember_detail", dto);
+		} catch (Exception e) {		
+		}
 		
 	}
 
@@ -38,6 +46,27 @@ public class MemberServiceImpl implements MemberService{
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public List<Map<String, String>> readSchool() {
+		List<Map<String, String>> list = null;
+		try {
+			  list = dao.selectList("member.readSchool");
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public Member readMember(String userId) {
+		Member dto = null;
+		try {
+			dto = dao.selectOne("member.readuserId", userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 }
