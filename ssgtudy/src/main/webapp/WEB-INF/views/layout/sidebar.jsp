@@ -104,7 +104,7 @@
 		                           </a>
 	                                	<ul class="submenu ">
 		                                <li class="submenu-item ">
-		                                    <a href="${pageContext.request.contextPath}/note/${menuItem}noteForm">쪽지함</a>
+		                                    <a href="${pageContext.request.contextPath}/note/receive/noteForm">쪽지함</a>
 		                                </li>
 		                                 
 		                                <li class="submenu-item ">
