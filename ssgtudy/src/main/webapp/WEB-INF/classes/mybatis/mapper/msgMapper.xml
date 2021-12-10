@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="msg">
+	<select id="receiveMsg" parameterType="map" resultType="com.ssg.study.my.My">
+		SELECT num, subject, hitCount, reg_date, 
+		
+		
+		
+		
+		FROM member m  
+	 	JOIN bbs b ON m.userId = b.userId
+	 	JOIN study_board sb ON m.userId = sb.userId
+	 	JOIN qna q ON m.userId = q.userId
+		WHERE 
+	</select>
+	
+	
+	
+	<select id="dataCount" parameterType="String" resultType="Integer"> 
+		SELECT NVL(COUNT(*), 0)								
+		FROM member m
+	 	JOIN bbs b ON m.userId = b.userId
+	 	JOIN study_board sb ON m.userId = sb.userId
+	 	JOIN qna q ON m.userId = q.userId
+	</select>
+	
+	
+	
+</mapper>
