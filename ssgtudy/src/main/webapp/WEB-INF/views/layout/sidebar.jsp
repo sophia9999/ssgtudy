@@ -126,10 +126,10 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/board/list">자유게시판</a>
+                                    <a href="${pageContext.request.contextPath}/bbs/list">자유게시판</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/list">질문답변게시판</a>
+                                    <a href="${pageContext.request.contextPath}/qna/list">질문답변게시판</a>
                                 </li>  
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/notice/list">공지사항</a>
