@@ -104,13 +104,13 @@
 		                           </a>
 	                                	<ul class="submenu ">
 		                                <li class="submenu-item ">
-		                                    <a href="${pageContext.request.contextPath}/msg/receive">받은쪽지함</a>
+		                                    <a href="${pageContext.request.contextPath}/note/noteForm">받은쪽지함</a>
 		                                </li>
 		                                <li class="submenu-item ">
-		                                    <a href="${pageContext.request.contextPath}/msg/send">보낸쪽지함</a>
+		                                    <a href="${pageContext.request.contextPath}/note/noteForm">보낸쪽지함</a>
 		                                </li>      
 		                                <li class="submenu-item ">
-		                                    <a href="${pageContext.request.contextPath}/msg/write">쪽지보내기</a>
+		                                    <a href="${pageContext.request.contextPath}/note/noteWrite">쪽지보내기</a>
 		                                </li>    
 				                                
 				                            
