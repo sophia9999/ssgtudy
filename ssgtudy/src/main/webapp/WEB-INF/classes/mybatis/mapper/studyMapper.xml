@@ -2,6 +2,28 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="study">
+
+	<sql id="where-list">
+		<if test="condition=='all' ">
+			( INSTR(subject, #{keyword}) &gt; 0
+				OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+		</if>
+		<if test="condition=='subject' ">
+			INSTR(subject, #{keyword}) &gt; 0
+		</if>
+		<if test="condition=='content' ">
+			DBMS_LOB.INSTR(content, #{keyword}) &gt; 0
+		</if>
+		<if test="condition=='userId' ">
+			userId=#{keyword}
+		</if>
+		<if test="condition=='reg_date' ">
+			( TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword}
+				OR TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword} )
+		</if>
+	</sql>
+	
+
 	<insert id="insertStudy" parameterType="com.ssg.study.study.Study" >
 		INSERT INTO study(studyNum, studyGoal, studyName, studyStatus)
 		VALUES (#{studyNum}, #{studyGoal}, #{studyName}, 0)
@@ -17,14 +39,14 @@
 	</insert>
 	
 	<select id="studyList" parameterType="map" resultType="com.ssg.study.study.Study">
-	SELECT * FROM (        
-    	SELECT ROWNUM rnum, tb.* FROM (	
-			SELECT s.studyNum, memberNum, role, userId, studyName, studyGoal, studystatus
-			FROM study s
-			JOIN study_member sm ON s.studyNum = sm.studyNum
-			WHERE userId = #{userId}
-	    ) tb WHERE ROWNUM &lt;= #{end}    
-	) where rnum &gt;= #{start}
+		SELECT * FROM (        
+	    	SELECT ROWNUM rnum, tb.* FROM (	
+				SELECT s.studyNum, memberNum, role, userId, studyName, studyGoal, studystatus
+				FROM study s
+				JOIN study_member sm ON s.studyNum = sm.studyNum
+				WHERE userId = #{userId}
+		    ) tb WHERE ROWNUM &lt;= #{end}    
+		) where rnum &gt;= #{start}
 	</select>
 	
 	<select id="myStudyDataCount" parameterType="String" resultType="Integer">
@@ -40,6 +62,79 @@
 		JOIN study_member sm ON s.studyNum = sm.studyNum
 		WHERE userId = #{userId}
 	</select>
+	<select id="readStudy" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT s.studyNum, memberNum, role, userId, studyName, studyGoal, studystatus
+		FROM study s
+		JOIN study_member sm ON s.studyNum = sm.studyNum
+		WHERE s.studyNum = #{studyNum} and userId= #{userId}
+	</select>
+	<select id="readCategory" parameterType="Integer" resultType="map">
+		SELECT categoryNum, categoryName, studyNum 
+		FROM study_category 
+		WHERE studyNum=#{studyNum}
+	</select>
+	<insert id="insertCategory" parameterType="map">
+		INSERT INTO study_category(categoryNum, categoryName, studyNum)
+		VALUES (studyCategory_seq.NEXTVAL, #{categoryName}, #{studyNum})
+	</insert>
+	<update id="updateCategory" parameterType="map">
+		UPDATE study_category SET categoryName = #{categoryName} 
+		WHERE categoryNum = #{categoryNum}
+	</update>
+	<delete id="deleteCategory" parameterType="Integer">
+		DELETE FROM study_category 
+		WHERE categoryNum = #{categoryNum}
+	</delete>
+	<select id="studyAdList" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (        
+	    	SELECT ROWNUM rnum, tb.* FROM (	
+				SELECT studyNum, boardNum, subject, nickname, hitCount, content, sa.userId, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date
+					FROM study_ad sa
+					JOIN member_detail md ON sa.userId = md.userId
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+		    </where>	
+		    ) tb WHERE ROWNUM &lt;= #{end}    
+		) where rnum &gt;= #{start}
+	</select>
 	
+	<select id="studyAdDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(count(*), 0)
+		FROM study_ad
+		<where>
+			<if test="keyword != null and keyword != '' ">
+				<include refid="where-list"/>
+			</if>
+	    </where>
+	</select>
 	
+	<select id="readStudyAd" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT studyNum, boardNum, subject, content, sa.userId, reg_date
+		FROM study_ad sa
+		JOIN member_detail md ON sa.userId = md.userId
+		WHERE boardNum = #{boardNum}
+	</select>
+	
+	<insert id="insertStudyAd" parameterType="com.ssg.study.study.Study">
+		INSERT INTO study_ad(BoardNum, subject, content, studyNum, userId, reg_date, hitCount)
+		VALUES (STUDYAD_SEQ.NEXTVAL, #{subject}, #{content}, #{studyNum}, #{userId}, SYSDATE, 0)
+	</insert>
+	
+	<update id="updateStudyAdHitCount" parameterType="Integer">
+		UPDATE study_ad SET hitCount=hitCount+1 WHERE BoardNum = #{BoardNum}
+	</update>
+	
+	<update id="updateStudyAd" parameterType="com.ssg.study.study.Study">
+		UPDATE study_ad SET subject=#{subject}, content=#{content}
+		WHERE boardNum = #{boardNum} AND userId = #{userId}
+	</update>
+	
+	<delete id="deleteStudyAd" parameterType="map">
+		DELETE FROM study_ad WHERE boardNum = #{boardNum}
+		<if test="membership &lt; 55 ">
+			AND userId = #{userId}
+		</if>
+	</delete>
 </mapper>

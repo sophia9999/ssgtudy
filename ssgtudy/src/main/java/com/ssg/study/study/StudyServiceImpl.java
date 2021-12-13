@@ -82,4 +82,119 @@ public class StudyServiceImpl implements StudyService {
 		return list;
 	}
 
+	@Override
+	public Study readStudy(Map<String, Object> map) throws Exception {
+		Study dto = null;
+		
+		try {
+			dto = dao.selectOne("study.readStudy", map);
+		} catch (Exception e) {
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public List<Map<String, Object>> readCategory(int studyNum) throws Exception {
+		List<Map<String, Object>> list = null;
+		
+		try {
+			list = dao.selectList("study.readCategory", studyNum);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public int insertCategory(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertCategory", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateCategory(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateCategory", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteCategory(int categoryNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.deleteData("study.deleteCategory", categoryNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int studyAdDataCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("study.studyAdDataCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> studyAdList(Map<String, Object> map) throws Exception {
+		List<Study> list = null;
+		
+		try {
+			list = dao.selectList("study.studyAdList", map);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public Study readStudyAd(int boardNum) throws Exception {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.readStudyAd", boardNum);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
+
+	@Override
+	public int insertStudyAd(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertStudyAd", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateStudyAd(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateStudyAd", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteStudyAd(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.deleteData("study.deleteStudyAd", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 }
