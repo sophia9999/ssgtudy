@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="note">
+
+	<select id="listFriend" parameterType="map" resultType="com.ssg.study.note.Note">
+		SELECT userId 
+		FROM member
+		<where>
+			userId != #{userId}
+			AND		
+			<if test="keyword!=null and keyword!='' ">
+				INSTR(${condition}, #{keyword}) &gt; 0
+			</if>
+		</where>				
+	</select>
+	
+	<insert id="insertNote" parameterType="com.ssg.study.note.Note">
+		INSERT INTO note(noteNum, content, sendDay, identifyDay, receiveDelete, sendDelete, senderId, receiverId)
+		VALUES (note_seq.NEXTVAL, #{content}, SYSDATE, #{identifyDay, jdbcType=VARCHAR}, 'N', 'N', #{senderId}, #{receiverId})
+	</insert>
+	
+	<sql id="where-list">
+		<if test="condition=='senderId' or condition=='receiverId'">
+			${condition}=#{keyword}
+		</if>
+		<if test="condition=='content'">
+			INSTR(content, #{keyword}) &gt; 0
+		</if>
+		<if test="condition=='sendDay'">
+			( TO_CHAR(sendDay, YYYYMMDD') = #{keyword}
+				OR TO_CHAR(sendDay, 'YYYYMMDD') = #{keyword})
+		</if>
+	</sql>
+	
+	<!-- 받은 쪽지 리스트 -->
+	<select id="dataCountReceive" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM note
+		JOIN member ON senderId=userId
+		<where>
+			<if test="keyword!=null and keyword!='' ">
+				<include refid="where-list"/>
+			</if>
+			AND receiverId = #{userId}
+			AND receiveDelete = 'N'
+		</where>
+	</select>
+	
+	<select id="listReceive" parameterType="map" resultType="com.ssg.study.note.Note">
+	 SELECT * FROM (	
+		SELECT ROWNUM rnum, tb.* FROM (
+			SELECT noteNum, content, senderId, 
+				TO_CHAR(sendDay, 'YYYY-MM-DD HH24:MI:SS') sendDay,
+				NVL2(identifyDay, TO_CHAR(identifyDay, 'YYYY-MM-DD HH24:MI:SS'), null) identifyDay,
+				senderDelete, receiveDelete
+			FROM note
+			JOIN member ON senderId=userId
+			<where>
+				<if test="keyword != null and keyword != ''">
+					<include refid="where-list"/>
+				</if> 
+				AND receiverId = #{userId}
+				AND receiveDelete = 'N'
+			</where>
+			ORDER BY NoteNum DESC
+		)tb WHERE ROWNUM &lt;= #{end}
+	 ) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- 보낸 쪽지 리스트 -->
+	<select id="dataCountSend" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM note
+		JOIN member ON receiverId = userId
+		<where>
+			<if test="keyword = != null and keyword != ''">
+				<include refid="where-list"/>
+			</if>
+			AND senderId = #{userId}
+			AND sendDelete = 'N'
+		</where>
+	</select>
+	
+	
+	
+	<select id="listSend" parameterType="map" resultType="com.ssg.study.note.Note">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.*FROM (
+				SELECT noteNum, content, receiverId, TO_CHAR(sendDay, 'YYYY-MM-DD HH24:MI:SS') sendDay,
+				NVL2(identifyDay, TO_CHAR(identifyDay, 'YYYY-MM-DD HH24:MI:SS'), null) identifyDay,
+				sendDelete, receiveDelete
+			FROM note
+			JOIN member ON receiverId=userId)
+			<where>
+				<if test="keyword != null and keyword !=''">
+					<include refid="where-list"/>
+				</if>
+				AND senderId = #{userId}
+				AND sendDelete = 'N'
+			</where>
+			ORDER BY noteNum DESC
+		) tb WHERE ROWNUM &lt;= #{end}
+	  ) WHERE rnum &gt;= #{start}	
+	</select>
+	
+	
+</mapper>

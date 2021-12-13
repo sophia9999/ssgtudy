@@ -1,20 +1,58 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+ <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <script type="text/javascript">
+$(function(){
+	var menu = "${menuItem}";
+	$("#tab-"+menu).addClass("active");
+	
+    $("button[role='tab']").on("click", function(e){
+		var tab = $(this).attr("data-tab");
+		var url = "${pageContext.request.contextPath}/note/"+tab+"/noteForm";
+		location.href=url;
+    });
+});
 
+function searchList() {
+	var f = document.searchForm;
+	f.submit();
+}
+
+$(function() {
+    $("#chkAll").click(function() {
+	   if($(this).is(":checked")) {
+		   $("input[name=nums]").prop("checked", true);
+        } else {
+		   $("input[name=nums]").prop("checked", false);
+        }
+    });
+ 
+    $(".btnDelete").click(function(){
+		var cnt = $("input[name=nums]:checked").length;
+
+		if (cnt == 0) {
+			alert("삭제할 쪽지를 먼저 선택 하세요 !!!");
+			return;
+		}
+         
+		if(confirm("선택한 쪽지를 삭제 하시 겠습니까 ? ")) {
+			var f = document.listForm;
+			f.action = "${pageContext.request.contextPath}/note/${menuItem}/delete";
+			f.submit();
+		}
+	});
+});
 </script>
 
-<div class="container">
 	<div class="body-title">
 		<h3> 
 			<i class="icofont-ui-messaging"></i>
  			쪽지함 
  		</h3>
  			
- 	 <div class="body-main"> 
+ 	 <div class="body-main">  
  	 	<ul class="nav nav-tabs" id="myTab" role="tablist">
  	 	 	 <li class="nav-item" role="presentation">
  	 	 	 	<button class="nav-link" id="tab-receive" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="receive" aria-selected="true" data-tab="receive">받은 쪽지함</button>
@@ -24,6 +62,8 @@
  			 	<button class="nav-link" id="tab-sedn" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="send" aria-selected="true" data-tab="send">보낸 쪽지함</button>
  			 </li>	 	
  	 	</ul>	
+ 	 	<div class="card">
+ 	 	
  	 
  	 <div class="tab-content pt-2" id="nav-tabContent">
  	 	<div class="tab-pane fade show active mt-3" id="nav-content" role="tabpanel" aria-labelledby="nav-tab-content">
@@ -35,7 +75,7 @@
  	 				</td>
  	 				
  	 				<td align="right">
- 	 					<button type="button" class="btn btn-light" onclick="javascript:location.href='${pageContext.request.contextPath}/note/write';">쪽지 쓰기</button>
+ 	 					<button type="button" class="btn btn-light" onclick="javascript:location.href='${pageContext.request.contextPath}/note/noteWrite';">쪽지 쓰기</button>
  	 				</td>
  	 			</tr>
  	 		</table>
@@ -55,13 +95,13 @@
  	 				<tbody>
  	 					<c:forEach var="dto" items="${list}">
  	 						<tr>
- 	 							<td><input type="checkbox" name="nums" value="${dto.num}" class="form-check-input"></td>
+ 	 							<td><input type="checkbox" name="noteNums" value="${dto.noteNum}" class="form-check-input"></td>
  	 							<td class="left ellipsis">
  	 								<span>
- 	 									<a href="${articleUrl}$num=${dto.num}" class="text-reset">${dto.content}</a>
+ 	 									<a href="${articleUrl}$noteNum=${dto.noteNum}" class="text-reset">${dto.content}</a>
  	 								</span>
  	 							</td>
- 	 							<td>${menuItem=="receive"?dto.senderName:dto.receiverName}</td>
+ 	 							<td>${menuItem=="receive"?dto.senderId:dto.receiverId}</td>
  	 							<td>${dto.sendDay}</td>
  	 							<td>${dto.identifyDay}</td>
  	 						</tr>		
@@ -80,23 +120,23 @@
  	 	
  	 	<div class="row board-list-footer">
  	 		<div class="col">
- 	 			<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/msg/${menuItem}/receive/';"><i class="bi bi-arrow-counterclockwise"></i></button>
+ 	 			<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/note/${menuItem}/noteForm/';">
+ 	 				<i class="bi bi-arrow-counterclockwise"></i>
+ 	 			</button>
  	 		</div>
  	 		<div class="col-6 text-center">
- 	 			<form class="row" name="searchForm" action="${pageContext.request.contextPath}/msg/${menuItem}/receive" method="post">
+ 	 			<form class="row" name="searchForm" action="${pageContext.request.contextPath}/note/${menuItem}/noteForm" method="post">
  	 				<div class="col-auto p-1">
  	 					<select name="condition" class="form-select">
  	 						<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
 							<c:choose>
 								<c:when test="${menuItem=='receive'}">
-									<option value="senderName" ${condition=="senderName"?"selected='selected'":""}>보낸사람</option>
-									<option value="senderId" ${condition=="senderName"?"selected='selected'":""}>아이디</option>
+									<option value="senderId" ${condition=="senderId"?"selected='selected'":""}>보낸 아이디</option>
 									<option value="sendDay" ${condition=="created"?"selected='selected'":""}>받은날짜</option>
 								</c:when>
 								<c:otherwise>
-									<option value="receiverName" ${condition=="senderName"?"selected='selected'":"" }>보낸사람</option>
-									<option value="receiverId" ${condition=="senderName"?"selected='selected'":"" }>아이디</option>
-									<option value="sendDay" ${condition=="senderName"?"selected='selected'":"" }>보낸날짜</option>
+									<option value="receiverId" ${condition=="receiverId"?"selected='selected'":"" }>받는 아이디</option>
+									<option value="sendDay" ${condition=="created"?"selected='selected'":"" }>보낸날짜</option>
 								</c:otherwise>	
 							</c:choose> 	 					
  	 					</select>	 				
@@ -117,7 +157,6 @@
  	 	 </div>
  	 	</div>
  	 
- 	 	
+ 	 	</div>
  	  </div>	
 	</div>
-</div>
