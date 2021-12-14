@@ -32,11 +32,18 @@
 			   </ul>
 			   <div class="tab-content" id="myTabContent">
 			         <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-			           	<c:if test="${dto.role > 1 }">
-			           		<div class="buttons text-center p-2">
-			            		<a href="#" class="btn btn-primary btnAddCategory">카테고리 추가하기</a>
-			           		</div> 
-			           	</c:if>
+			         	<c:choose>
+			         		<c:when test="${dto.role > 1 }">
+				           		<div class="buttons text-center p-2">
+				            		<a href="#" class="btn btn-primary btnAddCategory">카테고리 추가하기</a>
+				           		</div> 
+				           	</c:when>
+							<c:otherwise>
+				           		<div class="text-center p-2">
+				           			<p>아직 스터디관리자의 승인을 받지못했습니다.</p>
+				           		</div>
+				           	</c:otherwise>
+			           	</c:choose>
 					</div>
 				</div>
 			</div>

@@ -120,7 +120,14 @@ function ajaxFun(url, method, query, dataType, fn) {
 								<select name="studyNum" class="form-select">
 									<option value="">:: 스터디 선택 ::</option>
 									<c:forEach var="vo" items="${myStudyList}">
-										<option value="${vo.studyNum}" ${dto.studyNum==vo.studyNum?"selected='selected'":""}>${vo.studyName}</option>
+										<c:choose>
+											<c:when test="${vo.studyStatus == 0 }">
+												<option value="${vo.studyNum}" ${dto.studyNum==vo.studyNum?"selected='selected'":""}>${vo.studyName}</option>
+											</c:when>
+											<c:otherwise>
+												<option value="${vo.studyNum}" disabled="disabled">${vo.studyName} - 비활성화 상태입니다.</option>
+											</c:otherwise>
+										</c:choose>
 									</c:forEach>
 								</select>
 							</div>
@@ -140,7 +147,11 @@ function ajaxFun(url, method, query, dataType, fn) {
 							<div class="col-sm-12 d-flex justify-content-end">
 								<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시작성</button>
-								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">등록하기<i class="bi bi-check2"></i></button>
+								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정하기':'등록하기'}<i class="bi bi-check2"></i></button>
+								<c:if test="${mode=='update'}">
+									<input type="hidden" name="boardNum" value="${dto.boardNum}">
+									<input type="hidden" name="page" value="${page}">
+								</c:if>
 							</div>
 						</div>
 					</div>

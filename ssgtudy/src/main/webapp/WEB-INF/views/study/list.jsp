@@ -17,23 +17,25 @@
 	        	${dataCount}개(${page}/${total_page} 페이지)
 	        </div>
 	        <div class="card-body">
-	            <table class="table table-striped" id="table1">
+	            <table class="table table-lg" id="table1">
 	                <thead>
-	                    <tr>
-	                    	<th class="text-center">목록번호</th>
-	                        <th class="text-center">스터디이름</th>
-	                        <th class="text-center">스터디목표</th>
-	                        <th class="text-center">상태</th>
+	                    <tr class="text-center">
+	                    	<th class="col-md-1">번호</th>
+	                        <th class="col-md-3">스터디이름</th>
+	                        <th class="col-auto">스터디목표</th>
+	                        <th class="col-md-1">상태</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
 	                	<c:forEach var="dto" items="${list}">
-	                		<tr>
+	                		<tr class="text-center">
 	                			<td>${dto.listNum}</td>
 	                			<c:choose>
 	                				<c:when test="${dto.studyStatus > 0 }">
-	                					<td>${dto.studyName}
-			                			</td>
+	                					<td>${dto.studyName}</td>
+	                				</c:when>
+	                				<c:when test="${dto.role < 1 }">
+	                					<td>${dto.studyName}</td>
 	                				</c:when>
 	                				<c:otherwise>
 		                				<td>
@@ -45,6 +47,9 @@
 	                			<c:choose>
 	                				<c:when test="${dto.studyStatus > 0 }">
 	                					<td class="text-center"><a href="#" onclick="alert('스터디 상태에 관해서는 관리자에게 문의하세요.')" class="btn icon btn-danger"><i data-feather="times"></i></a></td>
+	                				</c:when>
+	                				<c:when test="${dto.role < 1 }">
+	                					<td class="text-center"><a href="#" onclick="alert('스터디관리자의 허락 후 활동이 가능합니다.')" class="btn icon btn-warning"><i data-feather="times"></i></a></td>
 	                				</c:when>
 	                				<c:otherwise>
 		                				<td class="text-center"><a href="#" class="btn icon btn-success"><i data-feather="check"></i></a></td>

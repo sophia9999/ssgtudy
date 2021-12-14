@@ -197,4 +197,56 @@ public class StudyServiceImpl implements StudyService {
 		return result;
 	}
 
+	@Override
+	public int updateStudyAdHitCount(int boardNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateStudyAdHitCount", boardNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int memberCount(Map<String, Object> paramMap) throws Exception {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("study.studyMemberOnce", paramMap);
+		} catch (Exception e) {
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int insertTimes(int studyNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertTimes", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateQuestCount(int studyNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateQuestCount", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateUsedCount(int studyNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateUsedCount", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 }

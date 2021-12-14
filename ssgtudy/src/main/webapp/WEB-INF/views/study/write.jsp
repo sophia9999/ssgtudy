@@ -31,13 +31,19 @@ function sendOk() {
 </script>
 
  <!-- Basic Horizontal form layout section start -->
+ 
 <section id="basic-horizontal-layouts">
     <div class="row match-height justify-content-center">
         <div class="col-10">
+        <div class="page-title">
+			<div class="row">
+				<div class="col-12 col-md-6 order-md-1 order-last">
+					<h3>스터디 그룹 등록하기</h3>
+					<p class="text-subtitle text-muted">새로운 스터디 모임을 등록해봐요.</p>
+				</div>
+			</div>
+		</div>
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title fs-2">스터디그룹 등록하기</h4>
-                </div>
                 <div class="card-content">
                     <div class="card-body">
                         <form class="form form-horizontal" name="form" method="post">

@@ -9,6 +9,12 @@ public interface StudyService {
 	public int insertStudy(Study dto) throws Exception;
 	public int insertStudyMember(Study dto) throws Exception; 
 	
+	// 스터디 등록시 스터디목표횟수 기록하는 테이블에도 같이 insert
+	public int insertTimes(int studyNum) throws Exception;
+	// 스터디 times 테이블
+	public int updateQuestCount(int studyNum) throws Exception;
+	public int updateUsedCount(int studyNum) throws Exception;
+	
 	// 나의 스터디 리스트
 	public List<Study> studyList(Map<String, Object> map) throws Exception;
 	public int myStudyDataCount(String userId) throws Exception;
@@ -30,6 +36,7 @@ public interface StudyService {
 	public int insertStudyAd(Study dto) throws Exception;
 	public int updateStudyAd(Study dto) throws Exception;
 	public int deleteStudyAd(Map<String, Object> map) throws Exception;
-	
+	public int updateStudyAdHitCount(int boardNum) throws Exception;
+	public int memberCount(Map<String, Object> paramMap) throws Exception;
 	
 }

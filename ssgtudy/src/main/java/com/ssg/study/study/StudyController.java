@@ -113,7 +113,7 @@ public class StudyController {
 			
 			service.insertStudy(dto); // study 테이블 삽입
 			service.insertStudyMember(dto); // study_member 테이블 삽입
-			
+			service.insertTimes(seq); // times 테이블에 insert (스터디별 목표이름횟수 기록하는 테이블) 
 		} catch (Exception e) {
 		}
 		
@@ -247,8 +247,6 @@ public class StudyController {
 			@RequestParam(value = "condition", defaultValue = "all")String condition,
 			@RequestParam(value = "keyword", defaultValue = "") String keyword ) throws Exception {
 		
-		
-		
 		return "study/homelist";
 	}
 	
@@ -303,8 +301,8 @@ public class StudyController {
 		}
 		
 		String query = "";
-		String listUrl = cp + "/ad";
-		String articleUrl = cp + "/ad/article?page=" + current_page;
+		String listUrl = cp + "study/ad";
+		String articleUrl = cp + "/study/ad/article?page=" + current_page;
 		if (keyword.length() != 0) {
 			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 		}
@@ -355,15 +353,140 @@ public class StudyController {
 		return "redirect:/study/ad";
 	}
 	
-	@RequestMapping(value = "article")
+	// 스터디 홍보 게시글보기
+	@RequestMapping(value = "ad/article")
 	public String studyAdArticle(@RequestParam int boardNum,
 			@RequestParam String page,
 			@RequestParam(defaultValue = "all") String condition,
 			@RequestParam(defaultValue = "") String keyword,
 			Model model	) throws Exception {
 		
+		keyword = URLDecoder.decode(keyword, "utf-8");
+
+		String query = "page=" + page;
+		if (keyword.length() != 0) {
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		}
+		
+		service.updateStudyAdHitCount(boardNum);
+		Study dto = service.readStudyAd(boardNum);
+		if (dto == null) {
+			return "redirect:/study/ad?" + query;
+		}
+		
+		// CKEditor 사용했으므로 심볼 안바꿔도됨.
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("query", query);
 		
 		return ".study.article";
 	}
 	
+	// 스터디 홍보 게시판 수정
+	@RequestMapping(value = "ad/update", method = RequestMethod.GET)
+	public String studyAdUpdate(@RequestParam int boardNum,
+			@RequestParam String page,
+			HttpSession session, Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		List<Study> myStudyList = service.studyHomeList(userId);
+		
+		Study dto = service.readStudyAd(boardNum);
+		
+		if (dto == null) {
+			return "redirect:/study/ad?page=" + page;
+		}
+		
+		if (!info.getUserId().equals(dto.getUserId())) {
+			return "redirect:/study/ad?page=" + page;
+		}
+
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
+		model.addAttribute("myStudyList", myStudyList);
+		
+		return ".study.adwrite";
+	}
+	// 스터디 홍보 게시판 수정 완료
+	@RequestMapping(value = "ad/update", method = RequestMethod.POST)
+	public String studyAdUpdateSubmit(Study dto,
+			@RequestParam String page,
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		try {
+			dto.setUserId(info.getUserId());
+			service.updateStudyAd(dto);
+		} catch (Exception e) {
+		}
+
+		return "redirect:/study/ad?page=" + page;
+	}
+	
+	@RequestMapping(value = "ad/delete")
+	public String studyAdDelete(
+			@RequestParam int boardNum,
+			@RequestParam String page,
+			@RequestParam(defaultValue = "all") String condition,
+			@RequestParam(defaultValue = "") String keyword,
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		keyword = URLDecoder.decode(keyword, "utf-8");
+		String query = "page=" + page;
+		if (keyword.length() != 0) {
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("boardNum", boardNum);
+		map.put("userId", info.getUserId());
+		map.put("membership", info.getMembership());
+
+		service.deleteStudyAd(map);
+		
+		return "redirect:/study/ad?" + query;
+	}
+	@RequestMapping(value = "member")
+	@ResponseBody
+	public Map<String, Object> studyMemberAdd(@RequestParam int studyNum,
+			@RequestParam String userId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String state = "true";
+		
+		Study dto = new Study();
+		dto.setUserId(userId);
+		dto.setStudyNum(studyNum);
+		dto.setRole(0); // 0이 대기중인 멤버
+		
+		try {
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("userId", userId);
+			paramMap.put("studyNum", studyNum);
+			int applyCount = service.memberCount(paramMap); // 한번만 신청하게
+			if( applyCount < 1) { // 0번일때만 신청가능하게
+				service.insertStudyMember(dto);				
+			} else {
+				state = "false";
+			}
+			
+		} catch (Exception e) {
+			state = "false";
+		}
+		map.put("state", state);
+		return map;
+	}
+	
+	@RequestMapping(value = "rank")
+	public String studyRankList(@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "all") String condition,
+			@RequestParam(defaultValue = "") String keyword,
+			HttpServletRequest req,
+			Model model) throws Exception {
+
+		return ".study.rank";
+	}
 }
