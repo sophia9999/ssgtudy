@@ -4,8 +4,8 @@
 <mapper namespace="note">
 
 	<select id="listFriend" parameterType="map" resultType="com.ssg.study.note.Note">
-		SELECT userId 
-		FROM member
+		SELECT userId, nickName 
+		FROM member_detail
 		<where>
 			userId != #{userId}
 			AND		
@@ -28,8 +28,8 @@
 			INSTR(content, #{keyword}) &gt; 0
 		</if>
 		<if test="condition=='sendDay'">
-			( TO_CHAR(sendDay, YYYYMMDD') = #{keyword}
-				OR TO_CHAR(sendDay, 'YYYYMMDD') = #{keyword})
+			( TO_CHAR(sendDay, 'YYYYMMDD') = #{keyword}
+				OR TO_CHAR(sendDay, 'YYYY-MM-DD') = #{keyword})
 		</if>
 	</sql>
 	
@@ -50,12 +50,12 @@
 	<select id="listReceive" parameterType="map" resultType="com.ssg.study.note.Note">
 	 SELECT * FROM (	
 		SELECT ROWNUM rnum, tb.* FROM (
-			SELECT noteNum, content, senderId, 
+			SELECT noteNum, content, senderId,
 				TO_CHAR(sendDay, 'YYYY-MM-DD HH24:MI:SS') sendDay,
 				NVL2(identifyDay, TO_CHAR(identifyDay, 'YYYY-MM-DD HH24:MI:SS'), null) identifyDay,
-				senderDelete, receiveDelete
+				sendDelete, receiveDelete
 			FROM note
-			JOIN member ON senderId=userId
+			JOIN member_detail ON senderId=userId
 			<where>
 				<if test="keyword != null and keyword != ''">
 					<include refid="where-list"/>
@@ -64,7 +64,7 @@
 				AND receiveDelete = 'N'
 			</where>
 			ORDER BY NoteNum DESC
-		)tb WHERE ROWNUM &lt;= #{end}
+		) tb WHERE ROWNUM &lt;= #{end}
 	 ) WHERE rnum &gt;= #{start}
 	</select>
 	
@@ -72,9 +72,9 @@
 	<select id="dataCountSend" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM note
-		JOIN member ON receiverId = userId
+		JOIN member ON receiverId=userId
 		<where>
-			<if test="keyword = != null and keyword != ''">
+			<if test="keyword!=null and keyword!='' ">
 				<include refid="where-list"/>
 			</if>
 			AND senderId = #{userId}
@@ -86,12 +86,12 @@
 	
 	<select id="listSend" parameterType="map" resultType="com.ssg.study.note.Note">
 		SELECT * FROM (
-			SELECT ROWNUM rnum, tb.*FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
 				SELECT noteNum, content, receiverId, TO_CHAR(sendDay, 'YYYY-MM-DD HH24:MI:SS') sendDay,
 				NVL2(identifyDay, TO_CHAR(identifyDay, 'YYYY-MM-DD HH24:MI:SS'), null) identifyDay,
 				sendDelete, receiveDelete
 			FROM note
-			JOIN member ON receiverId=userId)
+			JOIN member_detail ON receiverId=userId
 			<where>
 				<if test="keyword != null and keyword !=''">
 					<include refid="where-list"/>
@@ -103,6 +103,141 @@
 		) tb WHERE ROWNUM &lt;= #{end}
 	  ) WHERE rnum &gt;= #{start}	
 	</select>
+	
+	
+	
+	<!-- 받은 쪽지 내용 보기 -->
+	<select id="readReceive" parameterType="Integer" resultType="com.ssg.study.note.Note">
+			SELECT noteNum, content, senderId, nickName senderNickName,
+				sendDay, identifyDay, sendDelete, receiveDelete
+			FROM note
+			JOIN member_detail ON senderId=userId
+			WHERE noteNum=#{noteNum}
+	</select>	
+	
+	<!-- 받은쪽지 이전글 -->	
+	<select id="preReadReceive" parameterType="map" resultType="com.ssg.study.note.Note">		
+		SELECT * FROM (
+			SELECT noteNum, content, senderId, nickName senderNickName,
+				sendDay, identifyDay, sendDelete, receiveDelete
+			FROM note
+			JOIN member_detail ON senderId =userId	
+			<where>
+				<if test="keyword!=null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND receiverId = #{userId}
+				AND receiveDelete = 'N'
+				AND (noteNum &gt; #{noteNum})
+			</where>
+			ORDER BY noteNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<!-- 받은 쪽지 다음글 -->
+	<select id="nextReadReceive" parameterType="map" resultType="com.ssg.study.note.Note">
+		SELECT * FROM (
+			SELECT noteNum, content, senderId, nickName senderNickName,
+				sendDay, identifyDay, sendDelete, receiveDelete
+			FROM note
+			JOIN member_detail ON senderId=userId
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND receiverId = #{userId}
+				AND receiveDelete = 'N'
+				AND (noteNum &lt; #{noteNum})
+			</where>
+			ORDER BY noteNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<!--  보낸 쪽지 내용 보기  -->
+	<select id="readSend" parameterType="Integer" resultType="com.ssg.study.note.Note">
+		SELECT noteNum, content, receiverId, nickName receiverNickName,
+			sendDay, identifyDay, sendDelete, receiveDelete
+		FROM note
+		JOIN member_detail ON receiverId=userId
+		WHERE noteNum=#{noteNum}	
+	</select>
+	
+	<!-- 보낸 쪽지 이전글 -->
+	<select id="preReadSend" parameterType="map" resultType="com.ssg.study.note.Note">
+		SELECT * FROM (
+			SELECT noteNum, content, receiverId, nickName receiverNickName,
+				sendDay, identifyDay, sendDelete, receiveDelete
+			FROM note
+			JOIN member_detail ON receiverId=userId
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND senderId = #{userId}
+				AND sendDelete = 'N'
+				AND (noteNum &gt; #{noteNum})
+			</where>
+			ORDER BY noteNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+
+	<!-- 보낸 쪽지 다음글 -->
+	<select id="nextReadSend" parameterType="map" resultType="com.ssg.study.note.Note">
+		SELECT * FROM (
+			SELECT noteNum, content, receiverId, nickName receiverNickName,
+				sendDay, identifyDay, sendDelete, receiveDelete
+			FROM note
+			JOIN member_detail ON receiverId=userId
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND senderId = #{userId}
+				AND sendDelete = 'N'
+				AND (noteNum &lt; #{noteNum})
+			</where>
+			ORDER BY noteNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<!-- 보낸 쪽지함 족지 답변 -->
+	<select id="readReplReceive" parameterType="Integer" resultType="com.ssg.study.note.Note">
+		SELECT noteNum, content, senderId, nickName senderNickName,
+			sendDay, identifyDay, sendDelete, receiveDelete
+		FROM note
+		JOIN member_detail ON senderId=userId
+		WHERE parent=#{noteNum} AND receiveDelete = 'N'
+	</select>
+	
+	
+	<!-- 쪽지를 확인상태로 변경 -->
+	<delete id="updateIdentifyDay" parameterType="Integer">
+		UPDATE note SET identifyDay = SYSDATE
+		WHERE noteNum=#{noteNum} AND identifyDay IS NULL
+	</delete>
+	
+	<!-- 쪽지를 삭제 상태로 변경 -->
+	<delete id="updateDeleteState" parameterType="map">
+		UPDATE note SET ${field1} ='Y'
+		WHERE noteNum IN
+			<foreach item="noteNum" index="index" collection="numList"
+					open="(" separator="," close=")">
+				#{noteNum}
+			</foreach>
+	</delete>
+	
+	<!-- 쪽지 삭제  -->
+	<delete id="deleteNote" parameterType="map">
+		DELETE FROM note
+		WHERE ${field2} = 'Y' AND
+			noteNum IN
+				<foreach item="noteNum" index="index" collection="numList"
+						open="(" separator="," close=")">
+					#{noteNum}	
+				</foreach>
+	
+	</delete>
+	
 	
 	
 </mapper>

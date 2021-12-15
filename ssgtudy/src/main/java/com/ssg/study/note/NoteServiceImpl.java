@@ -67,11 +67,11 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public Note readReceive(int num) {
+	public Note readReceive(int noteNum) {
 		Note dto = null;
 		
 		try {
-			dto = dao.selectOne("note.readReceive", num);
+			dto = dao.selectOne("note.readReceive", noteNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,11 +105,11 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public Note readSend(int num) {
+	public Note readSend(int noteNum) {
 		Note dto = null;
 		
 		try {
-			dto = dao.selectOne("note.readSend", num);
+			dto = dao.selectOne("note.readSend", noteNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,9 +142,9 @@ public class NoteServiceImpl implements NoteService{
 	}
 
 	@Override
-	public void updateIdentifyDay(int num) throws Exception {
+	public void updateIdentifyDay(int noteNum) throws Exception {
 		try {
-			dao.updateData("note.updateIdentifyDay", num);
+			dao.updateData("note.updateIdentifyDay", noteNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

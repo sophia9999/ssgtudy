@@ -11,9 +11,44 @@ public class Note {
 	private String sendDelete;		// 보낸사람 쪽지삭제여
 	private String senderId;		// 보낸유저
 	private String receiverId;		// 받은유저
+	private String senderNickName;
+	private String receiverNickName;
 	
 	private List<String> receivers;
-	
+	private String userId;
+	private String nickName;
+
+	public String getSenderNickName() {
+		return senderNickName;
+	}
+
+	public void setSenderNickName(String senderNickName) {
+		this.senderNickName = senderNickName;
+	}
+
+	public String getReceiverNickName() {
+		return receiverNickName;
+	}
+
+	public void setReceiverNickName(String receiverNickName) {
+		this.receiverNickName = receiverNickName;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 
 	public int getNoteNum() {
 		return noteNum;

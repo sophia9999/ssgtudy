@@ -59,16 +59,15 @@ $(function() {
  			 </li>
  			 	
  			 <li class="nav-item" role="presentation">
- 			 	<button class="nav-link" id="tab-sedn" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="send" aria-selected="true" data-tab="send">보낸 쪽지함</button>
+ 			 	<button class="nav-link" id="tab-send" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="send" aria-selected="true" data-tab="send">보낸 쪽지함</button>
  			 </li>	 	
  	 	</ul>	
- 	 	<div class="card">
- 	 	
- 	 
  	 <div class="tab-content pt-2" id="nav-tabContent">
+ 	 
  	 	<div class="tab-pane fade show active mt-3" id="nav-content" role="tabpanel" aria-labelledby="nav-tab-content">
  	 	
  	 		<table class="table table-borderless mb-0">
+ 	 		
  	 			<tr>
  	 				<td align="left" width="50%">
  	 					<button type="button" class="btn btnDelete p-1" title="삭제"><i class="bi bi-trash"></i></button>
@@ -77,31 +76,35 @@ $(function() {
  	 				<td align="right">
  	 					<button type="button" class="btn btn-light" onclick="javascript:location.href='${pageContext.request.contextPath}/note/noteWrite';">쪽지 쓰기</button>
  	 				</td>
+ 	 				
  	 			</tr>
+ 	 			
  	 		</table>
+ 	 		 	 <div class="card">	
  	 		
  	 		<form name="listForm" method="post">
  	 			<table class="table table-hover board-list">
  	 				<thead class="table-light">
  	 					<tr>
- 	 						<th class="bw-40"><input type="checkbox" name="chAll" id="chkAll" class="form-check-input"></th>
- 	 						<th class="bw-auto">내용</th>
- 	 						<th class="bw-100">${menuItem=="receive"?"보낸사람":"받는사람"}</th>
- 	 						<th class="bw-150">${menuItem=="receive"?"받은날짜":"보낸날짜"}</th>
- 	 						<th class="bw-150">읽은날짜</th>
+ 	 						<th style="width: 10%"><input type="checkbox" name="chAll" id="chkAll" class="form-check-input"></th>
+ 	 						<th style="width: 10%">${menuItem=="receive"?"보낸사람":"받는사람"}</th>
+ 	 						<th style="width: 50%">내용</th>
+ 	 						<th style="width: 15%">${menuItem=="receive"?"받은날짜":"보낸날짜"}</th>
+ 	 						<th style="width: 15%">읽은날짜</th>
  	 					</tr>
- 	 				</thead>	
+ 	 				</thead>
  	 				
  	 				<tbody>
  	 					<c:forEach var="dto" items="${list}">
  	 						<tr>
- 	 							<td><input type="checkbox" name="noteNums" value="${dto.noteNum}" class="form-check-input"></td>
+ 	 							<td><input type="checkbox" name="nums" value="${dto.noteNum}" class="form-check-input"></td>
+ 	 							<td>${menuItem=="receive"?dto.senderId:dto.receiverId}</td>
+ 	 							
  	 							<td class="left ellipsis">
  	 								<span>
- 	 									<a href="${articleUrl}$noteNum=${dto.noteNum}" class="text-reset">${dto.content}</a>
+ 	 									<a href="${articleUrl}&noteNum=${dto.noteNum}" class="text-reset">${dto.content}</a>
  	 								</span>
  	 							</td>
- 	 							<td>${menuItem=="receive"?dto.senderId:dto.receiverId}</td>
  	 							<td>${dto.sendDay}</td>
  	 							<td>${dto.identifyDay}</td>
  	 						</tr>		
@@ -132,11 +135,11 @@ $(function() {
 							<c:choose>
 								<c:when test="${menuItem=='receive'}">
 									<option value="senderId" ${condition=="senderId"?"selected='selected'":""}>보낸 아이디</option>
-									<option value="sendDay" ${condition=="created"?"selected='selected'":""}>받은날짜</option>
+									<option value="sendDay" ${condition=="sendDay"?"selected='selected'":""}>받은날짜</option>
 								</c:when>
 								<c:otherwise>
 									<option value="receiverId" ${condition=="receiverId"?"selected='selected'":"" }>받는 아이디</option>
-									<option value="sendDay" ${condition=="created"?"selected='selected'":"" }>보낸날짜</option>
+									<option value="sendDay" ${condition=="sendDay"?"selected='selected'":"" }>보낸날짜</option>
 								</c:otherwise>	
 							</c:choose> 	 					
  	 					</select>	 				
@@ -153,10 +156,15 @@ $(function() {
  	 			&nbsp;
  	 		</div>
  	 	  </div>
+ 	 	  	</div>
+ 	 	   	 		 	  	 	
+ 	 	  
+ 	 		</div>
+ 	 	 	 				
  	 	
  	 	 </div>
  	 	</div>
  	 
+ 	 	
  	 	</div>
- 	  </div>	
-	</div>
+ 	 	

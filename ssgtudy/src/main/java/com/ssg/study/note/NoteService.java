@@ -14,15 +14,16 @@ public interface NoteService {
 	public int dataCountSend(Map<String, Object> map);
 	public List<Note> listSend(Map<String, Object> map);
 	
-	public Note readReceive(int num);
+	
+	public Note readReceive(int noteNum);
 	public Note preReadReceive(Map<String, Object> map);
 	public Note nextReadReceive(Map<String, Object> map);
 	
-	public Note readSend(int num);
+	public Note readSend(int noteNum);
 	public Note preReadSend(Map<String, Object> map);
 	public Note nextReadSend(Map<String, Object> map);
 	
-	public void updateIdentifyDay(int num) throws Exception;
+	public void updateIdentifyDay(int noteNum) throws Exception;
 	
 	public void deleteNote(Map<String, Object> map) throws Exception;
 	

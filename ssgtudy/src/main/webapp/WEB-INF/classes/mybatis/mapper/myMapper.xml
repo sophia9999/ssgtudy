@@ -8,7 +8,7 @@
 		
 		
 		
-		FROM member m  
+		FROM member m ss 
 	 	JOIN bbs b ON m.userId = b.userId
 	 	JOIN study_board sb ON m.userId = sb.userId
 	 	JOIN qna q ON m.userId = q.userId

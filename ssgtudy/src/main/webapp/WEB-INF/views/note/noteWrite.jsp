@@ -92,7 +92,8 @@ function ajaxFun(url, method, query, dataType, fn) {
 
 $(function(){
 	$(".btnReceiverDialog").click(function(){
-		$("#condition").val("userId");
+		$("#condition").val("nickName");
+		//$("#condition").val("userId");
 		$("#keyword").val("");
 		$(".dialog-receiver-list ul").empty();
 		
@@ -119,13 +120,16 @@ $(function(){
 	});
 	
 	function searchListFriend(data) {
+		
 		var s;
 		for(var i=0; i<data.listFriend.length; i++) {
 			var userId = data.listFriend[i].userId;
+			var nickName = data.listFriend[i].nickName;
 			
-			s = "<li><input type='checkbox' class='form-check-input' data-userId='"+userId+"' title='"+userId+"'> </li>";
+			s = "<li><input type='checkbox' class='form-check-input' data-userId='"+userId+"' title='"+userId+"'> <span>"+nickName+"</span> </li>";
 			$(".dialog-receiver-list ul").append(s);
 		}
+		
 	}
 	
 	// 대화상자-받는 사람 추가 버튼
@@ -143,14 +147,14 @@ $(function(){
 			return false;
 		}
 		
-		var b, userId, userName, s;
+		var b, userId, nickName, s;
 
 		b = false;
 		$(".dialog-receiver-list ul input[type=checkbox]:checked").each(function(){
 			userId = $(this).attr("data-userId");
-			userName = $(this).next("span").text();
+			nickName = $(this).next("span").text();
 			
-			$("#forms-receiver-list input[name=receivers]").each(function(){
+			$("#forms-receiver-list input[nickName=receivers]").each(function(){
 				if($(this).val() == userId) {
 					b = true;
 					return false;
@@ -158,7 +162,7 @@ $(function(){
 			});
 			
 			if(! b) {
-				s = "<i class='bi bi-trash' data-userId='"+userId+"'></i></span>";
+				s = "<span class='receiver-user btn border px-1'>"+nickName+" <i class='bi bi-trash' data-userId='"+userId+"'></i></span>";
 				$(".forms-receiver-name").append(s);
 				
 				s = "<input type='hidden' name='receivers' value='"+userId+"'>";
@@ -207,14 +211,17 @@ $(function(){
 				</li>
 			</ul>
 			
-			<div class="card">
 			
 			<div class="tab-content pt-2" id="nav-tabContent">
-				<div class="tab-pane fade show active mt-3" id="nav-content" role="tabpanel" aria-labelledby="nav-tab-content">
-				
+				<div class="tab-pane show active mt-3" id="nav-content" role="tabpanel" aria-labelledby="nav-tab-content">
+					
 					<form name="noteForm" method="post">
+							<div class="card">
+					
 						<table class="table write-form mt-5">
+						
 							<tr>
+							
 								<td class="table-light col-sm-2" scope="row">받는사람</td>
 								<td>
 									<div class="row">
@@ -235,7 +242,6 @@ $(function(){
 									<textarea name="content" id="content" class="form-control">${dto.content}</textarea>
 								</td>
 							</tr>
-							
 						</table>
 						
 						<table class="table table-borderless">
@@ -248,6 +254,7 @@ $(function(){
 								</td>
 							</tr>
 						</table>
+						</div>
 					</form>
 				
 				</div>
@@ -256,7 +263,7 @@ $(function(){
 		</div>
 		</div>
 	</div>
-</div>
+
 
 <div class="modal fade" id="myDialogModal" tabindex="-1" 
 		data-bs-backdrop="static" data-bs-keyboard="false"
@@ -271,7 +278,9 @@ $(function(){
 				<div class="row">
 					<div class="col-auto p-1">
 						<select name="condition" id="condition" class="form-select">
+							<option value="nickName">닉네임</option>
 							<option value="userId">아이디</option>
+							
 						</select>
 					</div>
 					<div class="col-auto p-1">

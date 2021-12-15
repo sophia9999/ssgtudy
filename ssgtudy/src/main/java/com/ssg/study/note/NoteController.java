@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -117,7 +117,7 @@ public class NoteController {
 	}
 	
 	// 쪽지 보내기
-	@PostMapping("write")
+	@RequestMapping(value = "noteWrite", method = RequestMethod.POST)
 	public String writeSubmit(Note dto, HttpSession session) throws Exception {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
@@ -157,7 +157,7 @@ public class NoteController {
 	}
 	
 	// 받은 쪽지 / 보낸 쪽지 - 글보기
-	@RequestMapping(value = "{menuItem}/article")
+	@RequestMapping(value = "{menuItem}/noteArticle")
 	public String article(@PathVariable String menuItem,
 			@RequestParam int noteNum, @RequestParam String page,
 			@RequestParam(defaultValue = "") String condition,
@@ -170,7 +170,7 @@ public class NoteController {
 		
 		String query = "page=" + page;
 		if(keyword.length() != 0) {
-			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -189,6 +189,7 @@ public class NoteController {
 			
 		} else { // 받은 쪽지 보기
 			// 확인 상태로 변경
+			
 			service.updateIdentifyDay(noteNum);
 			dto = service.readReceive(noteNum);
 			preDto = service.preReadReceive(map);
@@ -196,7 +197,7 @@ public class NoteController {
 		}
 		
 		if (dto == null) {
-			return "redirect:/note/" + menuItem + "noteForm?" + query;
+			return "redirect:/note/" + menuItem + "/noteForm?" + query;
 		}
 		
 		dto.setContent(dto.getContent().replace("\n", "<br>"));
@@ -230,11 +231,11 @@ public class NoteController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(menuItem.equals("receive")) {
-			map.put("fidle1", "receiveDelete");
-			map.put("fidle2", "sendDelete");
+			map.put("field1", "receiveDelete");
+			map.put("field2", "sendDelete");
 		} else {
-			map.put("fidle1", "sendDelete");
-			map.put("fidle1", "receiveDelete");
+			map.put("field1", "sendDelete");
+			map.put("field2", "receiveDelete");
 		}
 		
 		map.put("numList", nums);
