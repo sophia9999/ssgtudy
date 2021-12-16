@@ -29,18 +29,26 @@
 	</insert>
 	
 	<insert id="insertMember_detail" parameterType="com.ssg.study.member.Member">
-		INSERT INTO member_detail(userId, nickName, tel, membership, birth, zip_code, addr1, addr2, schoolCode, codeChange_Cnt, questCount, lottoUse,userName)
-   		 VALUES(#{userId}, #{nickName}, #{tel}, 1, #{birth}, #{zip_code}, #{addr1}, #{addr2}, #{schoolCode}, 0, 0, 0,#{userName})
+		INSERT INTO member_detail(userId, nickName, tel,email, membership, birth, zip_code, addr1, addr2,  codeChange_Cnt, questCount, lottoUse,userName,schoolCode)
+   		 VALUES(#{userId}, #{nickName}, #{tel},#{email}, 1, #{birth}, #{zip_code}, #{addr1}, #{addr2}, 0, 0, 0,#{userName},#{schoolCode, jdbcType=INTEGER})
 	</insert>
 	
 	
 	<select id="readuserId" parameterType="String" resultType="com.ssg.study.member.Member">
-		SELECT m.userId, pwd, stateCode, join_date, edit_date, last_date, failure_cnt 
-		     ,nickName, tel, membership, birth, zip_code, addr1, addr2, schoolCode,
-		     codeChange_Cnt, questCount, lottoUse
+		SELECT m.userId, pwd, stateCode, TO_CHAR(join_date, 'YYYY-MM-DD') join_date, TO_CHAR(edit_date, 'YYYY-MM-DD') edit_date , TO_CHAR(last_date, 'YYYY-MM-DD') last_date, failure_cnt 
+		     ,nickName, tel,email, membership, TO_CHAR(birth, 'YYYY-MM-DD') birth , zip_code, addr1, addr2, schoolCode,
+		     codeChange_Cnt, questCount, lottoUse,userName
 		    FROM member m
 		    JOIN member_detail d ON d.userId = m.userId
 		WHERE m.userId = #{userId}
 	</select>
+	
+	<update id="updatemember" parameterType="com.ssg.study.member.Member">
+		UPDATE member SET pwd=#{pwd} WHERE userId = #{userId}
+	</update>
+	
+	<update id="updatemember_detail" parameterType="com.ssg.study.member.Member">
+		UPDATE member_detail SET nickName=#{nickName},tel=#{tel},email=#{email},zip_code=#{zip_code},schoolCode=#{schoolCode,jdbcType=INTEGER},addr1=#{addr1},addr2=#{addr2},userName=#{userName},codeChange_cnt=#{codeChange_cnt} WHERE userId = #{userId}
+	</update>
 	
 </mapper>

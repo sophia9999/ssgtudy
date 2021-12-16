@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="friends">
+	
+	<select id="friendslist" parameterType="String" resultType="com.ssg.study.friends.Friends">
+			SELECT num,registrant,registered,reg_date,accept,userName,nickName,userId FROM friends f,member_detail m
+		WHERE (registrant = #{userId} AND ACCEPT = 'Y' AND f.registered=m.userId) OR (registered=#{userId} AND ACCEPT = 'Y'AND registrant=m.userId)
+	</select>
+	
+	<select id="registrantlist" parameterType="String" resultType="com.ssg.study.friends.Friends">
+		SELECT num,registrant,registered,reg_date,accept,userId,nickName,userName FROM friends f
+		 JOIN member_detail m ON f.registered=m.userId
+		WHERE registrant = #{userId} AND ACCEPT = 'N'
+	</select>
+	
+	<select id="registeredlist" parameterType="String" resultType="com.ssg.study.friends.Friends">
+		SELECT num,registrant,registered,reg_date,accept,userId,nickName,userName FROM friends f
+		 JOIN member_detail m ON f.registrant=m.userId
+		WHERE registered = #{userId} AND ACCEPT = 'N'
+	</select>
+	
+	<insert id="insertFriend" parameterType="com.ssg.study.friends.Friends">
+		INSERT INTO friends(num, registrant, registered, reg_date, accept) VALUES(friends_seq.NEXTVAL, #{registrant}, #{registered}, SYSDATE, 'N')
+	</insert>
+	
+	<select id="readUserName" parameterType="String" resultType="com.ssg.study.friends.Friends">
+		 SELECT  userId,nickName,userName 
+		 FROM member_detail
+		 WHERE  NOT userId IN (SELECT userId
+				FROM member_detail m,friends f
+				WHERE userName=#{userName} AND (f.registrant=m.userId OR f.registered=m.userId)) 
+		        AND userName=#{userName}
+	</select>
+	
+	<update id="updateregistered"  parameterType="com.ssg.study.friends.Friends">
+		UPDATE friends SET ACCEPT='Y' WHERE registrant = #{registrant} AND registered =#{registered}
+	</update>
+	
+	<delete id="deleteFriends" parameterType="com.ssg.study.friends.Friends">
+		 DELETE FROM friends WHERE (registered = #{registered} AND registrant =#{registrant}) OR ( registrant = #{registered} AND  registered=#{registrant})
+	</delete>
+	
+</mapper>

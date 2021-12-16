@@ -80,11 +80,11 @@
 
     $(document).ready(function () {
         SetGlobals();
-        if('${mode}'==='join'){
+        if('${mode}'==='join'||'${mode}'==='member'){
         	 InitializeConfetti();
                setTimeout(function(){
                	StopConfetti();
-       	  	}, 5000);
+       	  	}, 10000);
         }
         	
      
@@ -262,13 +262,13 @@
         <div class="row h-100">
             <div class="col-lg-9 col-12">
                 <div id="auth-left">       
-                    <h1 class="auth-title">
-                   	 ${mode=="join" ? "🎊회원가입을 축하드립니다 🎊" : "" }                
-                    </h1>
+                    <h2 class="auth-title">
+                   	 ${mode=="join" ? "🎊회원가입을 축하드립니다 🎊" : "🎉회원정보를  <br> 정상적으로 변경했습니다🎉" }                
+                    </h2>
                  	<div class="card">
 	                    <div class="card-header">
 	                         <h4> 
-	                         	${mode=="join" ? "즐거운 이용 되시길바랍니다😊😊" : ""}
+	                         	즐거운 이용 되시길바랍니다😊😊
 	                         </h4>
 	                    </div>
 	                    <div class="card-body">	                                                        

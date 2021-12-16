@@ -69,4 +69,15 @@ public class MemberServiceImpl implements MemberService{
 		return dto;
 	}
 
+	@Override
+	public void updateMember(Member dto) throws Exception {
+		try {
+			dao.insertData("member.updatemember", dto);
+			dao.insertData("member.updatemember_detail", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 }

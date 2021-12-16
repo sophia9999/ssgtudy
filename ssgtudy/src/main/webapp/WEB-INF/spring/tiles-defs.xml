@@ -15,18 +15,21 @@
 	</definition>
 	
    <!-- 2단 관리자 -->
-	<definition name=".adminLayout" template="/WEB-INF/views/admin/layout/layout2.jsp">
-	    <put-attribute name="title" value="spring" />
-	  	<put-attribute name="left" value="/WEB-INF/views/admin/layout/left.jsp" />
+	<!-- <definition name=".adminLayout" template="/WEB-INF/views/layout/layout.jsp">
+	    <put-attribute name="title" value="ssg.admin" />
+	    <put-attribute name="sidebar" value="/WEB-INF/views/layout/sidebar.jsp" />
 		<put-attribute name="body" value="/WEB-INF/views/admin/main/main.jsp" />
-	</definition>
-	<definition name=".admin.*.*.*" extends=".adminLayout">
+	</definition> -->
+	<definition name=".admin.*.*.*" extends=".mainLayout">
+		<put-attribute name="sidebar" value="/WEB-INF/views/admin/layout/sidebar.jsp" />		
 		<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}/{3}.jsp"/>
 	</definition>
-	<definition name=".admin.*.*" extends=".adminLayout">
+	<definition name=".admin.*.*" extends=".mainLayout">
+		<put-attribute name="sidebar" value="/WEB-INF/views/admin/layout/sidebar.jsp" />		
 		<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}.jsp"/>
 	</definition>
-	<definition name=".admin.*" extends=".adminLayout">
+	<definition name=".admin.*" extends=".mainLayout">
+		<put-attribute name="sidebar" value="/WEB-INF/views/admin/layout/sidebar.jsp" />			
     	<put-attribute name="body" value="/WEB-INF/views/admin/{1}.jsp" />
 	</definition>
 	

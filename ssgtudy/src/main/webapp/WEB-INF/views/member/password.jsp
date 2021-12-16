@@ -38,12 +38,12 @@ function sendLogin() {
     }
 
     str = f.userPwd.value;
-    if((!str) && "${mode}"==="login") {
+    if(!str) {
         f.userPwd.focus();
         return;
     }
 
-    f.action = "${pageContext.request.contextPath}/member/${mode}";
+    f.action = "${pageContext.request.contextPath}/member/login";
     f.submit();
 }
 </script>
@@ -55,7 +55,7 @@ function sendLogin() {
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">                
-                    <h1 class="auth-title">${mode=='login'? "login" : "pwdFind"} .</h1>
+                    <h1 class="auth-title">log in.</h1>
                     <form name="loginForm" action="" method="post">
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="text" name="userId" class="form-control form-control-xl" placeholder="아이디">
@@ -63,27 +63,27 @@ function sendLogin() {
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
-                        <c:if test="${mode=='login'}">
-                        	<div class="form-group position-relative has-icon-left mb-4">
+                        <div class="form-group position-relative has-icon-left mb-4">
                             <input type="password" name="userPwd" class="form-control form-control-xl" placeholder="비밀번호">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
-                        </c:if>
-                        
-                      
-                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">${mode=='login'? "로그인" : "비밀번호찾기"}</button>
+                        <div class="form-check form-check-lg d-flex align-items-end">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label text-gray-600" for="flexCheckDefault">
+                               	자동 로그인 유지
+                            </label>
+                        </div>
+                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">로그인</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="text-gray-600">
                         	<a href="${pageContext.request.contextPath}/member/join" class="font-bold">회원가입</a>
                     	</p>
-                    	<c:if test="${mode=='login'}">
-	                        <p>
-	                        	<a class="font-bold" href="${pageContext.request.contextPath}/member/pwdFind">비밀번호 찾기</a>
-	                        </p>
-                        </c:if>
+                        <p>
+                        	<a class="font-bold" href="${pageContext.request.contextPath}/member/pwdFind">비밀번호 찾기</a>
+                        </p>
                     </div>
                 </div>
             </div>

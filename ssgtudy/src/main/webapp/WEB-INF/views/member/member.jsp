@@ -103,8 +103,8 @@ function memberOk() {
         f.addr2.focus();
         return;
     }
-
-   	f.action = "${pageContext.request.contextPath}/member/${mode}";
+	
+	f.action = "${pageContext.request.contextPath}/member/${mode}";
     f.submit();
 }
 
@@ -154,13 +154,13 @@ function idck(){
             <div class="col-lg-7 col-12">
                 <div id="auth-left">       
                     <h1 class="auth-title">
-                    ${mode=="join" ? "Join up" : "member"}
+                    ${mode}
                     </h1>
 
                     <form name="memberForm"  method="post">
                         <div class="form-group position-relative has-icon-left mb-3">               
-                        	<div class="form-group position-relative has-icon-left input-group mb-3">								
-								<input type="text" name="userId" id="userId" class="form-control form-control-lg" placeholder="아이디">
+                        	<div class="form-group position-relative has-icon-left input-group mb-3">                        										
+									<input type="text" name="userId" id="userId" value="${dto.userId}" ${mode=="update" ? "readonly='readonly' ":""}  class="form-control form-control-lg" placeholder="아이디">								
 								<div class="form-control-icon">
 	                                <i class="bi bi-person"></i>
 	                            </div>
@@ -171,19 +171,19 @@ function idck(){
                         
                         </div>
                          <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="password" name="pwd" class="form-control form-control-lg" placeholder="비밀번호">
+                            <input type="password" name="pwd" value="${dto.pwd}" class="form-control form-control-lg" placeholder="비밀번호">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="text" name="userName" class="form-control form-control-lg" placeholder="이름">
+                            <input type="text" name="userName" value="${dto.userName}" class="form-control form-control-lg" placeholder="이름">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                          <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="text" name="nickName" class="form-control form-control-lg" placeholder="닉네임">
+                            <input type="text" name="nickName" value="${dto.nickName}" class="form-control form-control-lg" placeholder="닉네임">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
@@ -191,15 +191,15 @@ function idck(){
                         
                           <div class="form-group position-relative has-icon-left mb-3">
                             <div class="input-group mb-3">
-                            	<select class="form-select form-control form-control-lg" name="tel1">
-	                                 <option value="010" >010</option>
-									<option value="070" >070</option>
-									<option value="011" >011</option>					
+                            	<select class="form-select form-control form-control-lg"  name="tel1">
+	                                 <option value="010"  ${dto.tel1=="010" ?  "selected='selected'" : "" }  >010</option>
+									<option value="070" ${dto.tel1=="070" ?  "selected='selected'" : "" }  >070</option>
+									<option value="011" ${dto.tel1=="011" ?  "selected='selected'" : "" }  >011</option>					
 	                            </select>  
 	                            <span class="input-group-text" >-</span>	                            
-	  							<input type="number" name="tel2" class="form-control form-control-lg" maxlength="4">                          
+	  							<input type="text" value="${dto.tel2}" name="tel2" class="form-control form-control-lg" maxlength="4">                          
 	                            <span class="input-group-text" >-</span>
-								<input type="number" name="tel3" class="form-control form-control-lg" maxlength="4">                          								                                                        
+								<input type="text" name="tel3" value="${dto.tel3}" class="form-control form-control-lg" maxlength="4">                          								                                                        
                              </div>
                             
                             <div class="form-control-icon">
@@ -208,7 +208,7 @@ function idck(){
                         </div>
                         
                          <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="date" name="birth" class="form-control form-control-lg" placeholder="birth">
+                            <input type="date" name="birth" value="${dto.birth}" class="form-control form-control-lg" placeholder="birth">
                             <div class="form-control-icon">
                                 <i class="bi bi-Calendar-date"></i>
                             </div>
@@ -216,13 +216,13 @@ function idck(){
                         
                          <div class="form-group position-relative has-icon-left mb-3">
                             <div class="input-group mb-3">
-	  							<input type="text" name="email1" class="form-control form-control-lg" placeholder="email">                          
+	  							<input type="text" name="email1" value="${dto.email1}" class="form-control form-control-lg" placeholder="email">                          
 	                            <span class="input-group-text" id="basic-addon1">@</span>
-								<select class="form-select form-control form-control-lg" id="email2">
-	                                 <option value="naver.com" >네이버 메일</option>
-								<option value="gmail.com" >지 메일</option>
-								<option value="hanmail.net" >한 메일</option>
-								<option value="hotmail.com" >핫 메일</option>
+								<select class="form-select form-control form-control-lg" name="email2" id="email2">
+	                                <option value="naver.com" ${dto.email2=="naver.com" ?  "selected='selected'" : "" } >네이버 메일</option>
+									<option value="gmail.com"  ${dto.email2=="gmail.com" ?  "selected='selected'" : "" } >지 메일</option>
+									<option value="hanmail.net"  ${dto.email2=="hanmail.net" ?  "selected='selected'" : "" } >한 메일</option>
+									<option value="hotmail.com"  ${dto.email2=="hotmail.com" ?  "selected='selected'" : "" } >핫 메일</option>
 	                            </select>                                                          
                              </div>
                             
@@ -234,7 +234,7 @@ function idck(){
                         
                         
                         <div class="form-group position-relative has-icon-left input-group mb-3">								
-								<input type="text" name="zip_code" id="zip_code" class="form-control form-control-lg" readonly="readonly" placeholder="우편번호 검색">
+								<input type="text" name="zip_code" id="zip_code" value="${dto.zip_code}" class="form-control form-control-lg" readonly="readonly" placeholder="우편번호 검색">
 								<div class="form-control-icon">
                                 	<i class="bi bi-search"></i>
                             	</div>
@@ -242,25 +242,25 @@ function idck(){
                         </div>
                         
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="text" name="addr1" id="addr1" class="form-control form-control-lg" placeholder="주소">
+                            <input type="text" name="addr1" id="addr1" value="${dto.addr1}" class="form-control form-control-lg" placeholder="주소">
                             <div class="form-control-icon">
                                 <i class="bi bi-House-door"></i>
                             </div>
                         </div>
                         
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="text" name="addr2" id="addr2" class="form-control form-control-lg" placeholder="상세주소">
+                            <input type="text" name="addr2" id="addr2" value="${dto.addr2}" class="form-control form-control-lg" placeholder="상세주소">
                             <div class="form-control-icon">
                                 <i class="bi bi-House-door"></i>
                             </div>
                         </div>
                         
                         <div class="form-group position-relative has-icon-left mb-3">
-                        	<div class="input-group mb-3">
-                               
-                            	<select class="form-select form-control form-control-lg" id="schoolCode" >
+                        	<div class="input-group mb-3">                         
+                            	<select class="form-select form-control form-control-lg" name="schoolstr" id="schoolstr" >
+                                       <option ${dto.schoolCode==null ?  "selected='selected'" : "" } value="" >없음</option>                                    
                                        <c:forEach var="vo" items="${list}">
-                                       	<option value="${vo.schoolCode}">${vo.schoolName}</option>
+                                       	<option value="${vo.schoolCode}" ${dto.schoolCode==vo.schoolCode ?  "selected='selected'" : "" } >${vo.schoolName}</option>
                                        </c:forEach>
                                  </select>
                                  <div class="form-control-icon">
@@ -269,7 +269,7 @@ function idck(){
                             </div>                                
                         </div>
                       
-                        <button type="button" class="btn btn-primary btn-block btn-lg shadow-lg mt-5" onclick="memberOk()">Sign Up</button>
+                        <button type="button" class="btn btn-primary btn-block btn-lg shadow-lg mt-5" onclick="memberOk()">${mode} Up</button>
                   		<input type="hidden" name="userIdValid" id="userIdValid" value="false">
 		
                     </form>

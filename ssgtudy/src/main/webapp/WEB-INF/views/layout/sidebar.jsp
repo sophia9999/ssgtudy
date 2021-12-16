@@ -54,6 +54,8 @@
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/">메인페이지</a>
                                 </li>
+                              
+	                       
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/bbs/list">최신글</a>
                                 </li>  
@@ -71,7 +73,15 @@
                                 </li>                         
                             </ul>
                         </li>
-
+                        <c:if test="${sessionScope.member.membership >= 99}">
+                        	<li class="sidebar-item  has-sub">
+								 <a href="${pageContext.request.contextPath}/admin" class="sidebar-link">
+	                                <i class="bi bi-gear-wide-connected"></i>
+	                                <span>관리자페이지</span>
+	                            </a>
+							</li>
+                        </c:if>
+						
                         <li class="sidebar-item  has-sub">
                             <a href="#" class="sidebar-link">
 							<i class="icofont-user"></i>                                <span>내 페이지</span>

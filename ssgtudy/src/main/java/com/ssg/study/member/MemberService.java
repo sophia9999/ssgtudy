@@ -9,4 +9,5 @@ public interface MemberService {
 	public List<Map<String, String>> readSchool();
 	public void updateLastLogin(String userId) throws Exception;
 	public void insertMember(Member dto) throws Exception;
+	public void updateMember(Member dto) throws Exception;
 }

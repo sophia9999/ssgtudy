@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,7 +29,8 @@ public class MemberController {
 
 	
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String loginForm() {
+	public String loginForm(Model model) {
+		model.addAttribute("mode", "login");
 		return "/member/login";
 	}
 	
@@ -103,16 +106,33 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value = "join", method = RequestMethod.POST)
-	public String joinForm(Member dto,
+	public String joinsubmit(Member dto,
 							RedirectAttributes reattr) {
 		
 		try {
 			dto.setEmail(dto.getEmail1()+"@"+dto.getEmail2());
 			dto.setTel(dto.getTel1()+"-"+dto.getTel2()+"-"+dto.getTel3());
 			
+					
+			if(!dto.getSchoolstr().equals(""))dto.setSchoolCode(Integer.parseInt(dto.getSchoolstr()));
+			else dto.setSchoolCode(null);
+			System.out.println(dto.getSchoolCode());
+		
 			service.insertMember(dto);
-		} catch (Exception e) {			
+		} catch (DuplicateKeyException e) {
+			e.printStackTrace();
+			// 기본키 중복에 의한 제약 조건 위반
+			return "/member/join";
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			// 데이터형식 오류, 참조키, NOT NULL 등의 제약조건 위반
+			return "/member/join";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "/member/join";
 		}
+		
+		
 		reattr.addFlashAttribute("mode", "join");
 		return "redirect:/member/complete";
 	}
@@ -129,6 +149,7 @@ public class MemberController {
 				idck = "Nonull";
 			}
 		} catch (Exception e) {
+			
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("idck", idck);
@@ -136,10 +157,107 @@ public class MemberController {
 	}
 	
 	@RequestMapping(value = "complete")
-		public String completeForm(@ModelAttribute("mode") String mode) {
+		public String completeForm(@ModelAttribute("mode") String mode
+									,HttpSession session) {
 			if(mode == null)return "redirect:/";
+
+			session.removeAttribute("preLoginURI");
 			
 			return "/member/complete";
 		}
+	
+	@RequestMapping(value = "member", method = RequestMethod.GET)
+	public String memberForm(Model model
+							,HttpSession session) {
+		
+		
+		List<Map<String, String>> list = null;
+		Member dto = null;
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		try {
+			list = service.readSchool();
+			dto = service.readMember(userId);
+			
+			if(dto.getTel()!=null) {
+				String[] tel = dto.getTel().split("-");
+				dto.setTel1(tel[0]);
+				dto.setTel2(tel[1]);
+				dto.setTel3(tel[2]);
+			}
+			if(dto.getEmail()!=null) {
+				String[] email = dto.getEmail().split("@");
+				System.out.println(email[0]);
+				dto.setEmail1(email[0]);
+				dto.setEmail2(email[1]);
+			}
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			
+		}
+		model.addAttribute("mode", "member");
+		model.addAttribute("dto", dto);
+		model.addAttribute("list", list);
+		return "/member/member";
+	}
+	
+	@RequestMapping(value = "member", method = RequestMethod.POST)
+	public String updatesubmit(Member dto,
+							RedirectAttributes reattr) {
+		
+		try {
+			dto.setEmail(dto.getEmail1()+"@"+dto.getEmail2());
+			dto.setTel(dto.getTel1()+"-"+dto.getTel2()+"-"+dto.getTel3());
+			
+			Member predto = service.readMember(dto.getUserId());
+					
+			if(!dto.getSchoolstr().equals(""))dto.setSchoolCode(Integer.parseInt(dto.getSchoolstr()));
+			else dto.setSchoolCode(null);
+			System.out.println(dto.getCodeChange_cnt());
+			if(dto.getSchoolCode() != predto.getSchoolCode()) dto.setCodeChange_cnt(dto.getCodeChange_cnt()+1);
+			
+			service.updateMember(dto);
+		} catch (DuplicateKeyException e) {
+			e.printStackTrace();
+			// 기본키 중복에 의한 제약 조건 위반
+			return "/member/join";
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			// 데이터형식 오류, 참조키, NOT NULL 등의 제약조건 위반
+			return "/member/join";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "/member/join";
+		}
+		
+		
+		reattr.addFlashAttribute("mode", "member");
+		return "redirect:/member/complete";
+	}
+	
+	
+	@RequestMapping(value = "pwdFind", method = RequestMethod.GET)
+	public String pwdFindForm(Model model) {
+		model.addAttribute("mode", "pwdFind");
+		return "/member/login";
+	}
+	
+	@RequestMapping(value = "pwdFind", method = RequestMethod.POST)
+	public String pwdFindSubmit(String userId
+								,Model model) {
+		Member dto = null;
+		try {
+			dto = service.readMember(userId);
+			dto.setPwd("");
+		} catch (Exception e) {
+		}
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "pwdFind");
+		return "/member/member";
+	}
 	
 }
