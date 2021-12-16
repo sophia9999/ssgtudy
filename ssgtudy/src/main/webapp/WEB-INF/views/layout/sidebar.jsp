@@ -74,8 +74,8 @@
                             </ul>
                         </li>
                         <c:if test="${sessionScope.member.membership >= 99}">
-                        	<li class="sidebar-item  has-sub">
-								 <a href="${pageContext.request.contextPath}/admin" class="sidebar-link">
+                        	<li class="sidebar-item ">
+								 <a href="${pageContext.request.contextPath}/admin/main" class="sidebar-link">
 	                                <i class="bi bi-gear-wide-connected"></i>
 	                                <span>관리자페이지</span>
 	                            </a>
