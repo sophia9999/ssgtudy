@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -318,19 +319,6 @@ public class StudyController {
 		return model;
 	}
 	
-	// AJAX - HTML
-	@RequestMapping(value = "home/${dto.studyNum}/list")
-	public String list(Model model,
-			@PathVariable int studyNum,
-			HttpSession session,
-			@RequestParam(value = "pageNo") int page,
-			@RequestParam(value = "categoryNum") int categoryNum,
-			@RequestParam(value = "condition", defaultValue = "all")String condition,
-			@RequestParam(value = "keyword", defaultValue = "") String keyword ) throws Exception {
-		
-		return "study/homelist";
-	}
-	
 	@RequestMapping(value = "ad") // 스터디 홍보 게시판 
 	public String adList(@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "all") String condition,
@@ -617,7 +605,8 @@ public class StudyController {
 	public String studyListByCategory(
 			@RequestParam(value = "page", defaultValue = "1")int current_page,
 			@RequestParam(value = "categoryNum") int categoryNum,
-			Model model
+			Model model,
+			@PathVariable int studyNum
 			) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String status = "true";
@@ -626,7 +615,13 @@ public class StudyController {
 		map.put("categoryNum", categoryNum);
 		
 		int rows = 10;
+		
+		
 		int dataCount = service.studyListByCategoryDataCount(map);
+		
+		System.out.println(current_page);
+		System.out.println(dataCount);
+		
 		int total_page = myUtil.pageCount(rows, dataCount);
 		if (current_page > total_page) {
 			current_page = total_page;
@@ -634,6 +629,9 @@ public class StudyController {
 		
 		int start = (current_page - 1) * rows + 1;
 		int end = current_page * rows;
+		
+		System.out.println(start);
+		System.out.println(end);
 		map.put("start", start);
 		map.put("end", end);
 		try {
@@ -642,6 +640,7 @@ public class StudyController {
 			status = "false";
 		}
 		
+		model.addAttribute("studyNum", studyNum);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("page", current_page);
@@ -649,5 +648,17 @@ public class StudyController {
 		model.addAttribute("listByCategory", listByCategory);
 		return "study/homelist";
 	}
-	
+	// 홈에서 카테고리 별 리스트
+	// AJAX - HTML
+	@RequestMapping(value = "home/{studyNum}/list/write")
+	public String studyWrite(Model model,
+			@PathVariable int studyNum) throws Exception {
+		
+		List<Map<String, Object>> categoryList = service.readCategory(studyNum);
+		
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("mode", "write");
+		
+		return "study/homewrite";
+	}
 }

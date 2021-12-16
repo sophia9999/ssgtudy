@@ -34,7 +34,7 @@ function sendOk() {
 	}
 
 	if(! f.studyNum.value.trim() ) {
-		alert("홍보할 스터디를 선택하세요. ");
+		alert("카테고리를 선택하세요. ");
 		f.studyNum.focus();
 		return;
 	}
@@ -52,113 +52,60 @@ function sendOk() {
     }
 	f.content.value = str;
 
-	f.action="${pageContext.request.contextPath}/study/ad/${mode}";
-	f.submit();
+	// f.action="${pageContext.request.contextPath}/study/home/${studyNum}/${mode}";
+	// f.submit();
 }
 </script>
 
 
 <script type="text/javascript">
-function login() {
-	location.href="${pageContext.request.contextPath}/member/login";
-}
-
-function ajaxFun(url, method, query, dataType, fn) {
-	$.ajax({
-		type:method,
-		url:url,
-		data:query,
-		dataType:dataType,
-		success:function(data) {
-			fn(data);
-		},
-		beforeSend:function(jqXHR) {
-			jqXHR.setRequestHeader("AJAX", true);
-		},
-		error:function(jqXHR) {
-			if(jqXHR.status === 403) {
-				login();
-				return false;
-			} else if(jqXHR.status === 400) {
-				alert("요청 처리가 실패했습니다.");
-				return false;
-			}
-	    	
-			console.log(jqXHR.responseText);
-		}
-	});
-}
 
 </script>
-<div class="page-title">
+<form class="form form-horizontal" name="boardForm" method="post">
+	<div class="form-body pt-5">
 		<div class="row">
-			<div class="col-12 col-md-6 order-md-1 order-last">
-				<h3>스터디 홍보 게시판</h3>
-				<p class="text-subtitle text-muted">스터디 홍보하고 함께할 스터디 구성원을 모아봐요:)</p>
+			<div class="col-md-2">
+				<label>제목</label>
+			</div>
+			<div class="col-md-10 form-group">
+				<input type="text" name="subject" class="form-control" value="${dto.subject}">
+			</div>
+			<div class="col-md-2">
+				<label>카테고리</label>
+			</div>
+			<div class="col-md-10 form-group">
+				<select name="studyNum" class="form-select">
+					<option value="">:: 스터디 선택 ::</option>
+					<c:forEach var="vo" items="${categoryList}">
+						<option value="${vo.CATEGORYNUM}" ${dto.CATEGORYNUM==vo.CATEGORYNUM?"selected='selected'":""}>${vo.CATEGORYNAME}</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<label>작성자</label>
+			</div>
+			<div class="col-md-10 form-group">
+				<label>${sessionScope.member.nickName}</label>
+			</div>
+			<div class="col-md-2" style="height:300px" >
+				<label>내용</label>
+			</div>
+			<div class="col-md-10 form-group">
+				<div class="editor">${dto.content}</div>
+				<input type="hidden" name="content">
+			</div>
+			<div class="col-sm-12 d-flex justify-content-end">
+				<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
+				<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시작성</button>
+				<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정하기':'등록하기'}<i class="bi bi-check2"></i></button>
+				<c:if test="${mode=='update'}">
+					<input type="hidden" name="boardNum" value="${dto.boardNum}">
+					<input type="hidden" name="page" value="${page}">
+				</c:if>
 			</div>
 		</div>
 	</div>
-<div class="col-md-12 col-12">
-
-	<div class="card">
-		
-		<div class="card-content p-3">
-
-				<form class="form form-horizontal" name="boardForm" method="post">
-					<div class="form-body">
-						<div class="row">
-							<div class="col-md-2">
-								<label>제목</label>
-							</div>
-							<div class="col-md-10 form-group">
-								<input type="text" name="subject" class="form-control" value="${dto.subject}">
-							</div>
-							<div class="col-md-2">
-								<label>홍보할 스터디</label>
-							</div>
-							<div class="col-md-10 form-group">
-								<select name="studyNum" class="form-select">
-									<option value="">:: 스터디 선택 ::</option>
-									<c:forEach var="vo" items="${myStudyList}">
-										<c:choose>
-											<c:when test="${vo.studyStatus == 0 }">
-												<option value="${vo.studyNum}" ${dto.studyNum==vo.studyNum?"selected='selected'":""}>${vo.studyName}</option>
-											</c:when>
-											<c:otherwise>
-												<option value="${vo.studyNum}" disabled="disabled">${vo.studyName} - 비활성화 상태입니다.</option>
-											</c:otherwise>
-										</c:choose>
-									</c:forEach>
-								</select>
-							</div>
-							<div class="col-md-2">
-								<label>작성자</label>
-							</div>
-							<div class="col-md-10 form-group">
-								<label>${sessionScope.member.nickName}</label>
-							</div>
-							<div class="col-md-2" style="height:300px" >
-								<label>내용</label>
-							</div>
-							<div class="col-md-10 form-group">
-								<div class="editor">${dto.content}</div>
-								<input type="hidden" name="content">
-							</div>
-							<div class="col-sm-12 d-flex justify-content-end">
-								<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
-								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시작성</button>
-								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정하기':'등록하기'}<i class="bi bi-check2"></i></button>
-								<c:if test="${mode=='update'}">
-									<input type="hidden" name="boardNum" value="${dto.boardNum}">
-									<input type="hidden" name="page" value="${page}">
-								</c:if>
-							</div>
-						</div>
-					</div>
-				</form>
-		</div>
-	</div>
-</div>		
+</form>
 
 <script type="text/javascript">
 	ClassicEditor

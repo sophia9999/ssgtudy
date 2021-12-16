@@ -130,6 +130,7 @@ function listPage(page) {
 	var $tab = $("a[role='tab'].active");
 	var categoryNum = $tab.attr("data-categoryNum");
 	console.log(categoryNum);
+	
 	if(! categoryNum) {
 		var url = '${pageContext.request.contextPath}/study/home/${dto.studyNum}';
 		location.href = url;
@@ -137,7 +138,9 @@ function listPage(page) {
 		var url = "${pageContext.request.contextPath}/study/home/${dto.studyNum}/list";
 	}
 	
-	var query = "pageNo="+page+"&categoryNum=" + categoryNum;
+	var query = "page="+page+"&categoryNum=" + categoryNum;
+	console.log(query);
+	
 	var search=$('form[name=searchForm]').serialize();
 	query=query+"&"+search;
 	
