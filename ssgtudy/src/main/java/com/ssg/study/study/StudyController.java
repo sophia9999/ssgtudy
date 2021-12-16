@@ -90,7 +90,10 @@ public class StudyController {
 	}
 	
 	@RequestMapping(value = "enroll", method = RequestMethod.GET)
-	public String writeForm() throws Exception {
+	public String writeForm(Model model) throws Exception {
+		
+		model.addAttribute("mode", "enroll");
+		
 		return ".study.write";
 	}
 	
@@ -120,6 +123,82 @@ public class StudyController {
 		return "redirect:/study/list";
 	}
 	
+	@RequestMapping(value = "update", method = RequestMethod.GET)
+	public String updateForm(Model model,
+			@RequestParam int studyNum,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> map = new HashMap<>();
+		
+		if( info == null) {
+			return "redirect:/member/login";
+		}
+		String userId = info.getUserId();		
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		
+		Study dto = null;
+		try {
+			dto = service.readStudy(map);
+			if(dto == null) {
+				return "redirect:/study/list";
+			}
+		} catch (Exception e) {
+			return "redirect:/study/list";
+		}
+		model.addAttribute("mode", "update");
+		model.addAttribute("dto", dto);
+		
+		return ".study.write";
+	}
+	
+	@RequestMapping(value = "update", method = RequestMethod.POST)
+	public String updateSubmit(Study dto,
+			HttpSession session) throws Exception {
+
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		if( info == null) {
+			return "redirect:/member/login";
+		}
+		
+		if( dto.getRole() != 20) {
+			return "redirect:/study/list";
+		} 
+		
+		service.updateStudy(dto);
+		
+		return "redirect:/study/list";
+	}
+	
+	@RequestMapping(value = "inactive")
+	public String inactiveStudy(Model model,
+			@RequestParam int studyNum,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> map = new HashMap<>();
+		
+		if( info == null) {
+			return "redirect:/member/login";
+		}
+		String userId = info.getUserId();		
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		
+		Study dto = service.readStudy(map);
+		if(dto == null) {
+			return "redirect:/study/list";
+		}
+		
+		if(dto.getRole() != 20 ) {
+			return "redirect:/study/list";
+		}
+		
+		service.inactiveStudy(studyNum);
+		
+		return "redirect:/study/list";
+	}
+	
 	@RequestMapping(value = "home/{studyNum}")
 	public String studyHome(
 			@PathVariable int studyNum,
@@ -140,6 +219,8 @@ public class StudyController {
 		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
 		listMap = service.readCategory(studyNum);
 		
+		List<Study> memberList = service.memberList(studyNum);
+		model.addAttribute("memberList", memberList);
 		model.addAttribute("listCategory", listMap);
 		model.addAttribute("dto", dto);
 		
@@ -453,9 +534,17 @@ public class StudyController {
 	@RequestMapping(value = "member")
 	@ResponseBody
 	public Map<String, Object> studyMemberAdd(@RequestParam int studyNum,
-			@RequestParam String userId) throws Exception {
+			@RequestParam String userId,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		Map<String, Object> map = new HashMap<>();
-		String state = "true";
+		String status = "false";
+		
+		if(info == null) {
+			status = "403"; // 로그인 안되어있으면 로그인하러 가도록
+			map.put("status", status);
+			return map;
+		}
 		
 		Study dto = new Study();
 		dto.setUserId(userId);
@@ -470,23 +559,95 @@ public class StudyController {
 			if( applyCount < 1) { // 0번일때만 신청가능하게
 				service.insertStudyMember(dto);				
 			} else {
-				state = "false";
+				status = "400"; // 스터디 참여신청 실패
 			}
 			
 		} catch (Exception e) {
-			state = "false";
+			status = "400";
 		}
-		map.put("state", state);
+		map.put("status", status);
 		return map;
 	}
 	
+	// 일반 포워딩(jsp 반환)
 	@RequestMapping(value = "rank")
-	public String studyRankList(@RequestParam(value = "page", defaultValue = "1") int current_page,
-			@RequestParam(defaultValue = "all") String condition,
-			@RequestParam(defaultValue = "") String keyword,
-			HttpServletRequest req,
-			Model model) throws Exception {
+	public String studyRankGet() throws Exception {
 
 		return ".study.rank";
 	}
+	
+	
+	// AJAX - MAP을  JSON으로 변환해서 반환
+	@RequestMapping(value = "rank/list", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> studyRankList(@RequestParam(value = "pageNo", defaultValue = "1") 
+		int current_page) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String status = "true";
+		List<Study> rankList = null;
+		int rows = 5;
+		int dataCount = service.rankDataCount(map);
+		int total_page = myUtil.pageCount(rows, dataCount);
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		try {
+			rankList = service.rankList(map);
+		} catch (Exception e) {
+			status = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("dataCount", dataCount);
+		model.put("total_page", total_page);
+		model.put("pageNo", current_page);
+		model.put("status", status);
+		model.put("rankList", rankList);
+		return model;
+	}
+	
+	// 홈에서 카테고리 별 리스트
+	// AJAX - HTML
+	@RequestMapping(value = "home/{studyNum}/list")
+	public String studyListByCategory(
+			@RequestParam(value = "page", defaultValue = "1")int current_page,
+			@RequestParam(value = "categoryNum") int categoryNum,
+			Model model
+			) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String status = "true";
+		List<Study> listByCategory = null;
+		
+		map.put("categoryNum", categoryNum);
+		
+		int rows = 10;
+		int dataCount = service.studyListByCategoryDataCount(map);
+		int total_page = myUtil.pageCount(rows, dataCount);
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		try {
+			listByCategory = service.studyListByCategory(map);
+		} catch (Exception e) {
+			status = "false";
+		}
+		
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("page", current_page);
+		model.addAttribute("status", status);
+		model.addAttribute("listByCategory", listByCategory);
+		return "study/homelist";
+	}
+	
 }

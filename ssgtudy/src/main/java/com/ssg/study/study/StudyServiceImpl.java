@@ -249,4 +249,74 @@ public class StudyServiceImpl implements StudyService {
 		return result;
 	}
 
+	@Override
+	public List<Study> rankList(Map<String, Object> map) throws Exception {
+		List<Study> rankList = null;
+		try {
+			rankList = dao.selectList("study.rankList", map);
+		} catch (Exception e) {
+		}
+		return rankList;
+	}
+
+	@Override
+	public int rankDataCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.rankDataCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> memberList(int studyNum) throws Exception {
+		List<Study> memberList = null;
+		try {
+			memberList = dao.selectList("study.memberList", studyNum);
+		} catch (Exception e) {
+		}
+		return memberList;
+	}
+
+	@Override
+	public int updateStudy(Study dto) throws Exception {
+		int result = 0;
+		try {
+			dao.updateData("study.updateStudy", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int inactiveStudy(int studyNum) throws Exception {
+		int result = 0;
+		try {
+			dao.updateData("study.inactiveStudy", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> studyListByCategory(Map<String, Object> map) throws Exception {
+		List<Study> listByCategory = null;
+		try {
+			listByCategory = dao.selectList("study.studyListByCategory", map);
+		} catch (Exception e) {
+		}
+		return listByCategory;
+	}
+
+	@Override
+	public int studyListByCategoryDataCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			dao.selectOne("study.studyListByCategoryDataCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 }

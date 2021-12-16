@@ -19,6 +19,36 @@ public class Study {
 	private String nickName;
 	private int hitCount; // study_ad, study_ad_file 테이블
 	
+	private int questCount; // times 테이블. 목표달성횟수에 따른 RANK 반영
+	private int usedCount;  // times 테이블. 응모에 사용한 횟수
+	private int rank;
+	
+	private int categoryNum; // 홈에서 카테고리별 리스트 불러올 때
+	
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public int getQuestCount() {
+		return questCount;
+	}
+
+	public void setQuestCount(int questCount) {
+		this.questCount = questCount;
+	}
+
+	public int getUsedCount() {
+		return usedCount;
+	}
+
+	public void setUsedCount(int usedCount) {
+		this.usedCount = usedCount;
+	}
+
 	public String getNickName() {
 		return nickName;
 	}
@@ -129,5 +159,13 @@ public class Study {
 
 	public void setStudyStatus(int studyStatus) {
 		this.studyStatus = studyStatus;
+	}
+
+	public int getCategoryNum() {
+		return categoryNum;
+	}
+
+	public void setCategoryNum(int categoryNum) {
+		this.categoryNum = categoryNum;
 	}
 }

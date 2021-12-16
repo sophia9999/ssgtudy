@@ -20,11 +20,18 @@ function sendOk() {
 		return;
 	}
 	
+	<c:if test="${mode == 'enroll'}">
 	if(! confirm("스터디그룹 [" + studyName +"]을/를 만드시겠습니까 ? ")) {
 		return;
 	}
+	</c:if>
+	<c:if test="${mode == 'update'}">
+	if(! confirm("스터디그룹 [" + "${dto.studyName}" +"]을/를 수정하시겠습니까 ? ")) {
+		return;
+	}
+	</c:if>
 	
-	f.action = "${pageContext.request.contextPath}/study/enroll";
+	f.action = "${pageContext.request.contextPath}/study/${mode=='update'?'update':'enroll'}";
 	f.submit();
 	
 }
@@ -38,8 +45,8 @@ function sendOk() {
         <div class="page-title">
 			<div class="row">
 				<div class="col-12 col-md-6 order-md-1 order-last">
-					<h3>스터디 그룹 등록하기</h3>
-					<p class="text-subtitle text-muted">새로운 스터디 모임을 등록해봐요.</p>
+					<h3><span><i class="icofont-group-students"></i></span>${mode=='update'?'스터디 이름 및 목표 수정':'스터디 그룹 등록하기'}</h3>
+					<p class="text-subtitle text-muted">${mode=='update'?'수정':'새로운 스터디 모임을 등록할 수 있습니다.'}</p>
 				</div>
 			</div>
 		</div>
@@ -54,17 +61,21 @@ function sendOk() {
                                     </div>
                                     <div class="col-md-8 form-group">
                                         <input type="text" id="studyName" class="form-control"
-                                            name="studyName" placeholder="스터디이름">
+                                            name="studyName" placeholder="스터디이름" value="${dto.studyName}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>스터디그룹 목표</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <textarea class="form-control" id="studyGoal" name="studyGoal" style="height: 200px; resize: none;" placeholder="스터디그룹를 통해 이루고 싶은 목표를 입력해주세요:)"></textarea>
+                                        <textarea class="form-control" id="studyGoal" name="studyGoal" style="height: 200px; resize: none;" placeholder="스터디그룹를 통해 이루고 싶은 목표를 입력해주세요:)">${dto.studyGoal}</textarea>
+                                        <c:if test="${mode == 'update'}">
+                                        	<input type="hidden" value="${dto.studyNum}" name="studyNum">
+                                        	<input type="hidden" value="${dto.role}" name="role">
+                                        </c:if>
                                     </div>
                                     <div class="col-sm-12 d-flex justify-content-end">
                                         <button type="button"
-                                            class="btn btn-primary me-1 mb-1" onclick="sendOk()">만들기</button>
+                                            class="btn btn-primary me-1 mb-1" onclick="sendOk()">${mode=='update'?'수정하기':'만들기'}</button>
                                         <button type="reset"
                                             class="btn btn-light-secondary me-1 mb-1">다시입력</button>
                                     </div>

@@ -3,9 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<div class="card-header">
-    <h5 class="card-title text-truncate">${dto.studyGoal}</h5>
-</div>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item" role="presentation">
 	    <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
@@ -66,7 +63,35 @@
 
 
 <script type="text/javascript">
+$(function() {
+	$("a[role='tab']").on("click", function(e){
+    	listPage(1);
+	});
+});
 
+function listPage(page) {
+	var $tab = $("a[role='tab'].active");
+	var categoryNum = $tab.attr("data-categoryNum");
+	console.log(categoryNum);
+	if(! categoryNum) {
+		var url = '${pageContext.request.contextPath}/study/home/${dto.studyNum}';
+		location.href = url;
+	} else {
+		var url = "${pageContext.request.contextPath}/study/home/${dto.studyNum}/list";
+	}
+	
+	var query = "pageNo="+page+"&categoryNum=" + categoryNum;
+	var search=$('form[name=searchForm]').serialize();
+	query=query+"&"+search;
+	
+	var selector = "#myTabContent";
+	
+	var fn = function(data){
+		$(selector).html(data);
+	};
+	ajaxFun(url, "get", query, "html", fn);
+	
+}
 function categoryList() { // 새로고침
 	var url = "${pageContext.request.contextPath}/study/addCategory";
 	var selector = ".card-main";

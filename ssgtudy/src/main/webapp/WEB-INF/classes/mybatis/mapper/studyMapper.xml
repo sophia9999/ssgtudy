@@ -28,6 +28,15 @@
 		INSERT INTO study(studyNum, studyGoal, studyName, studyStatus)
 		VALUES (#{studyNum}, #{studyGoal}, #{studyName}, 0)
 	</insert>
+	<update id="updateStudy" parameterType="com.ssg.study.study.Study" >
+		UPDATE study SET studyGoal=#{studyGoal}, studyName=#{studyName}
+		WHERE studyNum = #{studyNum}		
+	</update>
+	<update id="inactiveStudy" parameterType="com.ssg.study.study.Study" >
+		UPDATE study SET studyStatus = 1
+		WHERE studyNum = #{studyNum}		
+	</update>
+	
 	<insert id="insertTimes" parameterType="com.ssg.study.study.Study">
 		INSERT INTO times(studyNum, questCount, usedCount) 
 		VALUES(#{studyNum}, 0, 0);
@@ -156,9 +165,76 @@
 		</if>
 	</delete>
 	
+	<!-- 스터디참여 신청은 한번만 가능 -->
 	<select id="studyMemberOnce" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM study_member
 		WHERE userId = #{userId} AND studyNum = #{studyNum}
+	</select>
+	
+	<select id="rankList" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT s.studyNum, studyName, studyGoal, questCount, usedCount, RANK() OVER (ORDER BY questCount desc) rank
+		        FROM times t
+		        JOIN study s ON s.studyNum= t.studyNum
+		        <where>
+				    <if test="keyword != null and keyword != '' ">
+				    INSTR(studyName, #{studyName}) &gt;= 1
+				    </if>
+				    AND studyStatus = 0
+			    </where>
+		    ) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	<select id="rankDataCount" resultType="Integer" parameterType="map">
+		SELECT NVL(COUNT(*), 0)
+		FROM times t
+		JOIN study s ON s.studyNum= t.studyNum
+		<where>
+		    <if test="keyword != null and keyword != '' ">
+		     INSTR(studyName, #{keyword}) &gt;= 1
+		    </if>
+		    AND studyStatus = 0
+	    </where>
+	</select>
+	
+	<select id="memberList" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT md.userId, nickName, role, s.studyNum 
+			FROM study s
+			JOIN study_member sb ON s.studyNum = sb.studyNum
+			JOIN member_detail md ON sb.userId = md.userId
+		WHERE s.studyNum = #{studyNum}
+	</select>
+	
+	<select id="studyListByCategoryDataCount" resultType="Integer" parameterType="map">
+		SELECT NVL(COUNT(*), 0)
+		FROM study_board_1 sb
+		JOIN study_category sc ON sc.categoryNum = sb.categoryNum
+		<where>
+			<if test="keyword != null and keyword != '' ">
+				<include refid="where-list"/>
+			</if>
+				AND sb.categoryNum = #{categoryNum}
+		</where>
+	</select>
+	
+	<select id="studyListByCategory" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (        
+	    	SELECT ROWNUM rnum, tb.* FROM (	
+				SELECT s.studyNum, boardNum, subject, sb.categoryNum, hitCount, studyStatus, nickname, content, sb.userId, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date
+					FROM study_board_1 sb
+                    JOIN study_category sc ON sc.categoryNum = sb.categoryNum
+			        JOIN study s ON sc.studynum = s.studyNum
+					JOIN member_detail md ON sb.userId = md.userId
+			    	<where>
+						<if test="keyword != null and keyword != '' ">
+								<include refid="where-list"/>
+						</if>
+						AND sb.categoryNum = #{categoryNum}
+					</where>
+		    		ORDER BY boardNum DESC
+		    ) tb WHERE ROWNUM &lt;= #{end}    
+		) where rnum &gt;= #{start}
 	</select>
 	
 </mapper>
