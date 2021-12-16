@@ -46,7 +46,7 @@ function searchList(){
                                     <tbody>
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
-	                                        	<td class="text-bold-500">${dto.listNum}</td>
+	                                        	<td class="text-bold-500">${dto.listNum}</td> 
 	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</a></td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>
