@@ -1,11 +1,14 @@
 package com.ssg.study.bbs;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ssg.study.common.FileManager;
 import com.ssg.study.common.dao.CommonDAO;
 
 @Service("bbs.boardService")
@@ -13,14 +16,39 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private CommonDAO dao;
 	
+	@Autowired
+	private FileManager fileManager;
+	
 	@Override
-	public void insertBoard(Board dto) throws Exception {
+	public void insertBoard(Board dto, String pathname) throws Exception {
 		try {
+			int seq = dao.selectOne("bbs.seq");
+			dto.setBbsNum(seq);
+			
 			dao.insertData("bbs.insertBoard", dto);
+			
+			//파일업로드
+			if(! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFilename = fileManager.doFileUpload(mf, pathname);
+					if(saveFilename == null) {
+						continue;
+					}
+					
+					String originalFilename = mf.getOriginalFilename();
+					long fileSize = mf.getSize();
+					
+					dto.setOriginalFilename(originalFilename);
+					dto.setSaveFilename(saveFilename);
+					dto.setFileSize(fileSize);
+					
+					insertFile(dto);
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		}
-		
 	}
 
 	@Override
@@ -85,19 +113,100 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void updateBoard(Board dto) throws Exception {
+	public void updateBoard(Board dto, String pathname) throws Exception {
 		try {
 			dao.updateData("bbs.updateBoard", dto);
+			
+			if( ! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFilename = fileManager.doFileUpload(mf, pathname);
+					if(saveFilename == null) {
+						continue;
+					}
+					
+					String originalFilename = mf.getOriginalFilename();
+					long fileSize = mf.getSize();
+					
+					dto.setOriginalFilename(originalFilename);
+					dto.setSaveFilename(saveFilename);
+					dto.setFileSize(fileSize);
+					
+					insertFile(dto);
+				
+				}
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 		
 	}
 
 	@Override
-	public void deleteBaord(int bbsNum) throws Exception {
+	public void deleteBoard(int bbsNum, String pathname, String userId) throws Exception {
 		try {
+			//파일지우기
+			List<Board> listFile = listFile(bbsNum);
+			if(listFile != null) {
+				for( Board dto : listFile) {
+					fileManager.doFileDelete(dto.getSaveFilename(), pathname);
+				}
+			}
+			
+			//파일테이블 내용 지우기
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("field", "bbsNum");
+			map.put("bbsNum", bbsNum);
+			deleteFile(map);
+			
 			dao.deleteData("bbs.deleteBoard", bbsNum);
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void insertFile(Board dto) throws Exception {
+		try {
+			dao.insertData("bbs.insertFile", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public List<Board> listFile(int bbsNum) {
+		List<Board> listFile = null;
+		
+		try {
+			listFile = dao.selectList("bbs.listFile", bbsNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listFile;
+	}
+
+	@Override
+	public Board readFile(int bbs_fileNum) {
+		Board dto = null;
+		
+		try {
+			dto = dao.selectOne("bbs.readFile", bbs_fileNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public void deleteFile(Map<String, Object> map) throws Exception {
+		try {
+			dao.deleteData("bbs.deleteFile", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 }

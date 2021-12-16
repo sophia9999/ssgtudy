@@ -1,5 +1,7 @@
 package com.ssg.study.bbs;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class Board {
@@ -14,14 +16,16 @@ public class Board {
 	private String nickName;
 	
 	private int bbs_fileNum;
-	private int fileSize;
+	private long fileSize;
 	private String saveFilename;
 	private String originalFilename;
-	private MultipartFile selectFile;
-	
+	private List<MultipartFile> selectFile;
+	private long gap;
 	
 	private String reason;
 	private int replyCount;
+	private int boardLikeCount;
+	
 	public int getListNum() {
 		return listNum;
 	}
@@ -76,10 +80,10 @@ public class Board {
 	public void setBbs_fileNum(int bbs_fileNum) {
 		this.bbs_fileNum = bbs_fileNum;
 	}
-	public int getFileSize() {
+	public long getFileSize() {
 		return fileSize;
 	}
-	public void setFileSize(int fileSize) {
+	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
 	public String getSaveFilename() {
@@ -94,11 +98,17 @@ public class Board {
 	public void setOriginalFilename(String originalFilename) {
 		this.originalFilename = originalFilename;
 	}
-	public MultipartFile getSelectFile() {
+	public List<MultipartFile> getSelectFile() {
 		return selectFile;
 	}
-	public void setSelectFile(MultipartFile selectFile) {
+	public void setSelectFile(List<MultipartFile> selectFile) {
 		this.selectFile = selectFile;
+	}
+	public long getGap() {
+		return gap;
+	}
+	public void setGap(long gap) {
+		this.gap = gap;
 	}
 	public String getReason() {
 		return reason;
@@ -111,6 +121,12 @@ public class Board {
 	}
 	public void setReplyCount(int replyCount) {
 		this.replyCount = replyCount;
+	}
+	public int getBoardLikeCount() {
+		return boardLikeCount;
+	}
+	public void setBoardLikeCount(int boardLikeCount) {
+		this.boardLikeCount = boardLikeCount;
 	}
 	
 	

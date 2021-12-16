@@ -2,10 +2,14 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bbs">
+	<select id="seq" resultType="Integer">
+		SELECT bbs_seq.NEXTVAL FROM dual
+	</select>
 	<insert id="insertBoard" parameterType="com.ssg.study.bbs.Board">
 		INSERT INTO bbs(bbsNum, subject, content, hitCount, reg_date, userId)
-			VALUES (bbs_seq.NEXTVAL, #{subject}, #{content}, 0, SYSDATE, #{userId})
+			VALUES (#{bbsNum}, #{subject}, #{content}, 0, SYSDATE, #{userId})
 	</insert>
+	
 	<sql id="where-list">
 		<choose>
 			<when test="condition=='all'">
@@ -19,8 +23,8 @@
 			</when>
 			<when test="condition=='reg_date'">
 				(
-					TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword} OR
-						TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword}
+					TO_CHAR(b.reg_date, 'YYYY-MM-DD') = #{keyword} OR
+						TO_CHAR(b.reg_date, 'YYYYMMDD') = #{keyword}
 				)
 			</when>
 			<otherwise>
@@ -31,7 +35,8 @@
 	
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
-		FROM bbs
+		FROM bbs b
+		JOIN member_detail m ON b.userId = m.userId
 		<where>
 			<if test="keyword!=null and keyword!=''">
 				<include refid="where-list"/>
@@ -42,11 +47,10 @@
 	<select id="listBoard" parameterType="map" resultType="com.ssg.study.bbs.Board">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, th.* FROM (
-				SELECT bbsNum, subject, content, hitCount, 
-					TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, nickName
+				SELECT b.bbsNum, nickName, subject, content, hitCount, 
+					TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date
 				FROM bbs b
-				JOIN member m ON b.userId = m.userId
-				JOIN member_detail d ON m.userId = d.userId
+				JOIN member_detail m ON b.userId = m.userId
 				<where>
 					<if test="keyword!=null and keyword!=''">
 						<include refid="where-list"/>
@@ -57,7 +61,79 @@
 		) WHERE rnum &gt;= #{start}
 	</select>
 	
+	<select id="readBoard" parameterType="Integer"
+		resultType="com.ssg.study.bbs.Board">
+		SELECT b.bbsNum, b.userId, subject, nickName, content, hitCount, 
+			TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date
+		FROM bbs b
+		JOIN member_detail m ON b.userId = m.userId
+		WHERE bbsNum = #{bbsNum}
+	</select>
+	
 	<update id="updateHitCount" parameterType="Integer">
 		UPDATE bbs SET hitCount=hitCount+1 WHERE bbsNum=#{bbsNum}
 	</update>
+	
+	<select id="preReadBoard" parameterType="map"
+		resultType="com.ssg.study.bbs.Board">
+		SELECT * FROM (
+			SELECT bbsNum, subject
+			FROM bbs b
+			JOIN member_detail m ON b.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!=''">
+					<include refid="where-list"/>
+				</if>
+				AND (bbsNum &gt; #{bbsNum} )
+			</where>
+			ORDER BY bbsNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<select id="nextReadBoard" parameterType="map"
+		resultType="com.ssg.study.bbs.Board">
+		SELECT * FROM (
+			SELECT bbsNum, subject
+			FROM bbs b
+			JOIN member_detail m ON b.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!=''">
+					<include refid="where-list"/>
+				</if>
+				AND (bbsNum &lt; #{bbsNum} )
+			</where>
+			ORDER BY bbsNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<update id="updateBoard" parameterType="com.ssg.study.bbs.Board">
+		UPDATE bbs SET subject=#{subject}, content=#{content}
+		WHERE bbsNum = #{bbsNum}
+	</update>
+	<delete id="deleteBoard" parameterType="Integer">
+		DELETE FROM bbs WHERE bbsNum=#{bbsNum}
+	</delete>
+	
+	
+	<!-- 파일 -->
+	<insert id="insertFile" parameterType="com.ssg.study.bbs.Board">
+		INSERT INTO bbs_file ( bbs_fileNum, originalFilename, saveFilename, bbsNum, fileSize )
+		VALUES (bbs_file_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{bbsNum}, #{fileSize})
+	</insert>
+	
+	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.bbs.Board">
+		SELECT bbs_fileNum, originalFilename, saveFilename, bbsNum, fileSize 
+		FROM bbs_file
+		WHERE bbsNum=#{bbsNum}
+	</select>
+	
+	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.bbs.Board">
+		SELECT bbs_fileNum, originalFilename, saveFilename, bbsNum, fileSize 
+		FROM bbs_file
+		WHERE bbs_fileNum=#{bbs_fileNum}
+	</select>
+	
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM bbs_file WHERE ${field}=#{bbsNum}
+	</delete>
 </mapper>

@@ -9,6 +9,13 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script type="text/javascript">
+function searchList(){
+	var f = document.searchForm;
+	f.submit();
+}
+
+</script>
 </head>
 <body>
 	<div class="page-title">
@@ -40,7 +47,7 @@
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.bbsNum}</td>
-	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</td>
+	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</a></td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
@@ -48,23 +55,38 @@
                                     	</c:forEach>	
                                     </tbody>
                                 </table>
+                                    <div class="page-box">
+            							${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+          							</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <form class="form form-horizontal">
+            
+            
+            <form class="form form-horizontal" name="searchForm"
+            	action="${pageContext.request.contextPath}/bbs/list" method="post">
 				<div class="form-body">
-					<div class="row"> 
-						<div class="col-md-4 form-group">                                                           
-						</div>                                      
-						<div class="col-md-3 form-group">
-							<input type="text" id="first-name" class="form-control" name="fname" placeholder="검색">                                          
+				    <div class="row" >
+				    	<div class="col-md-3 justify-content-center">                                         
 						</div>
-						<div class="col-md-1 form-group">                                                     
-							<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
+						<fieldset class="col-md-2 justify-content-center">
+	                        <select class="form-select" id="basicSelect" name="condition">
+		                        <option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
+								<option value="nickName" ${condition=="nickName"?"selected='selected'":""}>작성자</option>
+								<option value="reg_date" ${condition=="reg_date"?"selected='selected'":""}>등록일</option>
+								<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
+								<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
+	                        </select>
+                        </fieldset>                           
+						<div class="col-md-3 justify-content-center">
+							<input type="text" id="first-name" class="form-control" name="keyword" value="${keyword}">                                          
+						</div>
+						<div class="col-md-2 form-group">                                                     
+							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="searchList()">검색</button>
 						</div>				                                                   
-						<div class="col-md-4 d-flex justify-content-end">
+						<div class="col-md-2 justify-content-end">
 							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/write';">등록</button>
 							<button type="reset" class="btn btn-outline-primary me-1 mb-1">취소</button>
 						</div>
