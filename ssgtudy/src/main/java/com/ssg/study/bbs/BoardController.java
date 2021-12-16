@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +70,22 @@ public class BoardController {
 		map.put("end", end);
 		
 		List<Board> list = service.listBoard(map);
-		int listNum, n = 0;
+		
+		//리스트의 번호
+		Date endDate = new Date();
+		long gap;
+		int listNum, n=0;
 		for(Board dto : list) {
 			listNum = dataCount - (start + n -1);
 			dto.setListNum(listNum);
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
+			Date beginDate = formatter.parse(dto.getReg_date());
+			
+			gap = (endDate.getTime() - beginDate.getTime()) / (60*60*1000);
+			dto.setGap(gap);
+			
+			dto.setReg_date(dto.getReg_date().substring(0,10));
 			n++;
 		}
 		
