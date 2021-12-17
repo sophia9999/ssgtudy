@@ -121,7 +121,9 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="write", method = RequestMethod.GET)
-	public String writeForm(Model model) throws Exception {
+	public String writeForm(Model model, HttpSession session ) throws Exception {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		model.addAttribute("mode", "write");
 		return ".bbs.write";

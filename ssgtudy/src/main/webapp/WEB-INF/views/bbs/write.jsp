@@ -72,7 +72,7 @@ function sendOk() {
 							</div>
 							<div class="col-md-10 form-group">
 								<input type="text" id="nickName" class="form-control" name="nickName" readonly="readonly"
-									maxlength="10" value="${dto.nickName}">
+									maxlength="10" value="${sessionScope.member.nickName}">
 							</div>
 							<div class="col-md-2 content">
 								<label style="margin: auto">내용</label>
