@@ -52,7 +52,7 @@ public class MemberController {
 		} catch (Exception e) {
 		}
 		
-
+		
 		// 세션에 로그인 정보 저장
 		SessionInfo info = new SessionInfo();
 		

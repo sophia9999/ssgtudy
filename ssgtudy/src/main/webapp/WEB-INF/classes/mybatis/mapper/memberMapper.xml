@@ -8,7 +8,7 @@
 	</resultMap>
 
 	<select id="loginMember" parameterType="String" resultType="com.ssg.study.member.Member">
-		SELECT membership, m.userId, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
+		SELECT membership, m.userId,schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
 		FROM member m
 		JOIN member_detail md ON m.userId = md.userId
 		WHERE m.userId = #{userId} AND stateCode = 0

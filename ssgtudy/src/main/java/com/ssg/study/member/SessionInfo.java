@@ -6,7 +6,7 @@ public class SessionInfo {
 	private String userName;
 	private String nickName;
 	private int membership;
-	private int schoolCode;
+	private Integer schoolCode;
 	
 	
 	
@@ -43,11 +43,13 @@ public class SessionInfo {
 		this.membership = membership;
 	}
 
-	public int getSchoolCode() {
+	public Integer getSchoolCode() {
 		return schoolCode;
 	}
 
-	public void setSchoolCode(int schoolCode) {
+	public void setSchoolCode(Integer schoolCode) {
 		this.schoolCode = schoolCode;
 	}
+
+	
 }
