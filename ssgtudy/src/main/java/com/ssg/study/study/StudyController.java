@@ -731,7 +731,7 @@ public class StudyController {
 		
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("mode", "write");
-		
+		model.addAttribute("studyNum", studyNum);
 		return "study/homewrite";
 	}
 }

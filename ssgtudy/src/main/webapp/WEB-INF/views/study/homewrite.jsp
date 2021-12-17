@@ -75,7 +75,7 @@ function sendOk() {
 			</div>
 			<div class="col-md-10 form-group">
 				<select name="studyNum" class="form-select">
-					<option value="">:: 스터디 선택 ::</option>
+					<option value="">:: 카테고리 선택 ::</option>
 					<c:forEach var="vo" items="${categoryList}">
 						<option value="${vo.CATEGORYNUM}" ${dto.CATEGORYNUM==vo.CATEGORYNUM?"selected='selected'":""}>${vo.CATEGORYNAME}</option>
 					</c:forEach>
@@ -95,7 +95,7 @@ function sendOk() {
 				<input type="hidden" name="content">
 			</div>
 			<div class="col-sm-12 d-flex justify-content-end">
-				<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
+				<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/home/${studyNum}';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 				<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시작성</button>
 				<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정하기':'등록하기'}<i class="bi bi-check2"></i></button>
 				<c:if test="${mode=='update'}">

@@ -7,7 +7,7 @@
 	<div class="page-title">
 	    <div class="row">
 	        <div class="col-12 col-md-6 order-md-1 order-last">
-	            <h3>나의 스터디 리스트</h3>
+	            <h3><i class="icofont-listine-dots"></i> 나의 스터디 리스트</h3>
 	        </div>
 	    </div>
 	</div>
@@ -54,7 +54,7 @@
 	                					<td class="text-center"><a href="#" onclick="alert('스터디관리자의 허락 후 활동이 가능합니다.')" class="btn icon btn-warning"><i data-feather="times"></i></a></td>
 	                				</c:when>
 	                				<c:otherwise>
-		                				<td class="text-center"><a href="#" class="btn icon btn-success"><i data-feather="check"></i></a></td>
+		                				<td class="text-center"><a href="#" onclick="alert('활성화되어있는 스터디입니다.')" class="btn icon btn-success"><i data-feather="check"></i></a></td>
 	                				</c:otherwise>
 	                			</c:choose>
 	                		</tr>

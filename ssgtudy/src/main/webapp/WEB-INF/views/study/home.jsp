@@ -30,9 +30,13 @@
 					<c:choose>
 		         		<c:when test="${dto.role > 10 }">
 			           		<div class="buttons text-center p-2">
+			           		<hr>
+			           			<h6><i class="bi bi-gear-wide-connected"></i> 관리자 메뉴</h6>
+			           			<button type="button" class="btn btn-danger btnAddCategory">목표달성</button>
 			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 추가하기</button>
-			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button>  	
+			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button><br>  	
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
+			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
 			           		</div> 
 			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
@@ -57,7 +61,7 @@
 		    		</h5>
 		    	</div>
 		    		<table class="table table-borderless">
-		    			<tr>
+		    			<tr class="text-center">
 		    				<th>구성원</th>
 		    				<th>역할</th>
 		    			</tr>
@@ -81,12 +85,6 @@
 			    			</tr>
 			    		</c:forEach>
 		    		</table>
-			    
-		    	<c:if test="${dto.role > 1 }">
-	           		<div class="buttons text-center p-2">
-		         		<a href="#" class="btn btn-primary btnManageMember">구성원관리</a>     	
-	           		</div> 
-	           	</c:if>
 		    </div>
 		</div>
 	</div>
