@@ -191,7 +191,8 @@ $("body").on("click",".update",function(){
 	                                        <h6 class="text-muted mb-0">${vo.userId}</h6>
 	                                    </div>
 	                                   <div class="buttons px-4">
-	                                    	<button class='btn btn-sm btn-outline-primary delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>
+	                                    	<a class='btn btn-sm btn-outline-primary' href="${pageContext.request.contextPath}/note/noteWrite?userId=hong&nickName=홍관리자" >쪽지쓰기 </a>
+	                                       	<button class='btn btn-sm btn-outline-primary delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>	                             			
 	                                    </div>
                                 	</div>
                                 </c:forEach>
