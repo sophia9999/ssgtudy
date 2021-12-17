@@ -37,7 +37,7 @@
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button><br>  	
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
 			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
-			           		</div> 
+			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
 		           			<div class="text-center p-2">
