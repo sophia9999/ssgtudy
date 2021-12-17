@@ -198,7 +198,7 @@ function printRank(data) {
 									<div class="col-auto">
 									<div style="width:120px;" class="text-end">
 										<select name="condition" class="form-select">
-											<option value="studyName" ${condition=="studyName"?"selected='selected'":""}>스터디명</option>
+											<option value="studyName" ${condition=="studyName"?"selected='selected'":""}>스터디이름</option>
 										</select>
 									</div>
 									</div>                                                      
