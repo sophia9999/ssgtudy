@@ -51,7 +51,11 @@ function sendOk() {
         return;
     }
 	f.content.value = str;
-
+	
+	<c:if test="${studyDto.role < 1}">
+		location.href = "history.back()";
+		return false;
+	</c:if>
 	// f.action="${pageContext.request.contextPath}/study/home/${studyNum}/${mode}";
 	// f.submit();
 }

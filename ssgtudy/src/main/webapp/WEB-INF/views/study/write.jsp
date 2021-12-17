@@ -45,7 +45,7 @@ function sendOk() {
         <div class="page-title">
 			<div class="row">
 				<div class="col-12 col-md-6 order-md-1 order-last">
-					<h3><span><i class="icofont-group-students"></i></span>${mode=='update'?'스터디 이름 및 목표 수정':'스터디 그룹 등록하기'}</h3>
+					<h3><span class="align-middle"><i class="bi bi-stack"></i></span> ${mode=='update'?'스터디 이름 및 목표 수정':'스터디 그룹 등록하기'}</h3>
 					<p class="text-subtitle text-muted">${mode=='update'?'수정':'새로운 스터디 모임을 등록할 수 있습니다.'}</p>
 				</div>
 			</div>

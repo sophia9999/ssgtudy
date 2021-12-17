@@ -143,7 +143,7 @@ function visitHome(studyNum) {
 	                                    		<th class="col-2">순위</th>
 	                                    		<th class="col-auto">스터디이름</th>
 	                                    		<th class="col-2">달성횟수</th>
-	                                    		<th class="col-3">스터디홈</th>
+	                                    		<th class="col-3">스터디</th>
 	                                    	</tr>
                                     	</thead>
                                     	<tbody class="rank-list-body">
@@ -162,7 +162,7 @@ function visitHome(studyNum) {
                                     		</c:if>
 										</tbody>
                                     </table>
-										<div class="page-box">
+										<div class="page-box text-center">
 											${dataCount == 0 ? "등록된 스터디가 없습니다." : paging}
 										</div>
                                 </div>

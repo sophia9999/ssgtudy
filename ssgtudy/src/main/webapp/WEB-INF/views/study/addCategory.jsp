@@ -132,6 +132,10 @@ function updateCtgr(categoryNum) {
 }
 
 function deleteCtgr(categoryNum) {
+	if(! confirm("카테고리를 삭제하면 해당 카테고리의 게시글들은 사라집니다. 삭제하시겠습니까 ? ")) {
+		return false;
+	}
+	
 	var query = "categoryNum=" + categoryNum;
 	var url = "${pageContext.request.contextPath}/study/deleteCategory";
 	var fn = function() {

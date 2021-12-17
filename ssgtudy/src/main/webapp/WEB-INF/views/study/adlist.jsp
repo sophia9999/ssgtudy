@@ -52,7 +52,7 @@ function search() {
                                    </tbody>
                                </table>
                                
-                               <div class="page-box">
+                               <div class="page-box text-center">
 								${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 							</div>
                                

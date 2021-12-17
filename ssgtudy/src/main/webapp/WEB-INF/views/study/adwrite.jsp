@@ -93,7 +93,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 <div class="page-title">
 		<div class="row">
 			<div class="col-12 col-md-6 order-md-1 order-last">
-				<h3>스터디 홍보 게시판</h3>
+				<h3><span><i class="icofont-bullhorn"></i></span> 스터디 홍보 게시판</h3>
 				<p class="text-subtitle text-muted">스터디 홍보하고 함께할 스터디 구성원을 모아봐요:)</p>
 			</div>
 		</div>
@@ -121,11 +121,11 @@ function ajaxFun(url, method, query, dataType, fn) {
 									<option value="">:: 스터디 선택 ::</option>
 									<c:forEach var="vo" items="${myStudyList}">
 										<c:choose>
-											<c:when test="${vo.studyStatus == 0 }">
+											<c:when test="${vo.studyStatus == 0 && vo.role > 0}">
 												<option value="${vo.studyNum}" ${dto.studyNum==vo.studyNum?"selected='selected'":""}>${vo.studyName}</option>
 											</c:when>
 											<c:otherwise>
-												<option value="${vo.studyNum}" disabled="disabled">${vo.studyName} - 비활성화 상태입니다.</option>
+												<option value="${vo.studyNum}" disabled="disabled">${vo.studyName} - 참여대기중이거나 비활성화된 스터디입니다.</option>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>

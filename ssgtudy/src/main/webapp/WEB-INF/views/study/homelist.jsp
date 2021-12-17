@@ -29,7 +29,7 @@
         </tbody>
     </table>
     
-    <div class="page-box">
+    <div class="page-box text-center">
 		${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 	</div>
     
@@ -46,8 +46,10 @@
 			<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
 		</div>				                                                   
 		<div class="col-md-4 text-center justify-content-end">
-			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="writeArticle()">등록</button>
-			</div>
+			<c:if test="${studyDto.role > 0}">
+				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="writeArticle()">등록</button>
+			</c:if>
+		</div>
 		</div>
 	</div>
 </form>

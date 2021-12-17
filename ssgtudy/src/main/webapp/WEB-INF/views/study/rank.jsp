@@ -225,7 +225,7 @@ function printRank(data) {
 	                                    		<th class="col-2">순위</th>
 	                                    		<th class="col-auto">스터디이름</th>
 	                                    		<th class="col-2">달성횟수</th>
-	                                    		<th class="col-3">스터디홈</th>
+	                                    		<th class="col-3">스터디</th>
 	                                    	</tr>
                                     	</thead>
                                     	<tbody class="rank-list-body">
@@ -245,7 +245,7 @@ function printRank(data) {
 										</tbody>
                                     </table>
                                     <c:if test="${not empty postRankList}">
-										<div class="page-box">
+										<div class="page-box text-center">
 											${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 										</div>
                                 	</c:if>

@@ -4,13 +4,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 	<div class="col-12 col-md-6 order-md-1 order-last">
-	    <h3><i class="icofont-university"></i>[${dto.studyName}]의 스터디 공간</h3>
+	    <h3><i class="icofont-group-students"></i> ${dto.studyName}의 스터디 공간</h3>
 	</div>
 <section class="row">
 	<div class="row"> 
 		<div class="col-md-10">
 			<div class="card p-2 card-main">
-				<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<ul class="nav nav-tabs p-2" id="myTab" role="tablist">
 			       <li class="nav-item" role="presentation">
 			           <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
 			       </li>
@@ -31,22 +31,27 @@
 		         		<c:when test="${dto.role > 10 }">
 			           		<div class="buttons text-center p-2">
 			           		<hr>
-			           			<h6><i class="bi bi-gear-wide-connected"></i> 관리자 메뉴</h6>
+			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddCategory">목표달성</button>
-			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 추가하기</button>
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button><br>  	
-			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
+			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 관리</button>
 			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
+			         		<hr>
+			         			<h6><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> DANGEROUS ZONE</h6>
+			         			<p class="m-3 fw-bold">스터디 비활성화 후 활성화를 위해서는 관리자에게 쪽지로 요청해야합니다. 활성화를 위해서는 최소 몇 일이 걸릴 수도 있습니다. 신중하게 선택해주세요.</p>
+			         			<button type="button" class="btn btn-dark btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
 		           			<div class="text-center p-2">
+		           				<hr>
 			           			<h4>${dto.studyName}</h4>
 			           		</div>
 			           	</c:when>
 						<c:otherwise>
 			           		<div class="text-center p-2">
-			           			<h4>일반멤버가 아니므로 기능이 제한됩니다.</h4>
+			        	   		<hr>	
+			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           		</div>
 			           	</c:otherwise>
 		           	</c:choose>
@@ -57,7 +62,7 @@
 		    <div class="card friend">
 		    	<div class="card-header">
 		    		<h5 class="card-title text-center">
-		    			<i class="icofont-users-social"></i> 스터디 구성원
+		    			<span class="align-middle"><i class="bi bi-person-lines-fill"></i></span> 스터디 구성원
 		    		</h5>
 		    	</div>
 		    		<table class="table table-borderless">
@@ -66,7 +71,7 @@
 		    				<th>역할</th>
 		    			</tr>
 		    			<c:forEach items="${memberList}" var="dto">
-			    			<tr>
+			    			<tr class="text-center">
 			    				<td>${dto.nickName}</td>
 			    			<c:choose>
 			    				<c:when test="${dto.role > 10}">

@@ -7,7 +7,7 @@
 	<div class="page-title">
 	    <div class="row">
 	        <div class="col-12 col-md-6 order-md-1 order-last">
-	            <h3><i class="icofont-listine-dots"></i> 나의 스터디 리스트</h3>
+	            <h3><span class="align-middle"><i class="bi bi-stack"></i></span> 나의 스터디 리스트</h3>
 	        </div>
 	    </div>
 	</div>
@@ -62,8 +62,8 @@
 	                </tbody>
 	            </table>
 	        </div>
-	        <div class="page-box">
-				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+	        <div class="page-box text-center">
+				${dataCount == 0 ? "등록된 스터디가 없습니다." : paging}
 			</div>
 	    </div>
 	</section>

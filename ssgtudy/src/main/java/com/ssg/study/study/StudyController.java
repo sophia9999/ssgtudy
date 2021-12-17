@@ -679,18 +679,27 @@ public class StudyController {
 			@RequestParam(value = "page", defaultValue = "1")int current_page,
 			@RequestParam(value = "categoryNum") int categoryNum,
 			Model model,
-			@PathVariable int studyNum
-			) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+			@PathVariable int studyNum,
+			HttpSession session ) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>(); // 카테고리별 리스트 나오게끔
+		Map<String, Object> map2 = new HashMap<String, Object>(); // 멤버가 아니면 리스트보지못하고 글도 못쓰게끔
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Study dto = null;
+		
+		String userId = info.getUserId();		
+		map2.put("userId", userId);
+		map2.put("studyNum", studyNum);
+		
 		String status = "true";
 		List<Study> listByCategory = null;
 		
-		map.put("categoryNum", categoryNum);
+		map1.put("categoryNum", categoryNum);
 		
 		int rows = 10;
 		
 		
-		int dataCount = service.studyListByCategoryDataCount(map);
+		int dataCount = service.studyListByCategoryDataCount(map1);
 		
 		System.out.println(current_page);
 		System.out.println(dataCount);
@@ -705,10 +714,11 @@ public class StudyController {
 		
 		System.out.println(start);
 		System.out.println(end);
-		map.put("start", start);
-		map.put("end", end);
+		map1.put("start", start);
+		map1.put("end", end);
 		try {
-			listByCategory = service.studyListByCategory(map);
+			listByCategory = service.studyListByCategory(map1);
+			dto = service.readStudy(map2);
 		} catch (Exception e) {
 			status = "false";
 		}
@@ -719,19 +729,39 @@ public class StudyController {
 		model.addAttribute("page", current_page);
 		model.addAttribute("status", status);
 		model.addAttribute("listByCategory", listByCategory);
+		model.addAttribute("studyDto", dto);
 		return "study/homelist";
 	}
 	// 홈에서 카테고리 별 리스트
 	// AJAX - HTML
 	@RequestMapping(value = "home/{studyNum}/list/write")
 	public String studyWrite(Model model,
-			@PathVariable int studyNum) throws Exception {
+			@PathVariable int studyNum,
+			HttpSession session) throws Exception {
+		String status = "true";
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");	
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		List<Map<String, Object>> categoryList = service.readCategory(studyNum);
+		
+		String userId = info.getUserId();		
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		
+		Study dto = null;
+		try {
+			dto = service.readStudy(map);
+		} catch (Exception e) {
+			status = "false";
+		}
 		
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("mode", "write");
 		model.addAttribute("studyNum", studyNum);
+		model.addAttribute("studyDto", dto);
+		model.addAttribute("status", status);
+		
 		return "study/homewrite";
 	}
 }
