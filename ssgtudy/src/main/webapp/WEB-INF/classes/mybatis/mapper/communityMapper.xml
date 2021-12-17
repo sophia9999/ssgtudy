@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="community">
+	<select id="seq" resultType="Integer">
+		SELECT community_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertBoard" parameterType="com.ssg.study.community.Community">
+		INSERT INTO community(boardNum, userId, subject, content, hitCount, reg_date, schoolCode)
+			VALUES(#{boardNum}, #{userId}, #{subject}, #{content}, 0, SYSDATE, #{schoolCode})
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="condition == 'all'">
+			( INSTR(subject, #{keyword})) &gt; 0
+				OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+			</when>
+			<when test="condition == 'reg_date'">
+			( TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword}
+				OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword} )
+			</when>
+			<when test="condition == 'content'">
+				DBMS_LOB.INSTR(content, #{keyword}) &gt; 0
+			</when>
+			<otherwise>
+				INSTR(${condition}, #{keyword}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community c
+		JOIN member m ON c.userId = m.userId
+		<where>
+			<if test="keyword!=null and keyword!=''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listBoard" parameterType="map" resultType="com.ssg.study.community.Community">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT c.boardNum, c.userId, nickName, subject,
+					TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date,
+					hitCount,
+					NVL(replyCount, 0) replyCount
+				FROM community c
+				JOIN member_detail md ON c.userId = md.userId
+				LEFT OUTER JOIN (
+					SELECT boardNum, COUNT(*) replyCount FROM community_reply
+					WHERE answer = 0
+					GROUP BY boardNum
+				) rp ON c.boardNum = rp.boardNum
+				<where>
+					<if test="keyword != null and keyword != ''">
+						<include refid="where-list"/>
+					</if>
+				</where> 
+				ORDER BY boardNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="readBoard" parameterType="Integer" resultType="com.ssg.study.community.Community">
+		SELECT c.boardNum, c.userId, nickName, subject, content, 
+		hitCount, c.reg_date, NVL(boardLikeCount, 0) boardLikeCount
+		FROM community c
+		JOIN member_detail md ON c.userId = md.userId
+		LEFT OUTER JOIN (
+			SELECT boardNum, COUNT(*) boardLikeCount FROM community_like
+			GROUP BY boardNum
+		) bc ON c.boardNum = bc.boardNum
+		WHERE c.boardNum = #{boardNum}
+	</select>
+	
+	<update id="updateHitCount" parameterType="Integer">
+		UPDATE community SET hitCount = hitCount + 1 WHERE boardNum = #{boardNum}
+	</update>
+	
+	<select id="preReadBoard" parameterType="map" resultType="com.ssg.study.community.Community">
+		SELECT * FROM (
+			SELECT boardNum, subject
+			FROM community c
+			JOIN member m ON c.userId = m.userId
+			<where>
+				<if test="keyword != null and keyword != ''">
+					<include refid="where-list"/>
+				</if>
+				AND (boardNum &gt; #{boardNum})
+			</where>
+			ORDER BY boardNum 
+		) WHERE ROWNUM = 1 
+	</select>
+	
+	<select id="nextReadBoard" parameterType="map" resultType="com.ssg.study.community.Community">
+		SELECT * FROM (
+			SELECT boardNum, subject
+			FROM community c
+			JOIN member m ON c.userId = m.userId
+			<where>
+				<if test="keyword != null and keyword != ''">
+					<include refid="where-list"/>
+				</if>
+				AND (boardNum &lt; #{boardNum})
+			</where>
+			ORDER BY boardNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<update id="updateBoard" parameterType="com.ssg.study.community.Community">
+		UPDATE community SET subject=#{subject}, content=#{content}
+		WHERE boardNum=#{boardNum}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="Integer">
+		DELETE FROM community WHERE boardNum = #{boardNum}
+	</delete>
+	
+	<insert id="insertBoardLike" parameterType="map">
+		INSERT INTO community_like(boardNum, userId) 
+		VALUES (#{boardNum}, #{userId})
+	</insert>
+	
+	<delete id="deleteBoardLike" parameterType="map">
+		DELETE FROM community_like WHERE boardNum = #{boardNum} AND userId = #{userId}
+	</delete>
+	
+	<select id="boardLikeCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM community_like WHERE boardNum = #{boardNum}
+	</select>
+	
+	<select id="userBoardLiked" parameterType="map" resultType="com.ssg.study.community.Community">
+		SELECT boardNum, userId FROM community_like WHERE boardNum = #{boardNum} AND userId = #{userId}
+	</select>
+	
+	<!-- 댓글 -->
+	<insert id="insertReply" parameterType="com.ssg.study.community.Reply">
+		INSERT INTO community_reply(replyNum, boardNum, userId, content, reg_date, answer)
+		VALUES(reply_seq.NEXTVAL, #{boardNum}, #{userId}, #{content}, SYSDATE, #{answer})
+	</insert>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM community_reply
+		WHERE boardNum = #{boardNum} AND answer = 0
+	</select>
+	
+	<select id="listReply" parameterType="map" resultType="com.ssg.study.community.Reply">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT r.replyNum, r.userId, nickName, boardNum, content, r.reg_date,
+					NVL(answerCount, 0) answerCount,
+					NVL(likeCount, 0) likeCount
+				FROM community_reply r
+				JOIN member_detail md ON r.userId = md.userId
+				LEFT OUTER JOIN (
+					SELECT answer, COUNT(*) answerCount
+					FROM community_reply WHERE answer !=0 GROUP BY answer
+				) a ON r.replyNum = a.answer
+				LEFT OUTER JOIN (
+					SELECT replyNum, COUNT(*) likeCount
+					FROM community_replyLike GROUP BY replyNum
+				) c ON r.replyNum = c.replyNum
+				WHERE boardNum = #{boardNum} AND r.answer = 0
+				ORDER BY r.replyNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM community_reply
+		WHERE replyNum = #{replyNum}
+		<if test="mode=='reply'">
+		 	OR answer = #{replyNum} 
+		</if>
+	</delete>
+	
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.ssg.study.community.Reply">
+		SELECT replyNum, boardNum, r.userId, nickName, content, reg_date, answer
+		FROM community_reply r
+		JOIN member_detail md ON r.userId = md.userId
+		WHERE answer = #{answer}
+		ORDER BY replyNum DESC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="Integer" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM community_reply WHERE answer = #{answer}
+	</select>
+	
+	<insert id="insertReplyLike" parameterType="map">
+		INSERT INTO community_replyLike(replyNum, userId)
+		VALUES(#{replyNum}, #{userId})
+	</insert>
+	
+	<delete id="deleteReplyLike" parameterType="map">
+		DELETE FROM community_replyLike WHERE replyNum = #{replyNum} AND userId = #{userId}
+	</delete>
+	
+	<select id="replyLikeCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) likeCount FROM community_replyLike
+		WHERE replyNum = #{replyNum}
+	</select>
+	
+	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.community.Reply">
+		SELECT replyNum, userId FROM community_replyLike WHERE replyNum = #{replyNum}
+	</select>
+	
+	<!-- 파일 -->
+	<insert id="insertFile" parameterType="com.ssg.study.community.Community">
+		INSERT INTO community_file(fileNum, boardNum, saveFilename, originalFilename, fileSize)
+		VALUES (file_seq.NEXTVAL, #{boardNum}, #{saveFilename}, #{originalFilename}, #{fileSize})
+	</insert>
+	
+	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.community.Community">
+		SELECT fileNum, boardNum, saveFilename, originalFilename, fileSize
+		FROM community_file
+		WHERE boardNum = #{boardNum}
+	</select>
+	
+	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.community.Community">
+		SELECT fileNum, boardNum, saveFilename, originalFilename, fileSize
+		FROM community_file
+		WHERE fileNum = #{fileNum}
+	</select>
+	
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM community_file WHERE ${field} = #{boardNum}
+	</delete>
+</mapper>
