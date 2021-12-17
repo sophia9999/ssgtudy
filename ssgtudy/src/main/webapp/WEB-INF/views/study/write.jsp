@@ -76,8 +76,10 @@ function sendOk() {
                                     <div class="col-sm-12 d-flex justify-content-end">
                                         <button type="button"
                                             class="btn btn-primary me-1 mb-1" onclick="sendOk()">${mode=='update'?'수정하기':'만들기'}</button>
-                                        <button type="reset"
-                                            class="btn btn-light-secondary me-1 mb-1">다시입력</button>
+                                        <c:if test="${mode == 'write' }">
+                                        	<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시입력</button>
+                                        </c:if>
+                                       	<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="javascript:history.back();">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
                                     </div>
                                 </div>
                             </div>
