@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -116,9 +115,7 @@ public class StudyController {
 			dto.setStudyNum(seq);
 			
 			service.insertStudy(dto); // study 테이블 삽입
-			service.insertStudyMember(dto); // study_member 테이블 삽입
-			service.insertTimes(seq); // times 테이블에 insert (스터디별 목표이름횟수 기록하는 테이블) 
-		} catch (Exception e) {
+			} catch (Exception e) {
 		}
 		
 		return "redirect:/study/list";
@@ -215,6 +212,10 @@ public class StudyController {
 				dto = vo;
 				break;
 			}
+		}
+		
+		if( dto == null) {
+			dto = service.visitStudy(studyNum); // 방문시
 		}
 		
 		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();

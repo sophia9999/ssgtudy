@@ -28,6 +28,7 @@
 		INSERT INTO study(studyNum, studyGoal, studyName, studyStatus)
 		VALUES (#{studyNum}, #{studyGoal}, #{studyName}, 0)
 	</insert>
+	
 	<update id="updateStudy" parameterType="com.ssg.study.study.Study" >
 		UPDATE study SET studyGoal=#{studyGoal}, studyName=#{studyName}
 		WHERE studyNum = #{studyNum}		
@@ -39,7 +40,7 @@
 	
 	<insert id="insertTimes" parameterType="com.ssg.study.study.Study">
 		INSERT INTO times(studyNum, questCount, usedCount) 
-		VALUES(#{studyNum}, 0, 0);
+		VALUES(#{studyNum}, 0, 0)
 	</insert>
 	<update id="updateQuestCount" parameterType="Integer">
 		UPDATE times SET questCount = questCount + 1
@@ -89,6 +90,11 @@
 		FROM study s
 		JOIN study_member sm ON s.studyNum = sm.studyNum
 		WHERE s.studyNum = #{studyNum} and userId= #{userId}
+	</select>
+	<select id="visitStudy" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT studyNum, studyGoal, studyName, studyStatus
+		FROM study s
+		WHERE studyNum = #{studyNum}
 	</select>
 	<select id="readCategory" parameterType="Integer" resultType="map">
 		SELECT categoryNum, categoryName, studyNum 
@@ -204,6 +210,7 @@
 			JOIN study_member sb ON s.studyNum = sb.studyNum
 			JOIN member_detail md ON sb.userId = md.userId
 		WHERE s.studyNum = #{studyNum}
+		ORDER BY role DESC
 	</select>
 	
 	<select id="studyListByCategoryDataCount" resultType="Integer" parameterType="map">

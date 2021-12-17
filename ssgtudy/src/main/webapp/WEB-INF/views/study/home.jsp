@@ -35,9 +35,14 @@
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
 			           		</div> 
 			           	</c:when>
+			           	<c:when test="${dto.role == '1' }">
+		           			<div class="text-center p-2">
+			           			<h4>${dto.studyName}</h4>
+			           		</div>
+			           	</c:when>
 						<c:otherwise>
 			           		<div class="text-center p-2">
-			           			<h4>아직 스터디관리자의 승인을 받지못했습니다.</h4>
+			           			<h4>일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           		</div>
 			           	</c:otherwise>
 		           	</c:choose>
@@ -66,8 +71,11 @@
 			    				<c:when test="${dto.role > 1 }">
 			    					<td>스터디 관리자</td>
 			    				</c:when>
-			    				<c:otherwise>
+			    				<c:when test="${dto.role == '1' }">
 			    					<td>일반멤버</td>
+			    				</c:when>
+			    				<c:otherwise>
+			    					<td>대기멤버</td>
 			    				</c:otherwise>
 			    			</c:choose>
 			    			</tr>
@@ -131,6 +139,12 @@ function listPage(page) {
 	var categoryNum = $tab.attr("data-categoryNum");
 	console.log(categoryNum);
 	
+	<c:if test="${mode=='visit'}">
+	if(! categoryNum) {
+		var url = '${pageContext.request.contextPath}/study/home/${dto.studyNum}';
+		location.href = url;
+	}
+	</c:if>
 	if(! categoryNum) {
 		var url = '${pageContext.request.contextPath}/study/home/${dto.studyNum}';
 		location.href = url;

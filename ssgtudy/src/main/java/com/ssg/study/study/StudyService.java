@@ -25,6 +25,8 @@ public interface StudyService {
 	public List<Study> studyHomeList(String userId) throws Exception;
 	public Study readStudy(Map<String, Object> map) throws Exception;
 	public List<Study> memberList(int studyNum) throws Exception;
+	public Study visitStudy(int studyNum) throws Exception;
+	
 	// 스터디 홈 -> 카테고리 추가, 삭제, 등
 	public List<Map<String, Object>> readCategory(int studyNum) throws Exception;
 	public int insertCategory(Map<String, Object> map) throws Exception;

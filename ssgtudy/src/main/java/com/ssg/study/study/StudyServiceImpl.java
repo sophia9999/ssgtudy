@@ -19,6 +19,8 @@ public class StudyServiceImpl implements StudyService {
 		int result = 0;
 		try {
 			result = dao.insertData("study.insertStudy", dto);
+			result += insertStudyMember(dto);
+			result += insertTimes(dto.getStudyNum());
 		} catch (Exception e) {
 		}
 		return result;
@@ -317,6 +319,16 @@ public class StudyServiceImpl implements StudyService {
 		} catch (Exception e) {
 		}
 		return result;
+	}
+
+	@Override
+	public Study visitStudy(int studyNum) throws Exception {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.visitStudy", studyNum);
+		} catch (Exception e) {
+		}
+		return dto;
 	}
 
 }

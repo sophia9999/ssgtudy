@@ -41,7 +41,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 				login();
 				return false;
 			} else if(jqXHR.status === 400) {
-				alert("이미 참여되어있는 스터디 이거나, 참여 신청을 완료하지 못했습니다.");
+				alert("요청 처리 중 에러가 발생했습니다.");
 				return false;
 			}
 	    	
@@ -56,7 +56,12 @@ function memberAdd() {
 	var query = "userId="+userId+"&studyNum="+studyNum;
 	var url = "${pageCcontext.request.contextPath}/study/study/member";
 	var fn  = function(data) {
-		alert("스터디 참여 신청이 완료되었습니다:)");
+		
+		if(data.status === "400") {
+			alert("이미 참여중인 스터디이거나, 대기중입니다.");
+		} else {
+			alert("스터디 참여 신청이 완료되었습니다:)");
+		}
 	}
 	ajaxFun(url, "get", query, "json", fn);
 }

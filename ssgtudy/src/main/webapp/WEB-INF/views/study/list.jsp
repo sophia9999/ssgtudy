@@ -34,8 +34,10 @@
 	                				<c:when test="${dto.studyStatus > 0 }">
 	                					<td>${dto.studyName}</td>
 	                				</c:when>
-	                				<c:when test="${dto.role < 1 }">
-	                					<td>${dto.studyName}</td>
+	                				<c:when test="${dto.role == '0' }">
+	                					<td>
+	                						<a href="${articleUrl}/${dto.studyNum}">${dto.studyName}</a>
+	                					</td>
 	                				</c:when>
 	                				<c:otherwise>
 		                				<td>
@@ -49,7 +51,7 @@
 	                					<td class="text-center"><a href="#" onclick="alert('스터디 상태에 관해서는 관리자에게 문의하세요.')" class="btn icon btn-danger"><i data-feather="times"></i></a></td>
 	                				</c:when>
 	                				<c:when test="${dto.role < 1 }">
-	                					<td class="text-center"><a href="${articleUrl}/${dto.studyNum}" onclick="alert('스터디관리자의 허락 후 활동이 가능합니다.')" class="btn icon btn-warning"><i data-feather="times"></i></a></td>
+	                					<td class="text-center"><a href="#" onclick="alert('스터디관리자의 허락 후 활동이 가능합니다.')" class="btn icon btn-warning"><i data-feather="times"></i></a></td>
 	                				</c:when>
 	                				<c:otherwise>
 		                				<td class="text-center"><a href="#" class="btn icon btn-success"><i data-feather="check"></i></a></td>
