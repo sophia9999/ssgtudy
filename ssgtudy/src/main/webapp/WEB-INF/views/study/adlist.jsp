@@ -76,7 +76,7 @@ function search() {
 									</div>                                                      
 									</div>                                      
 									<div class="col-md-3 form-group">
-										<input type="text" id="" class="form-control" name="keyword" value="${dto.keyword}">                                          
+										<input type="text" id="" class="form-control" name="keyword" value="${keyword}">                                          
 									</div>
 									<div class="col-md-1 form-group">                                                     
 										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>

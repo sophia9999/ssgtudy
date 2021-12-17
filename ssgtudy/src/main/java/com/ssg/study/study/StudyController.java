@@ -565,6 +565,78 @@ public class StudyController {
 		return ".study.rank";
 	}
 	
+	@RequestMapping(value = "rank/list2")
+	public String studyRankSearch(@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "studyName") String condition,
+			@RequestParam(defaultValue = "") String keyword,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		String cp = req.getContextPath();
+
+		int rows = 20; // 한 화면에 보여주는 게시물 수
+		int total_page = 0;
+		int dataCount = 0;
+
+		if (req.getMethod().equalsIgnoreCase("GET")) { // GET 방식인 경우
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+		
+
+		// 전체 페이지 수
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("keyword", keyword);
+		
+		dataCount = service.rankDataCount(map);
+		if (dataCount != 0) {
+			total_page = myUtil.pageCount(rows, dataCount);
+		}
+		
+
+		// 비활성화되어 전체 페이지수가 변화 된 경우
+		if (total_page < current_page) {
+			current_page = total_page;
+		}
+
+		// 리스트에 출력할 데이터를 가져오기
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<Study> rankList = service.rankList(map);
+		
+		/*
+		int listNum, n = 0;
+		for (Study dto : rankList) {
+			listNum = dataCount - (start + n - 1);
+			dto.setListNum(listNum);
+			n++;
+		}
+		*/
+		
+		String query = "";
+		String listUrl = cp + "/study/rank/list2?";
+		if (keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+
+		if (query.length() != 0) {
+			listUrl += query;
+		}
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+
+		model.addAttribute("postRankList", rankList);
+		model.addAttribute("page", current_page);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		model.addAttribute("condition", condition);
+		model.addAttribute("keyword", keyword);
+		
+		return ".study.rank2";
+	}
 	
 	// AJAX - MAP을  JSON으로 변환해서 반환
 	@RequestMapping(value = "rank/list", method = RequestMethod.GET)

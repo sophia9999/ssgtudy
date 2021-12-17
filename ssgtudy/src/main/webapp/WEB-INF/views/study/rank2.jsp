@@ -6,7 +6,7 @@
 <script type="text/javascript">
 function search() {
 	var f = document.searchForm;
-	f.action = "${pageContext.request.contextPath}/study/rank/list2?page=1";
+	f.action = "${pageContext.request.contextPath}/study/rank/list2";
 	f.submit();
 }
 
@@ -39,30 +39,6 @@ function ajaxFun(url, method, query, dataType, fn) {
 		}
 	});
 }
-
-$(function(){
-	$(window).scroll(function(){
-		if($(window).scrollTop()+100 >= $(document).height()-$(window).height()) {
-			var pageNo = $(".guest-count").attr("data-pageNo");
-			var total_page = $(".guest-count").attr("data-totalPage");
-			if(pageNo < total_page) {
-				++pageNo;
-				listPage(pageNo);
-			}
-		}
-	});
-});
-
-function checkScrollBar() {
-	var hContent = $("body").height();
-	var hWindow = $(window).height();
-	if(hContent > hWindow) {
-		return true;
-	}
-	
-	return false;
-}
-
 
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
@@ -110,66 +86,6 @@ function visitHome(studyNum) {
 	location.href = url;
 }
 
-$(function() {
-	listPage(1);
-});
-
-function listPage(page) {
-	var url = "${pageContext.request.contextPath}/study/rank/list"
-	var query = "pageNo="+page;
-	
-	var fn = function(data) {
-		printRank(data);
-	}
-	ajaxFun(url, "get", query, "json", fn);
-}
-
-function printRank(data) {
-
-	var dataCount = data.dataCount;
-	var pageNo = data.pageNo;
-	var total_page = data.total_page;
-	
-	$(".rank-count").attr("data-totalPage", total_page);
-	
-	if(dataCount == 0) {
-		$("#listRank").hide();
-		$(".rank-list-body").empty();
-		return;
-	}
-	
-	$("#listRank").show();
-	$(".rank-count").html("총 스터디 수 " + dataCount +"개");
-	
-	var out = "";
-	for(var idx = 0; idx<data.rankList.length; idx++) {
-		var studyNum = data.rankList[idx].studyNum;
-		var studyName = data.rankList[idx].studyName;
-		var studyStatus = data.rankList[idx].studyStatus;
-		var rank = data.rankList[idx].rank;
-		var questCount = data.rankList[idx].questCount;
-		
-		out += "<tr class='text-center'>";
-		out += "	<td>"+rank+"</td>";
-		out += "	<td>"+studyName+"</td>";
-		out += "	<td>"+questCount+"</td>";
-		out += "	<td>";
-		out += "		<button type='button' class='btn btn-primary' onclick='visitHome("+studyNum+")'>구경하기</button>";
-		out += "		<button type='button' class='btn btn-danger' onclick='memberAdd("+studyNum+")'>참여신청</button>";
-		out += "	</td>";
-		out += "</tr>";
-	}
-
-	$(".rank-list-body").append(out);
-	
-	if(! checkScrollBar() ) {
-		if(pageNo < total_page) {
-			++pageNo;
-			listPage(pageNo);
-		}
-	}
-}
-
 </script>
 
 <section id="basic-horizontal-layouts">
@@ -209,14 +125,16 @@ function printRank(data) {
 									<div class="col-md-2 form-group">                                                     
 										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>
 									</div>				                                                   
-									<div class="col-md-2"></div>
+									<div class="col-md-2">
+										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="javascript:location.href='${pageContext.request.contextPath}/study/rank';">새로고침</button>
+									</div>
 								</div>
 							</div>
 						</form>   
                             <div class="form-body">
-                                <div class="row" id="listRank" style="display: none;">
+                                <div class="row" >
 	                                <div class='list-header'>
-										<span class='rank-count' data-pageNo="1" data-totalPage="1">${dataCount}개(${page}/${total_page} 페이지)</span>
+										<span class='rank-count' data-pageNo="1" data-totalPage="1">검색된 스터디 ${dataCount}개</span>
 										<span class='rank-title'></span>
 									</div>
                                     <table class="table table-responsive rank-list">
@@ -244,11 +162,9 @@ function printRank(data) {
                                     		</c:if>
 										</tbody>
                                     </table>
-                                    <c:if test="${not empty postRankList}">
 										<div class="page-box">
-											${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+											${dataCount == 0 ? "등록된 스터디가 없습니다." : paging}
 										</div>
-                                	</c:if>
                                 </div>
                             </div>
                     </div>

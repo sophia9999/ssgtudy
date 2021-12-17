@@ -180,18 +180,18 @@
 	<select id="rankList" parameterType="map" resultType="com.ssg.study.study.Study">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
-		        SELECT s.studyNum, studyName, studyGoal, questCount, usedCount, RANK() OVER (ORDER BY questCount desc) rank
+		        SELECT s.studyNum, studyName, studyGoal, questCount, usedCount, ROW_NUMBER() OVER (ORDER BY questCount desc) rank
 		        FROM times t
 		        JOIN study s ON s.studyNum= t.studyNum
-		        <where>
-				    <if test="keyword != null and keyword != '' ">
-				    INSTR(studyName, #{studyName}) &gt;= 1
-				    </if>
-				    AND studyStatus = 0
-			    </where>
+				WHERE studyStatus = 0
+				ORDER BY rank
 		    ) tb WHERE ROWNUM &lt;= #{end}
+		    <if test="keyword != null and keyword != '' ">
+			    AND INSTR(studyName, #{keyword}) &gt;= 1
+			</if>
 		) WHERE rnum &gt;= #{start}
 	</select>
+	
 	<select id="rankDataCount" resultType="Integer" parameterType="map">
 		SELECT NVL(COUNT(*), 0)
 		FROM times t
