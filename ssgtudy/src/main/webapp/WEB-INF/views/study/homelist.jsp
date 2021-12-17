@@ -9,11 +9,11 @@
    	<table class="table table-lg" style="text-align: center">
 	<thead>
 	   	<tr>
-	       	<th style="width:16.66%">번호</th>
-	    	<th style="width:33.33%">제목</th>
-	     	<th style="width:16.66%">작성자</th>
-	    	<th style="width:16.66%">등록일</th>
-	    	<th style="width:16.66%">조회수</th>
+	       	<th class="col-md-1">번호</th>
+          	<th class="col-auto">제목</th>
+           	<th class="col-md-2">작성자</th>
+          	<th class="col-md-2">등록일</th>
+          	<th class="col-md-1">조회수</th>
 	    </tr>
 	</thead>
 		<tbody>
@@ -46,8 +46,22 @@
 			<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
 		</div>				                                                   
 		<div class="col-md-4 text-center justify-content-end">
-			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/home/${dto.studyNum}/list/write';">등록</button>
+			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="writeArticle()">등록</button>
 			</div>
 		</div>
 	</div>
-</form>   
+</form>
+
+<script type="text/javascript">
+function writeArticle() {
+	var url ='${pageContext.request.contextPath}/study/home/${studyNum}/list/write';
+	var query = "a=";
+	var selector = "#myTabContent";
+	var fn = function(data){
+		$(".box").empty();
+		$(selector).html(data);
+	};
+	ajaxFun(url, "get", query, "html", fn);
+	
+}
+</script>

@@ -34,10 +34,10 @@ function search() {
                                    	<tr>
                                        	<th class="col-md-1">번호</th>
                                        	<th class="col-auto">제목</th>
-                                        	<th class="col-md-2">작성자</th>
+                                       	<th class="col-md-2">작성자</th>
                                        	<th class="col-md-2">등록일</th>
                                        	<th class="col-md-1">조회수</th>
-                                       </tr>
+                                      </tr>
                                    </thead>
                                    <tbody>
                                    	<c:forEach var="dto" items="${list}">
