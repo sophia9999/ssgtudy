@@ -8,6 +8,9 @@ public class SessionInfo {
 	private int membership;
 	private int schoolCode;
 	
+	
+	
+	
 	public String getUserId() {
 		return userId;
 	}
