@@ -17,6 +17,8 @@
 	padding: 0;
 }
 
+
+
 .receiver-user {
 	color: #0d58ba;
 	margin-right: 3px;
