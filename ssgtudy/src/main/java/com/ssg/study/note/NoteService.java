@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface NoteService {
 	public List<Note> listFriend(Map<String, Object> map);
-	
+
 	public void insertNote(Note dto) throws Exception;
 	
 	public int dataCountReceive(Map<String, Object> map);

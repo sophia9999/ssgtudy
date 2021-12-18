@@ -2,27 +2,33 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="my">
-	<select id="listMy" parameterType="map" resultType="com.ssg.study.my.My">
-		SELECT num, subject, hitCount, reg_date, 
-		
-		
-		
-		
-		FROM member m ss 
-	 	JOIN bbs b ON m.userId = b.userId
-	 	JOIN study_board sb ON m.userId = sb.userId
-	 	JOIN qna q ON m.userId = q.userId
-		WHERE 
+	<select id="myList" parameterType="map" resultType="com.ssg.study.my.MyBoard">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT 'bbs/article?bbsNum=' boardUrl, '자유게시판' boardTitle, bbsNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM bbs WHERE userId = #{userId}
+			 	UNION ALL
+				SELECT 'studyBoard/article?boardNum=' boardUrl, '스터디 게시판' boardTitle, boardNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM study_Board_1 WHERE userId = #{userId}	 	
+			 	UNION ALL
+				SELECT 'qna/article?qnaNum=' boardUrl, '질문과 답변' boardTitle, qnaNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM qna WHERE userId = #{userId} and groupNum = 0
+			 	ORDER BY boardTitle, reg_date DESC			
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
 	
-	
-	
 	<select id="dataCount" parameterType="String" resultType="Integer"> 
-		SELECT NVL(COUNT(*), 0)								
-		FROM member m
-	 	JOIN bbs b ON m.userId = b.userId
-	 	JOIN study_board sb ON m.userId = sb.userId
-	 	JOIN qna q ON m.userId = q.userId
+		SELECT COUNT(*) FROM (
+			SELECT bbsNum num, subject
+		 	FROM bbs WHERE userId = #{userId}
+		 	UNION ALL
+			SELECT boardNum num, subject
+		 	FROM study_Board_1 WHERE userId = #{userId}	 	
+		 	UNION ALL
+			SELECT qnaNum num, subject
+		 	FROM qna WHERE userId = #{userId} and groupNum = 0
+		)
 	</select>
 	
 	

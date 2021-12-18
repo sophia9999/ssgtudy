@@ -29,7 +29,6 @@ public class NoteController {
 	@Autowired
 	private NoteService service;
 
-	// 뻐먹은거 찾어 여기에 써.....
 	@Autowired
 	private MyUtil myUtil;
 

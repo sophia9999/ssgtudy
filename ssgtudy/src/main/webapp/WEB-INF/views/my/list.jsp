@@ -30,8 +30,8 @@
                                 	<thead>
                                     	<tr>
                                         	<th style="width:16.66%">번호</th>
-                                        	<th style="width:33.33%">제목</th>
-                                         	<th style="width:16.66%">작성자</th>
+                                        	<th style="width:16.66%">게시판분류</th>
+                                         	<th style="width:33.33%">제목</th>
                                         	<th style="width:16.66%">등록일</th>
                                         	<th style="width:16.66%">조회수</th>
                                         </tr>
@@ -39,9 +39,9 @@
                                     <tbody>
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
-	                                        	<td class="text-bold-500">${dto.bbsNum}</td>
-	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</td>
-	                                        	<td class="text-bold-500">${dto.nickName}</td>
+	                                        	<td class="text-bold-500">${dto.listNum}</td>
+	                                        	<td class="text-bold-500">${dto.boardTitle}</td>
+	                                        	<td><a href="${pageContext.request.contextPath}/${dto.boardUrl}${dto.num}&page=1">${dto.subject}</a></td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
 	                                    	</tr>
@@ -61,13 +61,7 @@
 						<div class="col-md-3 form-group">
 							<input type="text" id="first-name" class="form-control" name="fname" placeholder="검색">                                          
 						</div>
-						<div class="col-md-1 form-group">                                                     
-							<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
-						</div>				                                                   
-						<div class="col-md-4 d-flex justify-content-end">
-							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/write';">등록</button>
-							<button type="reset" class="btn btn-outline-primary me-1 mb-1">취소</button>
-						</div>
+						
 					</div>
 				</div>
 			</form>   

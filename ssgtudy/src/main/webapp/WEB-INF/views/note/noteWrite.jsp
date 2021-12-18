@@ -104,7 +104,7 @@ $(function(){
 	$(".btnReceiverFind").click(function(){
 		var condition = $("#condition").val();
 		var keyword = $("#keyword").val();
-		if(! keyword) {
+		if(condition != "friend" && keyword == "") {
 			$("#keyword").focus();
 			return false;
 		}
@@ -137,6 +137,7 @@ $(function(){
 		var len1 = $(".dialog-receiver-list ul input[type=checkbox]:checked").length;
 		var len2 = $("#forms-receiver-list input[name=receivers]").length;
 		
+		
 		if(len1 == 0) {
 			alert("추가할 사람을 먼저 선택하세요.");
 			return false;			
@@ -167,6 +168,8 @@ $(function(){
 				
 				s = "<input type='hidden' name='receivers' value='"+userId+"'>";
 				$("#forms-receiver-list").append(s);
+				
+				
 			}
 		});
 		
@@ -280,6 +283,7 @@ $(function(){
 						<select name="condition" id="condition" class="form-select">
 							<option value="nickName">닉네임</option>
 							<option value="userId">아이디</option>
+							<option value="friend">친구목록</option>
 							
 						</select>
 					</div>

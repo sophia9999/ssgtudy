@@ -14,6 +14,16 @@ public class Note {
 	private String senderNickName;
 	private String receiverNickName;
 	
+	private String userName;
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	private List<String> receivers;
 	private String userId;
 	private String nickName;

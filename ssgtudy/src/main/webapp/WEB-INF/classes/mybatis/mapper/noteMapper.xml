@@ -4,16 +4,32 @@
 <mapper namespace="note">
 
 	<select id="listFriend" parameterType="map" resultType="com.ssg.study.note.Note">
-		SELECT userId, nickName 
-		FROM member_detail
-		<where>
-			userId != #{userId}
-			AND		
-			<if test="keyword!=null and keyword!='' ">
-				INSTR(${condition}, #{keyword}) &gt; 0
-			</if>
-		</where>				
+		<choose>
+			<when test="condition == 'friend'">
+				SELECT nickName,userId FROM friends f,member_detail m
+				WHERE (registrant = #{userId} AND ACCEPT = 'Y' AND f.registered=m.userId) OR (registered=#{userId} AND ACCEPT = 'Y'AND registrant=m.userId)
+			</when>
+			<otherwise>
+				SELECT userId, nickName 
+				FROM member_detail
+				<where>
+					userId != #{userId}
+					AND		
+					<if test="keyword!=null and keyword!='' ">
+						INSTR(${condition}, #{keyword}) &gt; 0
+					</if>
+				</where>			
+			</otherwise>
+		</choose>
+				
 	</select>
+	
+	
+	<select id="friendslist" parameterType="String" resultType="com.ssg.study.friends.Friends">
+			SELECT num,registrant,registered,reg_date,accept,userName,nickName,userId FROM friends f,member_detail m
+		WHERE (registrant = #{userId} AND ACCEPT = 'Y' AND f.registered=m.userId) OR (registered=#{userId} AND ACCEPT = 'Y'AND registrant=m.userId)
+	</select>	
+	
 	
 	<insert id="insertNote" parameterType="com.ssg.study.note.Note">
 		INSERT INTO note(noteNum, content, sendDay, identifyDay, receiveDelete, sendDelete, senderId, receiverId)
