@@ -219,14 +219,53 @@ public class StudyController {
 		}
 		
 		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>();
+		
 		listMap = service.readCategory(studyNum);
 		
-		List<Study> memberList = service.memberList(studyNum);
-		model.addAttribute("memberList", memberList);
 		model.addAttribute("listCategory", listMap);
 		model.addAttribute("dto", dto);
 		
 		return ".study.home";
+	}
+	
+	// 멤버리스트
+	@RequestMapping(value = "memberList", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> memberList(
+			@RequestParam(value = "studyNum") int studyNum,
+			@RequestParam(value = "pageNo", defaultValue = "1") int current_page
+			) throws Exception {
+		String status = "true";
+		List<Study> memberList = null;
+		int rows = 2;
+		
+		int dataCount = service.memberDataCount(studyNum);
+		int start = (current_page - 1) * rows + 1;
+		int end = (current_page * rows);
+		int total_page = myUtil.pageCount(rows, dataCount);
+		
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("studyNum", studyNum);
+
+		try {
+			memberList = service.memberList(map);
+		} catch (Exception e) {
+			status = "false";
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("memberList", memberList);
+		model.put("dataCount", dataCount);
+		model.put("pageNo", current_page);
+		model.put("total_page", total_page);
+		model.put("status", status);
+		
+		return model;
 	}
 	
 	// AJAX-HTML

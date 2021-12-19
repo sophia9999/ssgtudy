@@ -2,9 +2,14 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<script type="text/css">
+.more-box .more:hover {
+	cursor: pointer; color: #2524ff; font-weight: 500;
+}
+</script>
 
 	<div class="col-12 col-md-6 order-md-1 order-last">
-	    <h3><i class="icofont-group-students"></i> ${dto.studyName}의 스터디 공간</h3>
+	    <h3><span><i class="icofont-archive"></i></span> ${dto.studyName}의 스터디 공간</h3>
 	</div>
 <section class="row">
 	<div class="row"> 
@@ -59,37 +64,28 @@
 			</div>
 		</div>
 		<div class="col-md-2">
-		    <div class="card friend">
-		    	<div class="card-header">
+		    <div class="card" id="listMember">
+		    	<div class="card-header list-header">
 		    		<h5 class="card-title text-center">
 		    			<span class="align-middle"><i class="bi bi-person-lines-fill"></i></span> 스터디 구성원
 		    		</h5>
+		    		<span class="member-count" data-pageNo="1" data-totalPage="1"></span>
+		    		<span class="member-title"></span>
 		    	</div>
-		    		<table class="table table-borderless">
-		    			<tr class="text-center">
-		    				<th>구성원</th>
-		    				<th>역할</th>
-		    			</tr>
-		    			<c:forEach items="${memberList}" var="dto">
-			    			<tr class="text-center">
-			    				<td>${dto.nickName}</td>
-			    			<c:choose>
-			    				<c:when test="${dto.role > 10}">
-			    					<td>스터디장</td>
-			    				</c:when>
-			    				<c:when test="${dto.role > 1 }">
-			    					<td>스터디 관리자</td>
-			    				</c:when>
-			    				<c:when test="${dto.role == '1' }">
-			    					<td>일반멤버</td>
-			    				</c:when>
-			    				<c:otherwise>
-			    					<td>대기멤버</td>
-			    				</c:otherwise>
-			    			</c:choose>
-			    			</tr>
-			    		</c:forEach>
-		    		</table>
+	    		<table class="table table-borderless member-list">
+	    			<thead>
+	    			<tr class="text-center">
+	    				<th>구성원</th>
+	    				<th>역할</th>
+	    			</tr>
+	    			</thead>
+	    			<tbody class="member-list-body">
+	    			
+	    			</tbody>
+	    		</table>
+	    		<div class="more-box text-center buttons">
+					<span class="more"><button type="button" class="btn btn-sm btn-primary btnMore">더보기 <i class="icofont-plus"></i></button></span>
+				</div>
 		    </div>
 		</div>
 	</div>
@@ -209,4 +205,73 @@ function inactiveStudy(studyNum) {
 }
 
 
+//더보기 누르면 멤버 리스트 더 불러오게끔
+$(function () {
+	$("body").on("click", ".btnMore", function() {
+		var pageNo = $(".member-count").attr("data-pageNo");
+		var total_page = $(".member-count").attr("data-totalPage");
+		
+		if(pageNo < total_page) {
+			pageNo++;
+			listMember(pageNo);
+		}
+	});
+})
+
+function listMember(page) {
+	var url = "${pageContext.request.contextPath}/study/memberList";
+	var query ="pageNo="+page+"&studyNum="+${dto.studyNum};
+	
+	var fn = function(data) {
+		printMember(data);
+	};
+	
+	ajaxFun(url, "get", query, "json", fn);	
+}
+
+function printMember(data) {
+	console.log(data);
+	var dataCount = data.dataCount;
+	var pageNo = data.pageNo;
+	var total_page = data.total_page;
+	
+	$(".member-count").attr("data-pageNo", pageNo);
+	$(".member-count").attr("data-totalPage", total_page);
+	
+	if(dataCount == 0) {
+		$(".member-list-body").empty();
+		return;
+	}
+	
+	if(pageNo < total_page) {
+		$(".more-box").show();
+	}
+	
+	var out = "";
+	for(var idx = 0; idx < data.memberList.length; idx++) {
+		var nickName = data.memberList[idx].nickName;
+		var role = data.memberList[idx].role;
+		
+		if(role > 10) {
+			role = "스터디장";
+		} else if(role > 1) {
+			role = "매니저";
+		} else if(role == '1') {
+			role = "일반멤버";
+		} else {
+			role = "대기멤버";
+		}
+		
+		out += "<tr class='text-center'>";
+		out += "	<td>"+nickName+"</td>";
+		out += "	<td>"+role+"</td>";
+		out += "</tr>";
+	}
+	
+	$(".member-list-body").append(out);
+}
+
+$(function () {
+	listMember(1);
+})
 </script>

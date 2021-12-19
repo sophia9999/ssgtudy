@@ -316,10 +316,10 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	@Override
-	public List<Study> memberList(int studyNum) throws Exception {
+	public List<Study> memberList(Map<String, Object> map) throws Exception {
 		List<Study> memberList = null;
 		try {
-			memberList = dao.selectList("study.memberList", studyNum);
+			memberList = dao.selectList("study.memberList", map);
 		} catch (Exception e) {
 		}
 		return memberList;
@@ -374,5 +374,16 @@ public class StudyServiceImpl implements StudyService {
 		}
 		return dto;
 	}
+
+	@Override
+	public int memberDataCount(int studyNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.memberDataCount", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 
 }
