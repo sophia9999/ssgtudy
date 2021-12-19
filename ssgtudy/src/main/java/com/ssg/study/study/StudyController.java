@@ -239,7 +239,10 @@ public class StudyController {
 		List<Study> memberList = null;
 		int rows = 2;
 		
-		int dataCount = service.memberDataCount(studyNum);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("studyNum", studyNum);
+		
+		int dataCount = service.memberDataCount(paramMap);
 		int start = (current_page - 1) * rows + 1;
 		int end = (current_page * rows);
 		int total_page = myUtil.pageCount(rows, dataCount);
@@ -248,13 +251,11 @@ public class StudyController {
 			current_page = total_page;
 		}
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("start", start);
-		map.put("end", end);
-		map.put("studyNum", studyNum);
+		paramMap.put("start", start);
+		paramMap.put("end", end);
 
 		try {
-			memberList = service.memberList(map);
+			memberList = service.memberList(paramMap);
 		} catch (Exception e) {
 			status = "false";
 		}
@@ -803,4 +804,99 @@ public class StudyController {
 		
 		return "study/homewrite";
 	}
+	
+	// 스터디 홈에서 구성원 관리 눌렀을 때
+	@RequestMapping(value = "manageMember")
+	public String manageMember(@RequestParam(value="studyNum") int studyNum,
+			@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(value = "keyword", defaultValue = "") String keyword,
+			@RequestParam(value = "nickName", defaultValue = "") String condition,
+			Model model,
+			HttpServletRequest req,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+
+		String cp = req.getContextPath();
+		String userId = info.getUserId();
+		
+		int rows = 1; // 한 화면에 보여주는 멤버 수
+		int total_page = 0;
+		int dataCount = 0;
+
+		if (req.getMethod().equalsIgnoreCase("GET")) { // GET 방식인 경우
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+		
+
+		// 전체 페이지 수
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		// paramMap.put("condition", condition);
+		paramMap.put("keyword", keyword);
+		paramMap.put("studyNum", studyNum);
+		
+		dataCount = service.memberDataCount(paramMap);
+		if (dataCount != 0) {
+			total_page = myUtil.pageCount(rows, dataCount);
+		}
+		
+
+		// 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+		if (total_page < current_page) {
+			current_page = total_page;
+		}
+
+		// 리스트에 출력할 데이터를 가져오기
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		paramMap.put("start", start);
+		paramMap.put("end", end);
+		
+		List<Study> memberList = service.memberList(paramMap);
+		
+		// 리스트의 번호
+		int listNum, n = 0;
+		for (Study dto : memberList) {
+			listNum = dataCount - (start + n - 1);
+			dto.setListNum(listNum);
+			n++;
+		}
+		
+		String query = "";
+		String listUrl = cp + "/study/manageMember?studyNum="+studyNum;
+		if (keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+
+		if (query.length() != 0) {
+			listUrl += "&" + query;
+		}
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		// 스터디 장이 아니면 홈으로 가세요
+		if(dto.getRole() != 20) {
+			return "redirect:study/home/"+studyNum;
+		}
+		model.addAttribute("vo", dto);
+		
+		model.addAttribute("list", memberList);
+		model.addAttribute("page", current_page);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+
+		model.addAttribute("condition", condition);
+		model.addAttribute("keyword", keyword);
+		
+		
+		model.addAttribute("studyNum", studyNum);
+		
+		return ".study.memberlist";
+	}
+	
+	// TODO 스터디멤버 역할 변경
 }

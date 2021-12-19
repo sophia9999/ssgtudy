@@ -16,13 +16,13 @@
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab"> 
-		<div class="table-responsive table">
+		<div class="table-responsive table mx-auto" style="width: 700px;">
 			<div class="m-3 p-2">
 					<table class="table mb-8 col-8">
 						<thead class="thead-dark">
 							<tr class="text-center">
 								<th>카테고리이름</th>
-								<th class="col-3">변경</th>
+								<th class="col-4">변경</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -37,8 +37,8 @@
 										${list.CATEGORYNAME}
 									</td>
 									<td>
-										<button type="button" class="btn btn-outline-primary" onclick="updateCtgr('${list.CATEGORYNUM}');">이름수정</button>
-										<button type="button" class="btn btn-outline-primary" onclick="deleteCtgr('${list.CATEGORYNUM}');">삭제</button>
+										<button type="button" class="btn btn-primary" onclick="updateCtgr('${list.CATEGORYNUM}');">이름수정</button>
+										<button type="button" class="btn btn-danger" onclick="deleteCtgr('${list.CATEGORYNUM}');">삭제</button>
 									</td>
 								</tr>
 							</c:forEach>

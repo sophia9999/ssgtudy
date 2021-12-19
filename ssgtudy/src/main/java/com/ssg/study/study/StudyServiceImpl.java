@@ -376,10 +376,10 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	@Override
-	public int memberDataCount(int studyNum) throws Exception {
+	public int memberDataCount(Map<String, Object> paramMap) throws Exception {
 		int result = 0;
 		try {
-			result = dao.selectOne("study.memberDataCount", studyNum);
+			result = dao.selectOne("study.memberDataCount", paramMap);
 		} catch (Exception e) {
 		}
 		return result;

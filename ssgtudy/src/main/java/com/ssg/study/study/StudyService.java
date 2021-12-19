@@ -27,7 +27,7 @@ public interface StudyService {
 	public Study visitStudy(int studyNum) throws Exception;
 	// 스터디 홈에서 멤버 리스트
 	public List<Study> memberList(Map<String, Object> map) throws Exception;
-	public int memberDataCount(int studyNum) throws Exception;
+	public int memberDataCount(Map<String, Object> paramMap) throws Exception;
 	
 	// 스터디 홈 -> 카테고리 추가, 삭제, 등
 	public List<Map<String, Object>> readCategory(int studyNum) throws Exception;

@@ -203,19 +203,30 @@
 	    </where>
 	</select>
 	
-	<select id="memberDataCount" parameterType="Integer" resultType="Integer">
-	 SELECT NVL(COUNT(*), 0) FROM study_member
-	 WHERE studyNum = #{studyNum}
+	<select id="memberDataCount" parameterType="map" resultType="Integer">
+	 SELECT NVL(COUNT(*), 0) FROM study_member sm
+	 JOIN member_detail md ON sm.userId=md.userId
+	 <where>
+	 	<if test="keyword != null and keyword != '' ">
+		    INSTR(nickName, #{keyword}) &gt;= 1
+		</if>
+		and studyNum = #{studyNum}
+	 </where>
 	</select>
 	
 	<select id="memberList" parameterType="map" resultType="com.ssg.study.study.Study">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
-		            SELECT md.userId, nickName, role, s.studyNum 
+		            SELECT md.userId, nickName, role, s.studyNum, memberNum
 		                FROM study s
 		                JOIN study_member sb ON s.studyNum = sb.studyNum
 		                JOIN member_detail md ON sb.userId = md.userId
-		            WHERE s.studyNum = #{studyNum}
+		            <where>
+					 	<if test="keyword != null and keyword != '' ">
+						    INSTR(nickName, #{keyword}) &gt;= 1
+						</if>
+						and s.studyNum = #{studyNum}
+					 </where>
 		            ORDER BY role DESC
 		    ) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}

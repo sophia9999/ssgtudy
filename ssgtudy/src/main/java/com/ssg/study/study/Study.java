@@ -9,7 +9,7 @@ public class Study {
 	private String studyGoal; // study 테이블
 	
 	private int role;
-	private int memberNum; 
+	private int memberNum; // 스터디멤버 역할 변경시 필요
 	private String userId; // study_member 테이블
 	
 	private int boardNum;

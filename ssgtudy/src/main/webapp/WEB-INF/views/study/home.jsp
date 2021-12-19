@@ -65,12 +65,12 @@
 		</div>
 		<div class="col-md-2">
 		    <div class="card" id="listMember">
-		    	<div class="card-header list-header">
+		    	<div class="card-header list-header pb-0 px-0">
 		    		<h5 class="card-title text-center">
 		    			<span class="align-middle"><i class="bi bi-person-lines-fill"></i></span> 스터디 구성원
 		    		</h5>
 		    		<span class="member-count" data-pageNo="1" data-totalPage="1"></span>
-		    		<span class="member-title"></span>
+		    		<p class="text-center fw-bold p-3 m-0"><span class="member-title">총 -명</span></p>
 		    	</div>
 	    		<table class="table table-borderless member-list">
 	    			<thead>
@@ -182,14 +182,8 @@ $(function() {
 
 $(function() {
 	$(".btnManageMember").click(function() {
-		var url = "${pageContext.request.contextPath}/study/manageMember";
-		var selector = ".card";
-		var query = "studyNum=${dto.studyNum}";
-		var fn = function(data) {
-			$(".card").empty();
-			$(selector).html(data);
-		};
-		ajaxFun(url, "get", query, "HTML", fn);
+		var url = "${pageContext.request.contextPath}/study/manageMember?studyNum=${dto.studyNum}";
+		location.href = url; 
 	});
 });
 
@@ -230,13 +224,17 @@ function listMember(page) {
 }
 
 function printMember(data) {
-	console.log(data);
+	// console.log(data);
 	var dataCount = data.dataCount;
 	var pageNo = data.pageNo;
 	var total_page = data.total_page;
-	
+		
 	$(".member-count").attr("data-pageNo", pageNo);
 	$(".member-count").attr("data-totalPage", total_page);
+	
+	var out = "";
+	out += dataCount + "명과 함께하고 있습니다.";
+	$(".member-title").html(out);
 	
 	if(dataCount == 0) {
 		$(".member-list-body").empty();
