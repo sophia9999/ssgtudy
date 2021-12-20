@@ -19,6 +19,7 @@ public class Study {
 	private String nickName;
 	private int hitCount; // study_ad, study_ad_file 테이블
 	
+	private String updateDate; // 목표달성추가는 한번만 가능하도록 체크하는용도
 	private int questCount; // times 테이블. 목표달성횟수에 따른 RANK 반영
 	private int usedCount;  // times 테이블. 응모에 사용한 횟수
 	private int rank;
@@ -167,5 +168,13 @@ public class Study {
 
 	public void setCategoryNum(int categoryNum) {
 		this.categoryNum = categoryNum;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
 	}
 }

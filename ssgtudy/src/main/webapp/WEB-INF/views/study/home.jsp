@@ -37,7 +37,7 @@
 			           		<div class="buttons text-center p-2">
 			           		<hr>
 			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
-			           			<button type="button" class="btn btn-danger btnAddCategory">목표달성</button>
+			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button><br>  	
 			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 관리</button>
 			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
@@ -47,16 +47,30 @@
 			         			<button type="button" class="btn btn-dark btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
 			           		</div>
 			           	</c:when>
+			           	<c:when test="${dto.role > 1 }">
+			           		<div class="buttons text-center p-2">
+			           		<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
+			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
+			           			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
+				           		<hr>
+			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
+			           		</div>
+			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
 		           			<div class="text-center p-2">
 		           				<hr>
 			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
 			           		</div>
 			           	</c:when>
 						<c:otherwise>
 			           		<div class="text-center p-2">
 			        	   		<hr>	
 			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
+			           			<hr>
+			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
 			           		</div>
 			           	</c:otherwise>
 		           	</c:choose>
@@ -232,10 +246,6 @@ function printMember(data) {
 	$(".member-count").attr("data-pageNo", pageNo);
 	$(".member-count").attr("data-totalPage", total_page);
 	
-	var out = "";
-	out += dataCount + "명과 함께하고 있습니다.";
-	$(".member-title").html(out);
-	
 	if(dataCount == 0) {
 		$(".member-list-body").empty();
 		return;
@@ -246,6 +256,7 @@ function printMember(data) {
 	}
 	
 	var out = "";
+	var waiting = 0;
 	for(var idx = 0; idx < data.memberList.length; idx++) {
 		var nickName = data.memberList[idx].nickName;
 		var role = data.memberList[idx].role;
@@ -253,11 +264,12 @@ function printMember(data) {
 		if(role > 10) {
 			role = "스터디장";
 		} else if(role > 1) {
-			role = "매니저";
+			role = "관리자";
 		} else if(role == '1') {
 			role = "일반멤버";
 		} else {
 			role = "대기멤버";
+			waiting++;
 		}
 		
 		out += "<tr class='text-center'>";
@@ -267,9 +279,51 @@ function printMember(data) {
 	}
 	
 	$(".member-list-body").append(out);
+	
+	var out = "";
+	out += (dataCount) + "명과 함께하고 있습니다.<br>";
+	<c:if test="${dto.role > 1}">
+	out += "참여대기중 : "+waiting+"명"
+	</c:if>
+	$(".member-title").html(out);
 }
 
 $(function () {
 	listMember(1);
 })
+
+
+$(function() {
+	$(".btnAddQuestCount").click(function() {
+		var studyNum = ${dto.studyNum};
+		if(${dto.role} <= 1) {
+			return false;
+		}
+
+		var url = "${pageContext.request.contextPath}/study/questCount";
+		var query = "studyNum=" + studyNum
+		
+		var fn = function(data) {
+			// console.log(data);
+			var questCount = data.questCount;
+			if( data.status == "true") {
+				alert("목표달성횟수 추가가 완료되었습니다. 총 "+questCount+"일 목표달성을 완료했습니다:)");
+			} else if( data.status == "false") {
+				alert("하루에 한번만 추가할 수 있습니다.");
+			}
+		}
+		
+		ajaxFun(url, "get", query, "json", fn);	
+	});
+});
+
+$(function() {
+	$(".btnReport").click(function() {
+		var studyNum = "${studyNum}";
+		// alert("${studyNum}이나 ${dto.studyNum}")
+		var url = "${pageContext.request.contextPath}/study/report?studyNum="+studyNum;
+		// location.href = url; 
+	});
+});
+
 </script>

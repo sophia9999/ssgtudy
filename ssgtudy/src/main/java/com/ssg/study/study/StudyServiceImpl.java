@@ -243,10 +243,10 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	@Override
-	public int updateUsedCount(int studyNum) throws Exception {
+	public int updateUsedCount(Map<String, Object> map) throws Exception {
 		int result = 0;
 		try {
-			result = dao.updateData("study.updateUsedCount", studyNum);
+			result = dao.updateData("study.updateUsedCount", map);
 		} catch (Exception e) {
 		}
 		return result;
@@ -383,6 +383,36 @@ public class StudyServiceImpl implements StudyService {
 		} catch (Exception e) {
 		}
 		return result;
+	}
+
+	@Override
+	public int updateMember(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateMember", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteMember(int memberNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.deleteData("study.deleteMember", memberNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public Study questCountCheck(int studyNum) throws Exception {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.questCountCheck", studyNum);
+		} catch (Exception e) {
+		}
+		return dto;
 	}
 
 

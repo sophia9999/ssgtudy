@@ -15,7 +15,8 @@ public interface StudyService {
 	public int insertTimes(int studyNum) throws Exception;
 	// 스터디 times 테이블
 	public int updateQuestCount(int studyNum) throws Exception;
-	public int updateUsedCount(int studyNum) throws Exception;
+	public int updateUsedCount(Map<String, Object> map) throws Exception;
+	public Study questCountCheck(int studyNum) throws Exception;
 	
 	// 나의 스터디 리스트
 	public List<Study> studyList(Map<String, Object> map) throws Exception;
@@ -25,9 +26,12 @@ public interface StudyService {
 	public List<Study> studyHomeList(String userId) throws Exception;
 	public Study readStudy(Map<String, Object> map) throws Exception;
 	public Study visitStudy(int studyNum) throws Exception;
+	
 	// 스터디 홈에서 멤버 리스트
 	public List<Study> memberList(Map<String, Object> map) throws Exception;
 	public int memberDataCount(Map<String, Object> paramMap) throws Exception;
+	public int updateMember(Map<String, Object> map) throws Exception;
+	public int deleteMember(int memberNum) throws Exception;
 	
 	// 스터디 홈 -> 카테고리 추가, 삭제, 등
 	public List<Map<String, Object>> readCategory(int studyNum) throws Exception;

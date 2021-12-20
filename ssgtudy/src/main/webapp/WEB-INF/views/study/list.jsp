@@ -63,8 +63,11 @@
 	            </table>
 	        </div>
 	        <div class="page-box text-center">
-				${dataCount == 0 ? "등록된 스터디가 없습니다." : paging}
+				${dataCount == 0 ? "등록된 스터디가 없습니다. 스터디에 가입해 보세요:)" : paging}
 			</div>
+			<c:if test="${dataCount == '0' }">
+				<div class="p-3"></div>
+			</c:if>
 	    </div>
 	</section>
 </div>

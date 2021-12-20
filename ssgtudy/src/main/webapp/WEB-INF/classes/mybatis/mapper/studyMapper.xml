@@ -43,11 +43,17 @@
 		VALUES(#{studyNum}, 0, 0)
 	</insert>
 	<update id="updateQuestCount" parameterType="Integer">
-		UPDATE times SET questCount = questCount + 1
+		UPDATE times SET questCount = questCount + 1, updateDate = SYSDATE
 		WHERE studyNum = #{studyNum}
 	</update>
-	<update id="updateUsedCount" parameterType="Integer">
-		UPDATE times SET usedCount = usedCount + 1
+	<select id="questCountCheck" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT questCount, TO_CHAR(updateDate, 'YYYY-MM-DD') updateDate
+		FROM times
+		WHERE studyNum = #{studyNum}
+	</select>
+	
+	<update id="updateUsedCount" parameterType="map">
+		UPDATE times SET usedCount = #{usedCount}
 		WHERE studyNum = #{studyNum}
 	</update>
 	
@@ -210,6 +216,9 @@
 	 	<if test="keyword != null and keyword != '' ">
 		    INSTR(nickName, #{keyword}) &gt;= 1
 		</if>
+		<if test="role != null and role != '' ">
+		    and role &lt;= 1
+		</if>
 		and studyNum = #{studyNum}
 	 </where>
 	</select>
@@ -224,6 +233,9 @@
 		            <where>
 					 	<if test="keyword != null and keyword != '' ">
 						    INSTR(nickName, #{keyword}) &gt;= 1
+						</if>
+						<if test="role != null and role != '' ">
+						    and role &lt;= 1
 						</if>
 						and s.studyNum = #{studyNum}
 					 </where>
@@ -263,4 +275,13 @@
 		) where rnum &gt;= #{start}
 	</select>
 	
+	<update id="updateMember" parameterType="map">
+		UPDATE study_member SET role = #{role}
+		WHERE memberNum = #{memberNum}
+	</update>
+	
+	<delete id="deleteMember" parameterType="Integer">
+		DELETE FROM study_member WHERE memberNum = #{memberNum}
+	</delete>
+
 </mapper>

@@ -3,6 +3,7 @@ package com.ssg.study.study;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -819,6 +820,15 @@ public class StudyController {
 		String cp = req.getContextPath();
 		String userId = info.getUserId();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		// 스터디 장혹은 관리자가 아니면 홈으로 가세요
+		if(dto.getRole() == 1 || dto.getRole() == 0) {
+			return "redirect:home/"+studyNum;
+		}
+
 		int rows = 1; // 한 화면에 보여주는 멤버 수
 		int total_page = 0;
 		int dataCount = 0;
@@ -834,7 +844,13 @@ public class StudyController {
 		paramMap.put("keyword", keyword);
 		paramMap.put("studyNum", studyNum);
 		
-		dataCount = service.memberDataCount(paramMap);
+		if(dto.getRole() == 10) {
+			paramMap.put("role", "10");
+			dataCount = service.memberDataCount(paramMap);
+		} else {
+			dataCount = service.memberDataCount(paramMap);
+		}
+
 		if (dataCount != 0) {
 			total_page = myUtil.pageCount(rows, dataCount);
 		}
@@ -851,13 +867,21 @@ public class StudyController {
 		paramMap.put("start", start);
 		paramMap.put("end", end);
 		
-		List<Study> memberList = service.memberList(paramMap);
+		List<Study> memberList = null;
+		
+		if(dto.getRole() == 10) {
+			paramMap.put("role", "10");
+			memberList = service.memberList(paramMap);
+		} else {
+			memberList = service.memberList(paramMap);			
+		}
+		
 		
 		// 리스트의 번호
 		int listNum, n = 0;
-		for (Study dto : memberList) {
+		for (Study s : memberList) {
 			listNum = dataCount - (start + n - 1);
-			dto.setListNum(listNum);
+			s.setListNum(listNum);
 			n++;
 		}
 		
@@ -872,15 +896,7 @@ public class StudyController {
 		}
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("studyNum", studyNum);
-		Study dto = service.readStudy(map);
-		// 스터디 장이 아니면 홈으로 가세요
-		if(dto.getRole() != 20) {
-			return "redirect:study/home/"+studyNum;
-		}
+		
 		model.addAttribute("vo", dto);
 		
 		model.addAttribute("list", memberList);
@@ -896,7 +912,109 @@ public class StudyController {
 		model.addAttribute("studyNum", studyNum);
 		
 		return ".study.memberlist";
+		
 	}
 	
-	// TODO 스터디멤버 역할 변경
+	// 스터디멤버 역할 변경
+	@RequestMapping(value = "memberstatus")
+	public String updateMember(@RequestParam(value = "studyNum") int studyNum,
+			@RequestParam(value = "memberNum") int memberNum,
+			@RequestParam(value = "roleValue") int role,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		// 스터디 장 혹은 관리자가 아니면 홈으로 가세요
+		if(dto.getRole() == 1 || dto.getRole() == 0) {
+			return "redirect:study/home/"+studyNum;
+		}
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("memberNum", memberNum);
+		paramMap.put("role", role);
+		
+		try {
+			service.updateMember(paramMap);
+		} catch (Exception e) {
+			return "redirect:home/"+studyNum;
+		}
+		
+		return "redirect:/study/manageMember?studyNum="+studyNum;
+	}
+	@RequestMapping(value = "memberRemove")
+	public String deleteMember(@RequestParam(value = "studyNum")int studyNum, 
+			@RequestParam(value = "memberNum") int memberNum ) throws Exception {
+		try {
+			service.deleteMember(memberNum);
+		} catch (Exception e) {
+		}
+		return "redirect:/study/manageMember?studyNum="+studyNum;
+	}
+	
+	@RequestMapping( value = "questCount")
+	@ResponseBody
+	public Map<String, Object> updateQuestCount(@RequestParam int studyNum, HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String status = "true";
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		
+		if(dto == null) { // 로그인 안되어있으면 로그인창가기
+			status = "403";
+			model.put("status", status);
+			return model;
+		} else if(dto.getRole() == 1 || dto.getRole() == 0) {
+			status = "400";
+			model.put("status", status);
+			return model;
+		} 
+		
+		Study vo = null;
+		vo = service.questCountCheck(studyNum);
+		
+		Calendar cal = Calendar.getInstance();
+		
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int date = cal.get(Calendar.DATE);
+		
+		String SYSDATE = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date);
+		// System.out.println(SYSDATE);
+		// 아직 한번도 목표달성한적이 없을경우 null 로되어있으므로 그 전날을 설정해준다.
+		if(vo.getUpdateDate() == null) {
+			String updateDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date-1);
+			vo.setUpdateDate(updateDate);
+		}
+		
+		if(vo.getUpdateDate().equals(SYSDATE) ) {
+			status = "false";
+			model.put("status", status);
+			return model;
+		}
+		int questCount = 0;
+		
+		try {
+			service.updateQuestCount(studyNum);
+			questCount = vo.getQuestCount() + 1;
+		} catch (Exception e) {
+			status = "400";
+		}
+		
+		
+		
+		model.put("status", status);
+		model.put("questCount", questCount);
+		return model;
+	}
 }
