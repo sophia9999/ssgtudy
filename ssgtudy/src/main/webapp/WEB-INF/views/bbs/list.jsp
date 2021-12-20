@@ -47,7 +47,10 @@ function searchList(){
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td> 
-	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</a></td>
+	                                        	<td>
+	                                        		<a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</a>
+	                                        		<c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
+	                                        	</td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>

@@ -18,4 +18,24 @@ public interface BoardService {
 	public List<Board> listFile(int bbsNum);
 	public Board readFile(int bbs_fileNum);
 	public void deleteFile(Map<String, Object> map)throws Exception;
+
+	public void insertBoardLike(Map<String, Object> map) throws Exception;
+	public void deleteBoardLike(Map<String, Object> map) throws Exception;
+	public int boardLikeCount(int bbsNum);
+	public boolean userBoardLiked(Map<String, Object> map);
+	
+	public void insertReply(Reply dto) throws Exception;
+	public List<Reply> listReply(Map<String, Object> map);
+	public int replyCount(Map<String, Object> map);
+	public void deleteReply(Map<String, Object> map) throws Exception;
+
+	public List<Reply> listReplyAnswer(int answer);
+	public int replyAnswerCount(int answer);
+	
+	public void insertReplyLike(Map<String, Object> map) throws Exception;
+	public void deleteReplyLike(Map<String, Object> map) throws Exception;
+	public int replyLikeCount(int replyNum);
+	public boolean userReplyLiked(Map<String, Object> map ) throws Exception;
+	
+	
 }

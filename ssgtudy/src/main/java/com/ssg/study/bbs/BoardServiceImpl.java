@@ -209,4 +209,171 @@ public class BoardServiceImpl implements BoardService {
 			throw e;
 		}
 	}
+
+	@Override
+	public void insertReply(Reply dto) throws Exception {
+		try {
+			dao.insertData("bbs.insertReply", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Reply> listReply(Map<String, Object> map) {
+		List<Reply> list = null;
+		
+		try {
+			list = dao.selectList("bbs.listReply", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public int replyCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("bbs.replyCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void deleteReply(Map<String, Object> map) throws Exception {
+		try {
+			dao.deleteData("bbs.deleteReply", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Reply> listReplyAnswer(int answer) {
+		List<Reply> list = null;
+		
+		try {
+			list = dao.selectList("bbs.listReplyAnswer", answer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public int replyAnswerCount(int answer) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("bbs.replyAnswerCount", answer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	@Override
+	public void insertBoardLike(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("bbs.insertBoardLike", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteBoardLike(Map<String, Object> map) throws Exception {
+		try {
+			dao.deleteData("bbs.deleteBoardLike", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int boardLikeCount(int bbsNum) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("bbs.boardLikeCount", bbsNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public boolean userBoardLiked(Map<String, Object> map) {
+		boolean result = false;
+		
+		try {
+			Board dto = dao.selectOne("bbs.userBoardLiked", map);
+			if(dto != null) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public void insertReplyLike(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("bbs.insertReplyLike", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteReplyLike(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("bbs.deleteReplyLike", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int replyLikeCount(int replyNum) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("bbs.replyLikeCount", replyNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public boolean userReplyLiked(Map<String, Object> map) throws Exception {
+		boolean result = false;
+		
+		try {
+			Board dto = dao.selectOne("bbs.userReplyLiked", map);
+			if( dto!=null )
+				result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

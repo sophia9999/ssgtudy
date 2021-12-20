@@ -48,9 +48,15 @@
 		SELECT * FROM (
 			SELECT ROWNUM rnum, th.* FROM (
 				SELECT b.bbsNum, nickName, subject, content, hitCount, 
-					TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date
+					TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date,
+					NVL(replyCount, 0) replyCount
 				FROM bbs b
 				JOIN member_detail m ON b.userId = m.userId
+				LEFT OUTER JOIN(
+					SELECT bbsNum, COUNT(*) replyCount FROM bbs_reply
+					WHERE answer=0
+					GROUP BY bbsNum
+				) rp ON b.bbsNum = rp.bbsNum
 				<where>
 					<if test="keyword!=null and keyword!=''">
 						<include refid="where-list"/>
@@ -64,10 +70,14 @@
 	<select id="readBoard" parameterType="Integer"
 		resultType="com.ssg.study.bbs.Board">
 		SELECT b.bbsNum, b.userId, subject, nickName, content, hitCount, 
-			TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date
+			TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date, NVL(boardLikeCount, 0) boardLikeCount
 		FROM bbs b
 		JOIN member_detail m ON b.userId = m.userId
-		WHERE bbsNum = #{bbsNum}
+		LEFT OUTER JOIN (
+			SELECT bbsNum, COUNT(*) boardLikeCount FROM bbs_like
+			GROUP BY bbsNum
+		) bc ON b.bbsNum = bc.bbsNum
+		WHERE b.bbsNum = #{bbsNum}
 	</select>
 	
 	<update id="updateHitCount" parameterType="Integer">
@@ -114,6 +124,22 @@
 		DELETE FROM bbs WHERE bbsNum=#{bbsNum}
 	</delete>
 	
+	<!-- 게시글 공감 -->
+	<insert id="insertBoardLike" parameterType="map">
+		INSERT INTO bbs_like (bbsNum, userId) VALUES (#{bbsNum}, #{userId})
+	</insert>
+	
+	<delete id="deleteBoardLike" parameterType="map">
+		DELETE FROM bbs_like WHERE bbsNum = #{bbsNum} AND userId = #{userId}
+	</delete>
+	
+	<select id="boardLikeCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM bbs_like WHERE bbsNum = #{bbsNum}
+	</select>
+	
+	<select id="userBoardLiked" parameterType="map" resultType="com.ssg.study.bbs.Board">
+		SELECT bbsNum, userId FROM bbs_like WHERE bbsNum = #{bbsNum} AND userId = #{userId}
+	</select>
 	
 	<!-- 파일 -->
 	<insert id="insertFile" parameterType="com.ssg.study.bbs.Board">
@@ -136,4 +162,79 @@
 	<delete id="deleteFile" parameterType="map">
 		DELETE FROM bbs_file WHERE ${field}=#{bbsNum}
 	</delete>
+	
+	<!-- 댓글 -->
+	<insert id="insertReply" parameterType="com.ssg.study.bbs.Reply">
+		INSERT INTO bbs_reply(replyNum, bbsNum, userId, content, answer, reg_date)
+		VALUES (bbs_reply_seq.NEXTVAL, #{bbsNum}, #{userId}, #{content}, #{answer}, SYSDATE )
+	</insert>
+	
+	<select id="listReply" parameterType="map" resultType="com.ssg.study.bbs.Reply">
+		SELECT * FROM (
+   			SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT r.replyNum, r.userId, nickName, bbsNum, content, r.reg_date,
+		            NVL(answerCount, 0) answerCount,
+		            NVL(likeCount, 0) likeCount
+		        FROM bbs_reply r
+		        JOIN member m ON r.userId = m.userId
+		        JOIN member_detail d ON m.userId = d.userId
+		        LEFT OUTER JOIN (
+		            SELECT answer, COUNT(*) answerCount
+		            FROM bbs_reply WHERE answer != 0 GROUP BY answer
+		        ) a ON r.replyNum = a.answer
+		        LEFT OUTER JOIN(
+		        	SELECT replyNum, COUNT(*) likeCount
+		        	FROM bbs_replylike GROUP BY replyNum
+		        ) c ON r.replyNum = c.replyNum
+		       WHERE bbsNum=#{bbsNum} AND r.answer=0
+		       ORDER BY r.replyNum DESC
+		    ) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) FROM bbs_reply
+		WHERE bbsNum=#{bbsNum} AND answer=0
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM bbs_reply
+		WHERE replyNum=#{replyNum}
+		<if test="mode=='reply'">
+			OR answer=#{replyNum}
+		</if>
+	</delete>
+	
+	<!-- 댓글의 답글 리스트 -->
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.ssg.study.bbs.Reply">
+		SELECT replyNum, bbsNum, r.userId, nickName, content, reg_date, answer
+		FROM bbs_reply r
+		JOIN member m ON r.userId = m.userId
+		JOIN member_detail d ON m.userId = d.userId
+		WHERE answer = #{answer}
+		ORDER BY replyNum DESC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="Integer" resultType="Integer">
+		SELECT NVL(COUNT(*),0)
+		FROM bbs_reply WHERE answer=#{answer}
+	</select>
+	
+	<!-- 댓글 좋아요 추가 -->
+	<insert id="insertReplyLike" parameterType="map">
+		INSERT INTO bbs_replylike(replyNum, userId) VALUES (#{replyNum},#{userId})
+	</insert>
+	
+	<delete id="deleteReplyLike" parameterType="map">
+		DELETE FROM bbs_replylike WHERE replyNum = #{replyNum} AND userId=#{userId}
+	</delete>
+	
+	<select id="replyLikeCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) likeCount FROM bbs_replylike
+		WHERE replyNum = #{replyNum}
+	</select>
+	
+	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.bbs.Reply">
+		SELECT replyNum, userId FROM bbs_replylike WHERE replyNum = #{replyNum}
+	</select>
 </mapper>

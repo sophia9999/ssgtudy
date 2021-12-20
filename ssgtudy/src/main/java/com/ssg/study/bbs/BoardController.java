@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -121,10 +122,8 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="write", method = RequestMethod.GET)
-	public String writeForm(Model model, HttpSession session ) throws Exception {
-		
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
+	public String writeForm(Model model) throws Exception {
+	
 		model.addAttribute("mode", "write");
 		return ".bbs.write";
 	}
@@ -144,15 +143,17 @@ public class BoardController {
 		return "redirect:/bbs/list";
 	}
 	
-	@RequestMapping(value="article", method=RequestMethod.GET)
+	@RequestMapping(value="article")
 	public String article (
 			@RequestParam int bbsNum,
 			@RequestParam String page,
 			@RequestParam(defaultValue = "all") String condition,
 			@RequestParam(defaultValue = "") String keyword,
-			Model model
+			Model model,
+			HttpSession session
 			) throws Exception {
 		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		keyword= URLDecoder.decode(keyword, "utf-8");
 		
 		String query = "page=" + page;
@@ -180,10 +181,15 @@ public class BoardController {
 		
 		List<Board> listFile = service.listFile(bbsNum);
 		
+		// 게시글 좋아요 여부
+		map.put("userId", info.getUserId());
+		boolean userBoardLiked = service.userBoardLiked(map);
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
 		model.addAttribute("preReadDto", preReadDto);
 		model.addAttribute("nextReadDto", nextReadDto);
+		model.addAttribute("userBoardLiked",userBoardLiked);
 		model.addAttribute("listFile", listFile);
 		model.addAttribute("query", query);
 		
@@ -340,4 +346,177 @@ public class BoardController {
 
 		return model;
 	}
-}
+	
+	// 게시글 좋아요 추가/삭제 : AJAX-JSON
+	@RequestMapping(value="insertBoardLike", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertBoardLike(@RequestParam int bbsNum,
+			@RequestParam boolean userLiked,
+			HttpSession session){
+		String state= "true";
+		int boardLikeCount = 0;
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("bbsNum", bbsNum);
+		paramMap.put("userId", info.getUserId());
+	
+		try {
+			if(userLiked) {
+				service.deleteBoardLike(paramMap);
+			} else {
+				service.insertBoardLike(paramMap);
+			}
+		} catch (DuplicateKeyException e) {
+			state = "liked";
+		} catch (Exception e) {
+			state = "false";
+		}
+		boardLikeCount = service.boardLikeCount(bbsNum);
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state );
+		model.put("boardLikeCount", boardLikeCount );
+	
+		return model;
+	}
+	
+	// 댓글 및 댓글의 답글 등록 : AJAX-JSON
+	@RequestMapping(value="insertReply", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertReply(Reply dto, HttpSession session){
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String state = "true";
+		
+		try {
+			dto.setUserId(info.getUserId());
+			service.insertReply(dto);
+		} catch (Exception e) {
+			state="false";
+		}
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	//댓글 리스트 : AJAX-TEXT
+	@RequestMapping(value="listReply")
+	public String listReply(@RequestParam int bbsNum,
+			@RequestParam(value="pageNo", defaultValue="1") int current_page,
+			Model model) throws Exception {
+		
+		int rows = 5;
+		int total_page = 0;
+		int dataCount = 0;
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("bbsNum", bbsNum);
+		
+		dataCount = service.replyCount(map);
+		total_page = myUtil.pageCount(rows, dataCount);
+		if(current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		int start = (current_page -1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<Reply> listReply = service.listReply(map);
+		
+		for(Reply dto : listReply) {
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+		}
+		
+		// AJAX용 페이지
+		String paging = myUtil.pagingMethod(current_page, total_page, "listPage");
+	
+		//포워딩할 jsp로 넘길 데이터
+		model.addAttribute("listReply", listReply );
+		model.addAttribute("pageNo", current_page );
+		model.addAttribute("replyCount", dataCount );
+		model.addAttribute("total_page", total_page );
+		model.addAttribute("paging", paging );
+
+		return "/bbs/listReply";
+	}
+	
+	// 댓글 및 댓글의 답글 삭제 : AJAX-JSON
+	@RequestMapping(value="deleteReply", method= RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteReply(@RequestParam Map<String, Object> paramMap){
+		String state="true";
+		
+		try {
+			service.deleteReply(paramMap);
+		} catch (Exception e) {
+			state="false";
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("state", state);
+		return map;
+	}
+	
+	// 댓글의 답글 리스트 : AJAX-TEXT
+	@RequestMapping(value="listReplyAnswer")
+	public String listReplyAnswer(@RequestParam int answer, Model model) throws Exception {
+		List<Reply> listReplyAnswer = service.listReplyAnswer(answer);
+		
+		for(Reply dto : listReplyAnswer) {
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));	
+		}
+		
+		model.addAttribute("listReplyAnswer", listReplyAnswer);
+		return "/bbs/listReplyAnswer";
+	}
+	
+	// 댓글의 답글 개수 : AJAX-JSON
+	@RequestMapping(value="countReplyAnswer")
+	@ResponseBody
+	public Map<String, Object> countReplyAnswer(@RequestParam(value="answer") int answer) {
+		int count = service.replyAnswerCount(answer);
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("count", count);
+		return model;
+	}
+	
+	@RequestMapping(value="insertReplyLike", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertReplyLike(
+			@RequestParam int replyNum,
+			@RequestParam boolean userReplyLiked,
+			HttpSession session) {
+		String state = "true";
+		int replyLikeCount = 0;
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> paramMap = new HashMap<>();
+		
+		paramMap.put("replyNum", replyNum);
+		paramMap.put("userId", info.getUserId());
+		
+		try {
+			if(userReplyLiked) {
+				service.deleteReplyLike(paramMap);
+			} else {
+				service.insertReplyLike(paramMap);			
+			}
+		} catch (DuplicateKeyException e) {
+			state= "liked";
+		} catch (Exception e) {
+			state= "false";
+		}
+		
+		replyLikeCount = service.replyLikeCount(replyNum);
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		model.put("replyLikeCount", replyLikeCount);
+		
+		return model;
+	}
+}	

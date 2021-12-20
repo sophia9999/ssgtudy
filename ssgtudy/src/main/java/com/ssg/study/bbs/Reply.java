@@ -2,13 +2,15 @@ package com.ssg.study.bbs;
 
 public class Reply {
 	private int replyNum;
+	private int bbsNum;
 	private String userId;
-	private String userName;
+	private String nickName;
 	private String content;
 	private String reg_date;
-	private int parentReplyNum;
-	private String reason;
+	private String answer;
 	
+	private int answerCount;
+	private int likeCount;
 	
 	public int getReplyNum() {
 		return replyNum;
@@ -16,17 +18,23 @@ public class Reply {
 	public void setReplyNum(int replyNum) {
 		this.replyNum = replyNum;
 	}
+	public int getBbsNum() {
+		return bbsNum;
+	}
+	public void setBbsNum(int bbsNum) {
+		this.bbsNum = bbsNum;
+	}
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserName() {
-		return userName;
+	public String getNickName() {
+		return nickName;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	public String getContent() {
 		return content;
@@ -40,16 +48,22 @@ public class Reply {
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
 	}
-	public int getParentReplyNum() {
-		return parentReplyNum;
+	public String getAnswer() {
+		return answer;
 	}
-	public void setParentReplyNum(int parentReplyNum) {
-		this.parentReplyNum = parentReplyNum;
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
-	public String getReason() {
-		return reason;
+	public int getAnswerCount() {
+		return answerCount;
 	}
-	public void setReason(String reason) {
-		this.reason = reason;
+	public void setAnswerCount(int answerCount) {
+		this.answerCount = answerCount;
 	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}	
 }
