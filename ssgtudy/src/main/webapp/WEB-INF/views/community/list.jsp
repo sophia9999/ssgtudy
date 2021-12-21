@@ -25,7 +25,7 @@ function searchList() {
 <section class="row">
 	<div class="container">
 		<div class="body-title">
-			<h3><i class="fas fa-school"></i><span> 학교 커뮤니티 게시판 </span></h3>
+			<h3><i class="fas fa-school"></i><span> ${sessionScope.member.schoolName} 커뮤니티 게시판 </span></h3>
 											<!-- ${schoolName} 게시판 -->
 		</div>
 		
@@ -63,8 +63,8 @@ function searchList() {
 								<td class="text-bold-500">${dto.reg_date}</td>
 								<td class="text-bold-500">${dto.hitCount}</td>
 								<td>
-									<c:if test="${not empty dto.saveFilename}">
-										<a href="${pageContext.request.contextPath}/community/download?boardNum=${dto.boardNum}" class="text-reset"><i class="bi bi-file-arrow-down"></i></a>
+									<c:if test="${dto.fileCount != 0}">
+										<a href="${pageContext.request.contextPath}/community/zipdownload?boardNum=${dto.boardNum}" class="text-reset"><i class="bi bi-file-arrow-down"></i></a>
 									</c:if>
 								</td>
 							</tr>
@@ -77,14 +77,14 @@ function searchList() {
 				
 						<div class="row board-list-footer">
 						<div class="col-md-4 text-start">
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/main';">새로고침</button>
+							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/main';">새로고침</button>
 						</div>
 						<div class="col-md-4 text-center">
 							<form class="row" name="searchForm" action="${pageContext.request.contextPath}/community/main" method="post">
 								<div class="col-auto p-1">
 									<select name="condition" class="form-select">
 										<option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
-										<option value="userName" ${condition=="userName"?"selected='selected'":""}>작성자</option>
+										<option value="nickName" ${condition=="nickName"?"selected='selected'":""}>작성자</option>
 										<option value="reg_date" ${condition=="reg_date"?"selected='selected'":""}>등록일</option>
 										<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
 										<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
@@ -94,12 +94,12 @@ function searchList() {
 									<input type="text" name="keyword" value="${keyword}" class="form-control">
 								</div>
 								<div class="col-auto p-1">
-									<button type="button" class="btn btn-light" onclick="searchList()"> <i class="bi bi-search"></i> </button>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="searchList()"> <i class="bi bi-search"></i> </button>
 								</div>
 							</form>
 						</div>
 						<div class="col-md-4 text-end">
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/write';">글올리기</button>
+							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/write';">글올리기</button>
 						</div>
 					</div>
            

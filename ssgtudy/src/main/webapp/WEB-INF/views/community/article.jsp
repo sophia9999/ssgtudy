@@ -292,6 +292,9 @@ $(function(){
 		ajaxFun(url, "post", query, "json", fn);
 	});
 });
+
+
+
 </script>
 <section class="row">
 	<div class="card">
@@ -310,6 +313,9 @@ $(function(){
 							</td>
 							<td align="right">
 								${dto.reg_date} | 조회 ${dto.hitCount}
+								<c:if test="${sessionScope.member.userId != dto.userId && sessionScope.member.membership < 50}">
+									<a href="${pageContext.request.contextPath}/community/boardReport?boardNum=${dto.boardNum}&page=${page}"><span> | 신고 </span></a>
+								</c:if>
 							</td>
 						</tr>
 						
@@ -321,7 +327,7 @@ $(function(){
 						
 						<tr>
 							<td colspan="2" class="text-center p-3">
-								<button type="button" class="btn btn-outline-secondary btnSendBoardLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.boardLikeCount}</span></button>
+								<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSendBoardLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.boardLikeCount}</span></button>
 							</td>
 						</tr>
 						
@@ -359,24 +365,24 @@ $(function(){
 						<td width="50%">
 							<c:choose>
 								<c:when test="${sessionScope.member.userId==dto.userId}">
-									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/update?boardNum=${dto.boardNum}&page=${page}';">수정</button>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/update?boardNum=${dto.boardNum}&page=${page}';">수정</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" class="btn btn-light" disabled="disabled">수정</button>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">수정</button>
 								</c:otherwise>
 							</c:choose>
 					    	
 							<c:choose>
 					    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
-					    			<button type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
+					    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard();">삭제</button>
 					    		</c:when>
 					    		<c:otherwise>
-					    			<button type="button" class="btn btn-light" disabled="disabled">삭제</button>
+					    			<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">삭제</button>
 					    		</c:otherwise>
 					    	</c:choose>
 						</td>
 						<td class="text-end">
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/main?${query}';">리스트</button>
+							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/main?${query}';">리스트</button>
 						</td>
 					</tr>
 				</table>
@@ -395,7 +401,7 @@ $(function(){
 							</tr>
 							<tr>
 							   <td align='right'>
-							        <button type='button' class='btn btn-light btnSendReply'>댓글 등록</button>
+							        <button type='button' class='btn btn-outline-primary me-1 mb-1 btnSendReply'>댓글 등록</button>
 							    </td>
 							 </tr>
 						</table>

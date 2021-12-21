@@ -13,30 +13,36 @@
 	
 	<sql id="where-list">
 		<choose>
-			<when test="condition == 'all'">
-			( INSTR(subject, #{keyword})) &gt; 0
+			<when test="condition == 'all' ">
+			( INSTR(subject, #{keyword}) &gt; 0
 				OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
 			</when>
-			<when test="condition == 'reg_date'">
+			<when test="condition == 'subject' ">
+				INSTR(subject, #{keyword}) &gt; 0
+			</when>
+			<when test="condition == 'content' ">
+				DBMS_LOB.INSTR(content, #{keyword}) &gt; 0
+			</when>
+			<when test="condition == 'reg_date' ">
 			( TO_CHAR(reg_date, 'YYYYMMDD') = #{keyword}
 				OR TO_CHAR(reg_date, 'YYYY-MM-DD') = #{keyword} )
 			</when>
-			<when test="condition == 'content'">
-				DBMS_LOB.INSTR(content, #{keyword}) &gt; 0
+			<when test="condition == 'nickName'">
+				nickName = #{keyword}
 			</when>
-			<otherwise>
-				INSTR(${condition}, #{keyword}) &gt; 0
-			</otherwise>
 		</choose>
 	</sql>
 	
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
 		FROM community c
-		JOIN member m ON c.userId = m.userId
+		JOIN member_detail md ON c.userId = md.userId
 		<where>
-			<if test="keyword!=null and keyword!=''">
-				<include refid="where-list"/>
+			<if test="schoolCode != null">
+				c.schoolCode = #{schoolCode}	
+			</if>
+			<if test="keyword!=null and keyword!='' ">
+				AND <include refid="where-list"/>
 			</if>
 		</where>
 	</select>
@@ -47,7 +53,8 @@
 				SELECT c.boardNum, c.userId, nickName, subject,
 					TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date,
 					hitCount,
-					NVL(replyCount, 0) replyCount
+					NVL(replyCount, 0) replyCount,
+					NVL(fileCount, 0) fileCount
 				FROM community c
 				JOIN member_detail md ON c.userId = md.userId
 				LEFT OUTER JOIN (
@@ -55,9 +62,17 @@
 					WHERE answer = 0
 					GROUP BY boardNum
 				) rp ON c.boardNum = rp.boardNum
+				LEFT OUTER JOIN (
+					SELECT boardNum, COUNT(*) fileCount FROM community_file
+					GROUP BY boardNum
+				) f ON c.boardNum = f.boardNum
 				<where>
-					<if test="keyword != null and keyword != ''">
-						<include refid="where-list"/>
+					<if test="schoolCode != null">
+						c.schoolCode = #{schoolCode}	
+					</if>
+				
+					<if test="keyword != null and keyword != '' ">
+						AND <include refid="where-list"/>
 					</if>
 				</where> 
 				ORDER BY boardNum DESC
@@ -85,10 +100,14 @@
 		SELECT * FROM (
 			SELECT boardNum, subject
 			FROM community c
-			JOIN member m ON c.userId = m.userId
+			JOIN member_detail md ON c.userId = md.userId
 			<where>
+				<if test="schoolCode != null">
+					c.schoolCode = #{schoolCode}	
+				</if>
+			
 				<if test="keyword != null and keyword != ''">
-					<include refid="where-list"/>
+					AND <include refid="where-list"/>
 				</if>
 				AND (boardNum &gt; #{boardNum})
 			</where>
@@ -100,10 +119,14 @@
 		SELECT * FROM (
 			SELECT boardNum, subject
 			FROM community c
-			JOIN member m ON c.userId = m.userId
+			JOIN member_detail md ON c.userId = md.userId
 			<where>
+				<if test="schoolCode != null">
+					c.schoolCode = #{schoolCode}	
+				</if>
+				
 				<if test="keyword != null and keyword != ''">
-					<include refid="where-list"/>
+					AND <include refid="where-list"/>
 				</if>
 				AND (boardNum &lt; #{boardNum})
 			</where>
@@ -208,6 +231,15 @@
 	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.community.Reply">
 		SELECT replyNum, userId FROM community_replyLike WHERE replyNum = #{replyNum}
 	</select>
+	
+	<!-- 신고 -->
+	<insert id="insertBoardReport" parameterType="com.ssg.study.community.Community">
+		INSERT INTO community_report(boardNum, userId, reason) VALUES(#{boardNum}, #{userId}, #{reason})
+	</insert>
+	
+	<insert id="insertReplyReport" parameterType="com.ssg.study.community.Reply">
+		INSERT INTO community_replyReport(replyNum, userId, reason) VALUES(#{replyNum}, #{userId}, #{reason})
+	</insert>
 	
 	<!-- 파일 -->
 	<insert id="insertFile" parameterType="com.ssg.study.community.Community">

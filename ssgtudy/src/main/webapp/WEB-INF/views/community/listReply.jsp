@@ -22,7 +22,7 @@
 							<span class='deleteReply' data-replyNum='${vo.replyNum}' data-pageNo='${pageNo}'>삭제</span>
 						</c:when>
 						<c:otherwise>
-							<span class='notifyReply'>신고</span>
+							<a href="${pageContext.request.contextPath}/community/replyReport?boardNum=${vo.boardNum}&page=${page}&replyNum=${vo.replyNum}">신고</a>
 						</c:otherwise>
 					</c:choose>
 				</td>

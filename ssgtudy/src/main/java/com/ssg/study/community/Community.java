@@ -33,6 +33,10 @@ public class Community {
 	private int replyCount;
 	private int boardLikeCount;
 	
+	// 게시글 신고
+	private String reason;
+	private String reason_etc;
+	
 	public int getListNum() {
 		return listNum;
 	}
@@ -146,5 +150,17 @@ public class Community {
 	}
 	public void setSelectFile(List<MultipartFile> selectFile) {
 		this.selectFile = selectFile;
+	}
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	public String getReason_etc() {
+		return reason_etc;
+	}
+	public void setReason_etc(String reason_etc) {
+		this.reason_etc = reason_etc;
 	}
 }

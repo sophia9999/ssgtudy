@@ -9,6 +9,10 @@ public class Reply {
 	private String reg_date;
 	private int answer;
 	
+	// 댓글 신고
+	private String reason;
+	private String reason_etc;
+	
 	private int answerCount;
 	private int likeCount;
 	
@@ -65,5 +69,17 @@ public class Reply {
 	}
 	public void setLikeCount(int likeCount) {
 		this.likeCount = likeCount;
+	}
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	public String getReason_etc() {
+		return reason_etc;
+	}
+	public void setReason_etc(String reason_etc) {
+		this.reason_etc = reason_etc;
 	}
 }

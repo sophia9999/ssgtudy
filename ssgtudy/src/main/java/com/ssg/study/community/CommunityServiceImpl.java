@@ -385,4 +385,24 @@ public class CommunityServiceImpl implements CommunityService {
 			throw e;
 		}
 	}
+
+	@Override
+	public void insertBoardReport(Community dto) throws Exception {
+		try {
+			dao.insertData("community.insertBoardReport", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void insertReplyReport(Reply dto) throws Exception {
+		try {
+			dao.insertData("community.insertReplyReport", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

@@ -39,4 +39,7 @@ public interface CommunityService {
 	public List<Community> listFile(int boardNum);
 	public Community readFile(int fileNum);
 	public void deleteFile(Map<String, Object> map) throws Exception;
+	
+	public void insertBoardReport(Community dto) throws Exception;
+	public void insertReplyReport(Reply dto) throws Exception;
 }

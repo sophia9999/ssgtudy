@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sound.midi.MidiDevice.Info;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -40,10 +41,13 @@ public class CommunityController {
 			@RequestParam(defaultValue = "all") String condition,
 			@RequestParam(defaultValue = "") String keyword,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Integer schoolCode = info.getSchoolCode();
 		
 		String cp = req.getContextPath();
-		
+	
 		int rows = 10;
 		int total_page = 0;
 		int dataCount = 0;
@@ -54,8 +58,9 @@ public class CommunityController {
 		
 		// 전체 페이지 수
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("condtion", condition);
+		map.put("condition", condition);
 		map.put("keyword", keyword);
+		map.put("schoolCode", schoolCode);
 		
 		dataCount = service.dataCount(map);
 		if(dataCount != 0) {
@@ -72,6 +77,7 @@ public class CommunityController {
 		int end = current_page * rows;
 		map.put("start", start);
 		map.put("end", end);
+		
 		
 		// 글 리스트
 		List<Community> list = service.listBoard(map);
@@ -107,7 +113,7 @@ public class CommunityController {
 		
 		model.addAttribute("condition", condition);
 		model.addAttribute("keyword", keyword);
-
+		
 		return ".community.list";
 	}
 	
@@ -500,5 +506,66 @@ public class CommunityController {
 		
 		return model;
 	}
-	 
+	
+	@RequestMapping(value = "boardReport", method = RequestMethod.GET)
+	public String reportForm(@RequestParam int boardNum,
+			@RequestParam String page,
+			Model model) throws Exception {
+		
+		model.addAttribute("boardNum", boardNum);
+		model.addAttribute("page", page);
+		
+		return ".community.boardReport";
+	}
+	
+	@RequestMapping(value = "/community/boardReport", method = RequestMethod.POST)
+	public String reportSubmit(Community dto, 
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setUserId(info.getUserId());
+			if(dto.getReason().equals("기타")) {
+				dto.setReason(dto.getReason_etc());
+			}
+			service.insertBoardReport(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return "redirect:/community/main";
+	}
+	
+	@RequestMapping(value = "replyReport", method = RequestMethod.GET)
+	public String replyReportForm(@RequestParam int boardNum,
+			@RequestParam int replyNum,
+			@RequestParam String page,
+			Model model) throws Exception {
+		
+		model.addAttribute("boardNum", boardNum);
+		model.addAttribute("replyNum", replyNum);
+		model.addAttribute("page", page);
+		
+		return ".community.replyReport";
+	}
+	
+	@RequestMapping(value = "/community/replyReport", method = RequestMethod.POST)
+	public String replyReportSubmit(Reply dto, 
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		try {
+			dto.setUserId(info.getUserId());
+			if(dto.getReason().equals("기타")) {
+				dto.setReason(dto.getReason_etc());
+			}
+			service.insertReplyReport(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+		return "redirect:/community/main";
+	}
 }
