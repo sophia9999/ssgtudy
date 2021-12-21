@@ -83,29 +83,6 @@ function search() {
                            		<button type="button" class="btn btn-primary changeRole" value="${dto.memberNum}">변경</button>
 								<button type="button" class="btn btn-danger deleteMember" value="${dto.memberNum}">강퇴</button>
                             </div>
-							
-							<!-- 
-								<div class="btn-group buttons">
-									<select name="role" class="select form-select memberRole">
-										<c:choose>
-											<c:when test="${vo.role > 10}">
-												<option value="20" ${dto.role == '20' ? "selected='selected'":"" }>스터디장</option>
-												<option value="10" ${dto.role == '10' ? "selected='selected'":"" }>스터디관리자</option>
-												<option value="1" ${dto.role == '1' ? "selected='selected'":"" }>일반멤버</option>
-												<option value="0" ${dto.role == '0' ? "selected='selected'":"" }>대기멤버</option>
-											</c:when>
-											<c:otherwise>
-												<option value="1">일반멤버</option>
-												<option value="0">대기멤버</option>
-											</c:otherwise>
-										</c:choose>
-									</select>
-									<div class="buttons">
-										<button type="button" class="btn btn-primary changeRole" value="${dto.memberNum}">변경</button>
-										<button type="button" class="btn btn-danger deleteMember" value="${dto.memberNum}">강퇴</button>
-									</div>
-								</div>
-							 -->
 							</td>
                 		</tr>
                 	</c:forEach>

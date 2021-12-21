@@ -359,7 +359,7 @@ public class StudyServiceImpl implements StudyService {
 	public int studyListByCategoryDataCount(Map<String, Object> map) throws Exception {
 		int result = 0;
 		try {
-			dao.selectOne("study.studyListByCategoryDataCount", map);
+			result = dao.selectOne("study.studyListByCategoryDataCount", map);
 		} catch (Exception e) {
 		}
 		return result;
@@ -410,6 +410,46 @@ public class StudyServiceImpl implements StudyService {
 		Study dto = null;
 		try {
 			dto = dao.selectOne("study.questCountCheck", studyNum);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
+
+	@Override
+	public int insertStudyReport(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertStudyReport", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int insertEachStudyBoard(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertEachStudyBoard", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateArticleByCategory(int boardNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateArticleByCategory", boardNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public Study readArticleByCategory(int boardNum) throws Exception {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.readArticleByCategory", boardNum);
 		} catch (Exception e) {
 		}
 		return dto;

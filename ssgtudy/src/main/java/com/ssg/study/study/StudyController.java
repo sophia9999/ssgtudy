@@ -238,7 +238,7 @@ public class StudyController {
 			) throws Exception {
 		String status = "true";
 		List<Study> memberList = null;
-		int rows = 2;
+		int rows = 10;
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("studyNum", studyNum);
@@ -720,62 +720,95 @@ public class StudyController {
 			@RequestParam(value = "page", defaultValue = "1")int current_page,
 			@RequestParam(value = "categoryNum") int categoryNum,
 			Model model,
+			@RequestParam(defaultValue = "all") String condition,
+			@RequestParam(defaultValue = "") String keyword,
 			@PathVariable int studyNum,
-			HttpSession session ) throws Exception {
-		Map<String, Object> map1 = new HashMap<String, Object>(); // 카테고리별 리스트 나오게끔
-		Map<String, Object> map2 = new HashMap<String, Object>(); // 멤버가 아니면 리스트보지못하고 글도 못쓰게끔
-		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		Study dto = null;
-		
-		String userId = info.getUserId();		
-		map2.put("userId", userId);
-		map2.put("studyNum", studyNum);
-		
+			HttpSession session,
+			HttpServletRequest req) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>(); // 카테고리별 리스트 나오게끔
+		SessionInfo info = (SessionInfo)session.getAttribute("member");	
 		String status = "true";
-		List<Study> listByCategory = null;
 		
-		map1.put("categoryNum", categoryNum);
+		String cp = req.getContextPath();
 		
 		int rows = 10;
+		int total_page = 0;
+		int dataCount = 0;
 		
+		if (req.getMethod().equalsIgnoreCase("GET")) { // GET 방식인 경우
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
 		
-		int dataCount = service.studyListByCategoryDataCount(map1);
-		
-		System.out.println(current_page);
-		System.out.println(dataCount);
-		
-		int total_page = myUtil.pageCount(rows, dataCount);
-		if (current_page > total_page) {
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		map.put("categoryNum", categoryNum);
+				
+		dataCount = service.studyListByCategoryDataCount(map);
+		if (dataCount != 0) {
+			total_page = myUtil.pageCount(rows, dataCount);
+		}
+
+		// 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+		if (total_page < current_page) {
 			current_page = total_page;
 		}
-		
+
+		// 리스트에 출력할 데이터를 가져오기
 		int start = (current_page - 1) * rows + 1;
-		int end = current_page * rows;
+		int end = current_page * rows+ 1;
+		map.put("start", start);
+		map.put("end", end);
 		
-		System.out.println(start);
-		System.out.println(end);
-		map1.put("start", start);
-		map1.put("end", end);
-		try {
-			listByCategory = service.studyListByCategory(map1);
-			dto = service.readStudy(map2);
-		} catch (Exception e) {
-			status = "false";
+		List<Study> listByCategory = null;
+		listByCategory = service.studyListByCategory(map);
+		
+		// 리스트의 번호
+		int listNum, n = 0;
+		for (Study dto : listByCategory) {
+			listNum = dataCount - (start + n - 1);
+			dto.setListNum(listNum);
+			n++;
 		}
 		
+		String query = "";
+		String listUrl = cp + "/home/"+studyNum+"/list?categoryNum="+categoryNum;
+		String articleUrl = cp + "/home/"+studyNum+"/article?page=" + current_page+"&categoryNum="+categoryNum;
+		if (keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+
+		if (query.length() != 0) {
+			listUrl += "&" + query;
+			articleUrl += "&" + query;
+		}
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		Study dto = null;
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", info.getUserId());
+		paramMap.put("studyNum", studyNum);
+		dto = service.readStudy(paramMap);
+		
+		model.addAttribute("paging", paging);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("listUrl", listUrl);
 		model.addAttribute("studyNum", studyNum);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("page", current_page);
 		model.addAttribute("status", status);
 		model.addAttribute("listByCategory", listByCategory);
+		
 		model.addAttribute("studyDto", dto);
+		
+		model.addAttribute("categoryNum", categoryNum);
 		return "study/homelist";
 	}
+	
 	// 홈에서 카테고리 별 리스트
 	// AJAX - HTML
-	@RequestMapping(value = "home/{studyNum}/list/write")
+	@RequestMapping(value = "home/{studyNum}/list/write", method = RequestMethod.GET)
 	public String studyWrite(Model model,
 			@PathVariable int studyNum,
 			HttpSession session) throws Exception {
@@ -806,6 +839,78 @@ public class StudyController {
 		return "study/homewrite";
 	}
 	
+	// 스터디홈에서 카테고리탭누르고 글작성 할 때
+		@RequestMapping(value = "home/{studyNum}/list/write", method = RequestMethod.POST)
+		public String studyWriteSubmit(@PathVariable int studyNum,
+				HttpSession session, Study dto, 
+				Model model) throws Exception {
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");	
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			List<Map<String, Object>> categoryList = service.readCategory(studyNum);
+			
+			String userId = info.getUserId();		
+			map.put("userId", userId);
+			map.put("studyNum", studyNum);
+			// 스터디 회원아니면
+			Study vo = service.readStudy(map);
+			if(vo == null) {
+				return "redirect:/study/home/"+studyNum;
+			} else if (vo.getRole() <= 1) {
+				// 스터디 일반멤버 or 관리자가 아니면
+				return "redirect:/study/home/"+studyNum;
+			}
+
+			dto.setUserId(userId);
+			service.insertEachStudyBoard(dto);				
+
+			
+			model.addAttribute("studyNum", studyNum);
+			model.addAttribute("categoryList", categoryList);
+			return "redirect:/study/home/"+studyNum;
+		}
+	
+	@RequestMapping(value = "home/{studyNum}/article")
+	public String articleByCategory(
+			@RequestParam(value = "page")String page,
+			@RequestParam(value = "categoryNum") int categoryNum,
+			Model model,
+			@RequestParam(defaultValue = "all") String condition,
+			@RequestParam(defaultValue = "") String keyword,
+			@PathVariable int studyNum,
+			@RequestParam int boardNum,
+			HttpSession session,
+			HttpServletRequest req) throws Exception {
+		keyword = URLDecoder.decode(keyword, "utf-8");
+		Map<String, Object> map = new HashMap<String, Object>();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");	
+		
+		String userId = info.getUserId();		
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		
+		String query = "page=" + page;
+		if (keyword.length() != 0) {
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		}
+		
+		service.updateArticleByCategory(boardNum);
+		
+		Study dto = service.readStudy(map);
+		if (dto == null) {
+			return "redirect:/study/home/"+studyNum;
+		}
+		
+		// CKEditor 사용했으므로 심볼 안바꿔도됨.
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("query", query);
+		
+		return ".study.homearticle";
+	}
+		
 	// 스터디 홈에서 구성원 관리 눌렀을 때
 	@RequestMapping(value = "manageMember")
 	public String manageMember(@RequestParam(value="studyNum") int studyNum,
@@ -829,7 +934,7 @@ public class StudyController {
 			return "redirect:home/"+studyNum;
 		}
 
-		int rows = 1; // 한 화면에 보여주는 멤버 수
+		int rows = 10; // 한 화면에 보여주는 멤버 수
 		int total_page = 0;
 		int dataCount = 0;
 
@@ -878,11 +983,11 @@ public class StudyController {
 		
 		
 		// 리스트의 번호
-		int listNum, n = 0;
+		int listNum = 0;
+		int n = 1;
 		for (Study s : memberList) {
-			listNum = dataCount - (start + n - 1);
+			listNum = n++;
 			s.setListNum(listNum);
-			n++;
 		}
 		
 		String query = "";
@@ -1011,10 +1116,57 @@ public class StudyController {
 			status = "400";
 		}
 		
-		
-		
 		model.put("status", status);
 		model.put("questCount", questCount);
+		return model;
+	}
+	
+	@RequestMapping(value = "report")
+	@ResponseBody
+	public Map<String, Object> memberWithdraw(@RequestParam(value = "studyNum") int studyNum,
+			@RequestParam String reason, 
+			HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String status = "true";
+		// 신고시에 필요한 유저 id
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		map.put("reason", reason);
+		
+		
+		try {
+			int result = service.insertStudyReport(map);
+			if( result < 1) {
+				status = "1"; 
+			}
+		} catch (Exception e) {
+			status = "400";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("status", status);
+		
+		return model;
+	}
+	
+	// 일반회원이 직접 스터디 탈퇴할 때
+	@RequestMapping(value = "withdraw")
+	@ResponseBody
+	public Map<String, Object> withdraw(@RequestParam(value = "studyNum")int studyNum, 
+			@RequestParam(value = "memberNum") int memberNum ) throws Exception {
+		String status = "true";
+		try {
+			service.deleteMember(memberNum);
+		} catch (Exception e) {
+			status = "1"; // 멤버만 탈퇴가능
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("status", status);
+		model.put("studyNum", studyNum);
 		return model;
 	}
 }

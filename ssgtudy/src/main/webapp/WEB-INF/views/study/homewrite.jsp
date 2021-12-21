@@ -33,9 +33,9 @@ function sendOk() {
 		return;
 	}
 
-	if(! f.studyNum.value.trim() ) {
+	if(! f.categoryNum.value.trim() ) {
 		alert("카테고리를 선택하세요. ");
-		f.studyNum.focus();
+		f.categoryNum.focus();
 		return;
 	}
 	
@@ -56,8 +56,9 @@ function sendOk() {
 		location.href = "history.back()";
 		return false;
 	</c:if>
-	// f.action="${pageContext.request.contextPath}/study/home/${studyNum}/${mode}";
-	// f.submit();
+	
+	f.action="${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}";
+	f.submit();
 }
 </script>
 
@@ -78,7 +79,7 @@ function sendOk() {
 				<label>카테고리</label>
 			</div>
 			<div class="col-md-10 form-group">
-				<select name="studyNum" class="form-select">
+				<select name="categoryNum" class="form-select">
 					<option value="">:: 카테고리 선택 ::</option>
 					<c:forEach var="vo" items="${categoryList}">
 						<option value="${vo.CATEGORYNUM}" ${dto.CATEGORYNUM==vo.CATEGORYNUM?"selected='selected'":""}>${vo.CATEGORYNAME}</option>
@@ -89,7 +90,10 @@ function sendOk() {
 				<label>작성자</label>
 			</div>
 			<div class="col-md-10 form-group">
-				<label>${sessionScope.member.nickName}</label>
+				<label>
+					<c:if test="${not empty dto.nickName}">${dto.nickName}</c:if>
+					<c:if test="${empty dto.nickName}">${sessionScope.member.nickName}</c:if>
+				</label>
 			</div>
 			<div class="col-md-2" style="height:300px" >
 				<label>내용</label>

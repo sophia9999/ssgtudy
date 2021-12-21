@@ -246,7 +246,7 @@
 	
 	<select id="studyListByCategoryDataCount" resultType="Integer" parameterType="map">
 		SELECT NVL(COUNT(*), 0)
-		FROM study_board_1 sb
+		FROM study_board sb
 		JOIN study_category sc ON sc.categoryNum = sb.categoryNum
 		<where>
 			<if test="keyword != null and keyword != '' ">
@@ -260,7 +260,7 @@
 		SELECT * FROM (        
 	    	SELECT ROWNUM rnum, tb.* FROM (	
 				SELECT s.studyNum, boardNum, subject, sb.categoryNum, hitCount, studyStatus, nickname, content, sb.userId, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date
-					FROM study_board_1 sb
+					FROM study_board sb
                     JOIN study_category sc ON sc.categoryNum = sb.categoryNum
 			        JOIN study s ON sc.studynum = s.studyNum
 					JOIN member_detail md ON sb.userId = md.userId
@@ -274,6 +274,16 @@
 		    ) tb WHERE ROWNUM &lt;= #{end}    
 		) where rnum &gt;= #{start}
 	</select>
+	<update id="updateArticleByCategory" parameterType="Integer">
+		UPDATE study_board SET hitCount = hitCount + 1
+		WHERE boardNum = #{boardNum}
+	</update>
+	<select id="readArticleByCategory" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT boardNum, subject, sb.userId, hitCount, categoryNum, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, content
+		FROM study_board sb
+		JOIN member_detail md ON sb.userId = md.userId
+		WHERE boardNum = #{boardNum}
+	</select>
 	
 	<update id="updateMember" parameterType="map">
 		UPDATE study_member SET role = #{role}
@@ -283,5 +293,13 @@
 	<delete id="deleteMember" parameterType="Integer">
 		DELETE FROM study_member WHERE memberNum = #{memberNum}
 	</delete>
-
+	<insert id="insertStudyReport" parameterType="map">
+		INSERT INTO study_report(studyNum, userId, reason)
+		VALUES(#{studyNum}, #{userId}, #{reason})
+	</insert>
+	
+	<insert id="insertEachStudyBoard" parameterType="com.ssg.study.study.Study">
+		INSERT INTO study_board(boardNum, subject, content, userId, hitCount, categoryNum, reg_date)
+		VALUES (STUDYBOARD_1_SEQ.nextval, #{subject}, #{content}, #{userId}, 0, #{categoryNum}, SYSDATE)
+	</insert>
 </mapper>

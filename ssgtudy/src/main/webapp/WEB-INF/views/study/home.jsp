@@ -61,16 +61,27 @@
 		           			<div class="text-center p-2">
 		           				<hr>
 			           			<h4>${dto.studyName}</h4>
-			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
+			           			<button type="button" class="btn btn-primary btnReport" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
 			           	</c:when>
-						<c:otherwise>
+			           	<c:when test="${mode=='visit'}">
 			           		<div class="text-center p-2">
 			        	   		<hr>	
 			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           			<hr>
 			           			<h4>${dto.studyName}</h4>
-			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
+			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           		</div>
+			           	</c:when>
+						<c:otherwise> <!-- 대기일때 dto.role 이 0이라서.. -->
+			           		<div class="text-center p-2">
+			        	   		<hr>	
+			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
+			           			<hr>
+			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
 			           	</c:otherwise>
 		           	</c:choose>
@@ -104,11 +115,27 @@
 		</div>
 	</div>
 </section>
-
-<form name="searchForm" method="post">
-	<input type="hidden" name="condition" value="all">
-    <input type="hidden" name="keyword" value="">
-</form>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">스터디 신고</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	<form class="form form-horizontal" name="reportForm" method="post">
+        	<textarea class="form-control" name="reason" style="height: 200px; resize: none;" placeholder="신고사유를 적어주세요."></textarea>
+        	<input type="hidden" name="studyNum" value="${dto.studyNum}">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+        <button type="button" class="btn btn-danger btnReport">신고하기</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 function login() {
@@ -256,7 +283,6 @@ function printMember(data) {
 	}
 	
 	var out = "";
-	var waiting = 0;
 	for(var idx = 0; idx < data.memberList.length; idx++) {
 		var nickName = data.memberList[idx].nickName;
 		var role = data.memberList[idx].role;
@@ -269,7 +295,6 @@ function printMember(data) {
 			role = "일반멤버";
 		} else {
 			role = "대기멤버";
-			waiting++;
 		}
 		
 		out += "<tr class='text-center'>";
@@ -282,9 +307,7 @@ function printMember(data) {
 	
 	var out = "";
 	out += (dataCount) + "명과 함께하고 있습니다.<br>";
-	<c:if test="${dto.role > 1}">
-	out += "참여대기중 : "+waiting+"명"
-	</c:if>
+
 	$(".member-title").html(out);
 }
 
@@ -300,6 +323,9 @@ $(function() {
 			return false;
 		}
 
+		if(! confirm("목표달성횟수를 추가하시겠습니까 ? ") ) {
+			return false;
+		}
 		var url = "${pageContext.request.contextPath}/study/questCount";
 		var query = "studyNum=" + studyNum
 		
@@ -319,11 +345,61 @@ $(function() {
 
 $(function() {
 	$(".btnReport").click(function() {
-		var studyNum = "${studyNum}";
-		// alert("${studyNum}이나 ${dto.studyNum}")
-		var url = "${pageContext.request.contextPath}/study/report?studyNum="+studyNum;
+		var f = document.reportForm;
+		
+		var studyNum = f.studyNum.value;
+		var reason = f.reason.value.trim();
+
+		if(! reason) {
+			alert("사유는 필수 입력입니다.");
+			return false;
+		}
+		
+		var query = "studyNum="+studyNum+"&reason="+reason;
+		
+		var url = "${pageContext.request.contextPath}/study/report";
 		// location.href = url; 
+		var fn = function(data) {
+			// console.log(data);
+			if(data.status == 'true') {
+				alert("신고 접수가 완료되었습니다.");
+				// location.href = "${pageContext.request.contextPath}/";
+			} else if(data.status == '1') {
+				alert("이미 신고한 이력이 있습니다.");
+			}
+		}
+		
+		ajaxFun(url, "post", query, "json", fn);
+		
 	});
 });
 
+$(function() {
+	$(".btnWithdraw").click(function() {
+		// console.log(${dto.memberNum});
+		if(! confirm( "${dto.studyName}에서 탈퇴하시겠습니까 ? ") ) {
+			return false;
+		}
+		
+		if(${dto.memberNum} == '0') { // 0은 방문자
+			alert("이 스터디의 멤버가 아닙니다.");
+			return false;
+		}
+			
+		var query = "memberNum="+${dto.memberNum}+"&studyNum="+${studyNum};
+		var url = "${pageContext.request.contextPath}/study/withdraw";
+		var fn = function(data) {
+			if(data.status == 'true') {
+				alert("탈퇴가 완료되었습니다. ");
+				location.href = "${pageContext.request.contextPath}/study/home/"+data.studyNum;
+			} else if(data.status == '1') {
+				alert("이 스터디의 멤버가 아닙니다.")
+			}
+		}
+		ajaxFun(url, "get", query, "json", fn); 
+	});
+});
+
+
 </script>
+
