@@ -49,7 +49,8 @@
 			SELECT ROWNUM rnum, th.* FROM (
 				SELECT b.bbsNum, nickName, subject, content, hitCount, 
 					TO_CHAR(b.reg_date, 'YYYY-MM-DD') reg_date,
-					NVL(replyCount, 0) replyCount
+					NVL(replyCount, 0) replyCount, 
+					NVL(fileCount,0) fileCount
 				FROM bbs b
 				JOIN member_detail m ON b.userId = m.userId
 				LEFT OUTER JOIN(
@@ -57,6 +58,10 @@
 					WHERE answer=0
 					GROUP BY bbsNum
 				) rp ON b.bbsNum = rp.bbsNum
+				 LEFT OUTER JOIN(
+                   SELECT bbsNum, COUNT(*) fileCount FROM bbs_file
+                   GROUP BY bbsNum
+                ) f ON b.bbsNum = f.bbsNum
 				<where>
 					<if test="keyword!=null and keyword!=''">
 						<include refid="where-list"/>

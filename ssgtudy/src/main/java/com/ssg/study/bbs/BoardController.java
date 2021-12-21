@@ -298,7 +298,7 @@ public class BoardController {
 			HttpServletResponse resp,
 			HttpSession session) throws Exception {
 		String root = session.getServletContext().getRealPath("/");
-		String pathname = root + "uploads" + File.separator + "board";
+		String pathname = root + "uploads" + File.separator + "bbs";
 		
 		boolean b = false;
 		

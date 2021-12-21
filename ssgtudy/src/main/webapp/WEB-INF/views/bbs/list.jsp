@@ -36,11 +36,12 @@ function searchList(){
                             	<table class="table table-lg" style="text-align: center">
                                 	<thead>
                                     	<tr>
-                                        	<th style="width:16.66%">번호</th>
-                                        	<th style="width:33.33%">제목</th>
-                                         	<th style="width:16.66%">작성자</th>
-                                        	<th style="width:16.66%">등록일</th>
-                                        	<th style="width:16.66%">조회수</th>
+                                        	<th style="width:14.2%">번호</th>
+                                        	<th style="width:29%">제목</th>
+                                         	<th style="width:14.2%">작성자</th>
+                                        	<th style="width:14.2%">등록일</th>
+                                        	<th style="width:14.2%">조회수</th>
+                                        	<th style="width:14.2%">파일</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,6 +55,13 @@ function searchList(){
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
+	                                        	<td class="text-bold-500">
+	                                        		<c:if test="${dto.fileCount != 0}">
+	                                        			<a href="${pageContext.request.contextPath}/bbs/zipdownload?bbsNum=${dto.bbsNum}">
+	                                        				<i class="bi bi-download text-muted"></i>
+	                                        			</a>
+	                                        		</c:if>
+	                                        	</td>
 	                                    	</tr>
                                     	</c:forEach>	
                                     </tbody>
