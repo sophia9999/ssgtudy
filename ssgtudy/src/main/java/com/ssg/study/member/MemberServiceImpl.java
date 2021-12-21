@@ -80,4 +80,57 @@ public class MemberServiceImpl implements MemberService{
 		
 	}
 
+	@Override
+	public List<Member> readAdmin() {
+		List<Member> list = null;
+		try {
+			list = dao.selectList("member.readAdmin");
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public Member findAdmin(String userId) {
+		Member dto = null;
+		try {
+			dto = dao.selectOne("member.findAdmin",userId);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
+
+	@Override
+	public void updateAdmin(Map<String, Object> map) throws Exception {
+		try {
+			dao.updateData("member.updateAdmin", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public List<Member> readStateCode() {
+		List<Member> list = null;
+		try {
+			list = dao.selectList("member.readStateCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public void updateStateCode(Map<String, Object> map) throws Exception {
+		try {
+			 dao.updateData("member.updateStateCode",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }

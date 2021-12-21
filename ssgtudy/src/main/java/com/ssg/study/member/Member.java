@@ -31,6 +31,7 @@ public class Member {
 	private int questCount;
 	private int lottoUse;
 	private String schoolstr;
+	private String schoolName;
 	
 	public String getUserId() {
 		return userId;
@@ -187,6 +188,12 @@ public class Member {
 	}
 	public void setSchoolstr(String schoolstr) {
 		this.schoolstr = schoolstr;
+	}
+	public String getSchoolName() {
+		return schoolName;
+	}
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
 	}
 	
 

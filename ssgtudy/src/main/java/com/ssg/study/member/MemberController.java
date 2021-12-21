@@ -61,6 +61,8 @@ public class MemberController {
 		info.setNickName(dto.getNickName());
 		info.setMembership(dto.getMembership());
 		info.setSchoolCode(dto.getSchoolCode());
+		info.setSchoolName(dto.getSchoolName());
+		
 		// 1은 일반회원 / 99는 관리자 ㅇ
 
 		session.setMaxInactiveInterval(30 * 60); // 세션유지시간 30분, 기본:30분

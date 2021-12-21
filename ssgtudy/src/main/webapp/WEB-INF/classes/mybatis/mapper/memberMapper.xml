@@ -8,9 +8,10 @@
 	</resultMap>
 
 	<select id="loginMember" parameterType="String" resultType="com.ssg.study.member.Member">
-		SELECT membership, m.userId,schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
+		SELECT membership, m.userId,md.schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date,schoolName
 		FROM member m
 		JOIN member_detail md ON m.userId = md.userId
+        LEFT OUTER JOIN school s ON s.schoolcode = md.schoolcode
 		WHERE m.userId = #{userId} AND stateCode = 0
 	</select>
 	
@@ -50,5 +51,34 @@
 	<update id="updatemember_detail" parameterType="com.ssg.study.member.Member">
 		UPDATE member_detail SET nickName=#{nickName},tel=#{tel},email=#{email},zip_code=#{zip_code},schoolCode=#{schoolCode,jdbcType=INTEGER},addr1=#{addr1},addr2=#{addr2},userName=#{userName},codeChange_cnt=#{codeChange_cnt} WHERE userId = #{userId}
 	</update>
+	
+	<select id="readAdmin" resultType="com.ssg.study.member.Member">
+			SELECT membership, m.userId,schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
+			FROM member m
+			JOIN member_detail md ON m.userId = md.userId
+			WHERE membership &gt;= 50
+	</select>
+	
+	<select id="findAdmin" parameterType="String" resultType="com.ssg.study.member.Member">
+			SELECT membership, m.userId,schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date
+			FROM member m
+			JOIN member_detail md ON m.userId = md.userId
+			WHERE m.userId=#{userId}
+	</select>
+	
+	<update id="updateAdmin" parameterType="Map">
+		UPDATE member_detail SET membership=#{membership}  WHERE userId = #{userId}
+	</update>
+	
+	<select id="readStateCode" resultType="com.ssg.study.member.Member">
+		SELECT userId,stateCode,TO_CHAR(join_date, 'YYYY-MM-DD') join_date,TO_CHAR(edit_date, 'YYYY-MM-DD') edit_date,TO_CHAR(last_date, 'YYYY-MM-DD') last_date
+		FROM member
+		WHERE stateCode &lt; 10
+	</select>
+	
+	<update id="updateStateCode" parameterType="Map">
+		UPDATE member SET stateCode=#{stateCode}  WHERE userId = #{userId}		
+	</update>
+	
 	
 </mapper>
