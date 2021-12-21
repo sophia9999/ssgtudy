@@ -279,7 +279,7 @@
 		WHERE boardNum = #{boardNum}
 	</update>
 	<select id="readArticleByCategory" parameterType="Integer" resultType="com.ssg.study.study.Study">
-		SELECT boardNum, subject, sb.userId, hitCount, categoryNum, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, content
+		SELECT boardNum, subject, sb.userId, nickName, hitCount, categoryNum, TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date, content
 		FROM study_board sb
 		JOIN member_detail md ON sb.userId = md.userId
 		WHERE boardNum = #{boardNum}

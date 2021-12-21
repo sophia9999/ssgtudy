@@ -141,7 +141,7 @@
 function login() {
 	location.href="${pageContext.request.contextPath}/member/login";
 }
-
+var isRun = false;
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
 		type:method,
@@ -150,6 +150,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 		dataType:dataType,
 		success:function(data) {
 			fn(data);
+			isRun = false;
 		},
 		beforeSend:function(jqXHR) {
 			jqXHR.setRequestHeader("AJAX", true);
@@ -177,7 +178,7 @@ $(function() {
 function listPage(page) {
 	var $tab = $("a[role='tab'].active");
 	var categoryNum = $tab.attr("data-categoryNum");
-	console.log(categoryNum);
+	// console.log(categoryNum);
 	
 	<c:if test="${mode=='visit'}">
 	if(! categoryNum) {
@@ -193,12 +194,18 @@ function listPage(page) {
 	}
 	
 	var query = "page="+page+"&categoryNum=" + categoryNum;
-	console.log(query);
+	// console.log(query);
 	
 	var search=$('form[name=searchForm]').serialize();
 	query=query+"&"+search;
 	
 	var selector = "#myTabContent";
+	
+	if(isRun == true) {
+		return;
+	}
+	
+	isRun = true;
 	
 	var fn = function(data){
 		$(".box").empty();

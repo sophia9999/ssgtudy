@@ -18,6 +18,7 @@
 	    }
 	}
 </c:if>
+
 </script>
 <div class="card table-responsive">
 	<table class="table mb-0 table-lg">
@@ -69,9 +70,27 @@
 		    	</c:choose>
 			</td>
 			<td class="text-end">
-				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='history.back()';">리스트</button>
+				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="btnBack()">리스트</button>
 			</td>
 		</tr>
 	</table>
 </div>
+
+<script type="text/javascript">
+function btnBack() {
+	
+	var url = '${pageContext.request.contextPath}/study/home/${studyNum}/list';
+	var query = '${query}';
+	
+	// console.log(query);
+	var selector = "#myTabContent";
+	
+	var fn = function(data){
+		$(".box").empty();
+		$(selector).html(data);
+	};
+	ajaxFun(url, "get", query, "html", fn);
+	
+}
+</script>
 		

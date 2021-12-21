@@ -58,7 +58,15 @@ function sendOk() {
 	</c:if>
 	
 	f.action="${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}";
-	f.submit();
+	// f.submit();
+	
+	var url ='${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}';
+	var query = "subject="+f.subject.value.trim()+"&categoryNum="+f.categoryNum.value.trim()+"&content="+f.content.value;
+	var fn = function(data){
+		// console.log(data);
+		listPage(1);
+	};
+	ajaxFun(url, "post", query, "html", fn);
 }
 </script>
 

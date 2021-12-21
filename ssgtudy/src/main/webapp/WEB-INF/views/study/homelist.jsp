@@ -20,7 +20,7 @@
 			<c:forEach var="dto" items="${listByCategory}">
 			 	<tr>
 			     	<td class="text-bold-500">${dto.listNum}</td>
-			     	<td class="text-start"><a href="${articleUrl}&boardNum=${dto.boardNum}">${dto.subject}</a></td>
+			     	<td class="text-start"><a href="${articleUrl}&boardNum=${dto.boardNum}" class="readArticle">${dto.subject}</a></td>
 			     	<td class="text-bold-500">${dto.nickName}</td>
 					<td>${dto.reg_date}</td>
 			     	<td class="text-bold-500">${dto.hitCount}</td>
@@ -32,7 +32,9 @@
     <div class="page-box text-center">
 		${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 	</div>
-    
+    <c:if test="${dataCount == '0' }">
+		<div class="p-3"></div>
+	</c:if>
 </div>
 
 <form class="form form-horizontal" name="listSearch" method="post">
@@ -93,7 +95,7 @@ function listSearchBtn() {
 	
 	var url ='${pageContext.request.contextPath}/study/home/${studyNum}/list';
 	var query = "page="+page+"&categoryNum="+categoryNum+"&condition="+condition+"&keyword="+keyword;
-	console.log(query);
+	// console.log(query);
 	
 	var selector = "#myTabContent";
 	var fn = function(data){
@@ -103,4 +105,31 @@ function listSearchBtn() {
 	ajaxFun(url, "post", query, "html", fn);
 }
 
+$(function() {
+	$("body").on("click", ".readArticle", function(ignore) {
+		ignore.preventDefault();
+		var preUrl = $(this).attr("href");
+		// console.log(preUrl);
+		var url = preUrl.substr(0, preUrl.indexOf("?"));
+		// console.log(url);
+		var query = preUrl.substr(preUrl.indexOf("?")+1, preUrl.length);
+		// console.log(query);
+		
+		
+		if(isRun == true) {
+			return;
+		}
+		
+		isRun = true;
+		
+		var selector = "#myTabContent";
+		var fn = function(data){
+			console.log("여기서 여러번 가짐"); // 여기가 문제인데 왜 여러번가지는거냐..ㅠ
+			$(".box").empty();
+			$(selector).html(data);
+		};
+		ajaxFun(url, "get", query, "html", fn);
+		
+	});
+});
 </script>

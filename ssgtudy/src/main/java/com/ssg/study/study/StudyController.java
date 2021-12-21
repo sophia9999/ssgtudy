@@ -731,7 +731,7 @@ public class StudyController {
 		
 		String cp = req.getContextPath();
 		
-		int rows = 10;
+		int rows = 5;
 		int total_page = 0;
 		int dataCount = 0;
 		
@@ -755,7 +755,7 @@ public class StudyController {
 
 		// 리스트에 출력할 데이터를 가져오기
 		int start = (current_page - 1) * rows + 1;
-		int end = current_page * rows+ 1;
+		int end = current_page * rows;
 		map.put("start", start);
 		map.put("end", end);
 		
@@ -771,8 +771,8 @@ public class StudyController {
 		}
 		
 		String query = "";
-		String listUrl = cp + "/home/"+studyNum+"/list?categoryNum="+categoryNum;
-		String articleUrl = cp + "/home/"+studyNum+"/article?page=" + current_page+"&categoryNum="+categoryNum;
+		String listUrl = cp + "study/home/"+studyNum+"/list?categoryNum="+categoryNum;
+		String articleUrl = cp + "/study/home/"+studyNum+"/article?page=" + current_page+"&categoryNum="+categoryNum;
 		if (keyword.length() != 0) {
 			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 		}
@@ -782,7 +782,7 @@ public class StudyController {
 			articleUrl += "&" + query;
 		}
 		
-		String paging = myUtil.paging(current_page, total_page, listUrl);
+		String paging = myUtil.pagingMethod(current_page, total_page, "listPage");
 		
 		Study dto = null;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -839,6 +839,7 @@ public class StudyController {
 		return "study/homewrite";
 	}
 	
+	// AJAX / HTML
 	// 스터디홈에서 카테고리탭누르고 글작성 할 때
 		@RequestMapping(value = "home/{studyNum}/list/write", method = RequestMethod.POST)
 		public String studyWriteSubmit(@PathVariable int studyNum,
@@ -864,11 +865,10 @@ public class StudyController {
 
 			dto.setUserId(userId);
 			service.insertEachStudyBoard(dto);				
-
 			
 			model.addAttribute("studyNum", studyNum);
 			model.addAttribute("categoryList", categoryList);
-			return "redirect:/study/home/"+studyNum;
+			return "study/homelist";
 		}
 	
 	@RequestMapping(value = "home/{studyNum}/article")
@@ -890,16 +890,19 @@ public class StudyController {
 		map.put("userId", userId);
 		map.put("studyNum", studyNum);
 		
-		String query = "page=" + page;
+		String query = "page="+ page +"&categoryNum="+categoryNum;
 		if (keyword.length() != 0) {
 			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
 		}
 		
 		service.updateArticleByCategory(boardNum);
 		
-		Study dto = service.readStudy(map);
-		if (dto == null) {
-			return "redirect:/study/home/"+studyNum;
+		Study vo = service.readStudy(map); // 이 스터디 멤버가 아니면 못읽어요
+		Study dto = null;
+		if (vo == null) {
+			return "redirect:/study/study/home/"+studyNum;
+		} else if(vo.getRole() >= 1) { // 일반멤버부터 읽을 수 있습니다.
+			dto = service.readArticleByCategory(boardNum);
 		}
 		
 		// CKEditor 사용했으므로 심볼 안바꿔도됨.
@@ -908,7 +911,7 @@ public class StudyController {
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
 		
-		return ".study.homearticle";
+		return "/study/homearticle";
 	}
 		
 	// 스터디 홈에서 구성원 관리 눌렀을 때
