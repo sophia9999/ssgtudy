@@ -319,6 +319,7 @@ $(function(){
                            		</td>
                            		<td align="right">
                            			${dto.reg_date} &nbsp|&nbsp 조회 ${dto.hitCount}
+                           			<span class='notifyReply' style="cursor:pointer"> &nbsp|&nbsp 신고</span>
                            		</td>
                            </tr> 
                            <tr style="border-bottom:white">

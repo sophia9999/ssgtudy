@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<div class="reply-info" style="margin: 15px 0 15px;">
+<div class="reply-info" style="margin: 40px 10px 15px;">
 	<span class='reply-count' style="color:#435EBE;font-weight: 700;">댓글 ${replyCount}개</span>
 	<span>[목록, ${pageNo}/${total_page} 페이지]</span>
 </div>
@@ -22,7 +22,7 @@
 							style="cursor:pointer">삭제</span>
 					</c:when>
 					<c:otherwise>
-						<span class='notifyReply'>신고</span>
+						<span class='notifyReply' style="cursor:pointer">신고</span>
 					</c:otherwise>
 				</c:choose>
 			</td>

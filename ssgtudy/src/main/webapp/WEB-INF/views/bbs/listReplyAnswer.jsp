@@ -16,7 +16,7 @@
 							style="cursor:pointer">삭제</span>
 					</c:when>
 					<c:otherwise>
-						<span class='notifyReply'>신고</span>
+						<span class='notifyReply' style="cursor:pointer">신고</span>
 					</c:otherwise>
 				</c:choose>
 			</div>
