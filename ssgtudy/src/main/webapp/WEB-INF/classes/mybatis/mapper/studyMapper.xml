@@ -274,7 +274,7 @@
 		    ) tb WHERE ROWNUM &lt;= #{end}    
 		) where rnum &gt;= #{start}
 	</select>
-	<update id="updateArticleByCategory" parameterType="Integer">
+	<update id="updateHitCountByCategory" parameterType="Integer">
 		UPDATE study_board SET hitCount = hitCount + 1
 		WHERE boardNum = #{boardNum}
 	</update>
@@ -302,4 +302,13 @@
 		INSERT INTO study_board(boardNum, subject, content, userId, hitCount, categoryNum, reg_date)
 		VALUES (STUDYBOARD_1_SEQ.nextval, #{subject}, #{content}, #{userId}, 0, #{categoryNum}, SYSDATE)
 	</insert>
+	
+	<update id="updateArticleByCategory" parameterType="com.ssg.study.study.Study">
+		UPDATE study_board SET subject=#{subject}, content=#{content}
+		WHERE boardNum = #{boardNum}
+	</update>
+	
+	<delete id="deleteEachStudyBoard" parameterType="Integer">
+		DELETE FROM study_board WHERE boardNum = #{boardNum}
+	</delete>
 </mapper>

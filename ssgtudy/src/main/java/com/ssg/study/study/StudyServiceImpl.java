@@ -436,16 +436,6 @@ public class StudyServiceImpl implements StudyService {
 	}
 
 	@Override
-	public int updateArticleByCategory(int boardNum) throws Exception {
-		int result = 0;
-		try {
-			result = dao.updateData("study.updateArticleByCategory", boardNum);
-		} catch (Exception e) {
-		}
-		return result;
-	}
-
-	@Override
 	public Study readArticleByCategory(int boardNum) throws Exception {
 		Study dto = null;
 		try {
@@ -453,6 +443,36 @@ public class StudyServiceImpl implements StudyService {
 		} catch (Exception e) {
 		}
 		return dto;
+	}
+
+	@Override
+	public int updateHitCountByCategory(int boardNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateHitCountByCategory", boardNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteEachStudyBoard(int boardNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.deleteData("study.deleteEachStudyBoard", boardNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateArticleByCategory(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateArticleByCategory", dto);
+		} catch (Exception e) {
+		}
+		return result;
 	}
 
 

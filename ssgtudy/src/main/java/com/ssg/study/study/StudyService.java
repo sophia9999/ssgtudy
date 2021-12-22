@@ -46,11 +46,12 @@ public interface StudyService {
 	public List<Study> studyListByCategory(Map<String, Object> map) throws Exception; 
 	public int studyListByCategoryDataCount(Map<String, Object> map) throws Exception;
 	
-	// 스터디 홈에서 해당 카테고리에 삽입
+	// 스터디 홈에서 해당 카테고리에 게시글
 	public int insertEachStudyBoard(Study dto) throws Exception;
-	public int updateArticleByCategory(int boardNum) throws Exception;
-	
+	public int updateHitCountByCategory(int boardNum) throws Exception;
 	public Study readArticleByCategory(int boardNum) throws Exception;
+	public int deleteEachStudyBoard(int boardNum) throws Exception;
+	public int updateArticleByCategory(Study dto) throws Exception;
 	
 	// 스터디 홍보 게시판
 	public int studyAdDataCount(Map<String, Object> map) throws Exception;

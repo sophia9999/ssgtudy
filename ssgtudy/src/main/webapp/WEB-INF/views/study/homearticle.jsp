@@ -8,18 +8,6 @@
 	border: none;
 }
 </style>
-<script type="text/javascript">
-<c:if test="${sessionScope.member.userId==dto.userId||sessionScope.member.membership>50 || studyDto.role >= 10}">
-	function deleteBoard() {
-	    if(confirm("게시글을 삭제 하시겠습니까 ? ")) {
-		    var query = "boardNum=${dto.boardNum}&${query}";
-		    var url = "${pageContext.request.contextPath}/study/ad/delete?" + query;
-	    	location.href = url;
-	    }
-	}
-</c:if>
-
-</script>
 <div class="card table-responsive">
 	<table class="table mb-0 table-lg">
 		<thead>
@@ -39,12 +27,20 @@
 					${dto.reg_date} | 조회 ${dto.hitCount}
 				</td>
 			</tr>
-			
+			<c:if test="${not empty message}">
+				<tr>
+					<td colspan="2" valign="top" height="200" style="padding-top: 5px;">
+					<div><h5 class="text-center">${message.msg}</h5></div>
+				</td>
+				</tr>
+			</c:if>
+			<c:if test="${empty message}">
 			<tr>
 				<td colspan="2" valign="top" height="200" style="padding-top: 5px;">
 					<div class="editor">${dto.content}</div>
 				</td>
 			</tr>
+			</c:if>
 		</tbody>
 	</table>
 				
@@ -53,7 +49,7 @@
 			<td width="50%">
 				<c:choose>
 					<c:when test="${sessionScope.member.userId==dto.userId}">
-						<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/home/'+${studyNum}+'/update?boardNum=${dto.boardNum}&page=${page}';">수정</button>
+						<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="amendArticle()">수정</button>
 					</c:when>
 					<c:otherwise>
 						<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">수정</button>
@@ -62,7 +58,7 @@
 		    	
 				<c:choose>
 		    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50 || studyDto.role >= 10}">
-		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard();">삭제</button>
+		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard('${dto.boardNum}');">삭제</button>
 		    		</c:when>
 		    		<c:otherwise>
 		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">삭제</button>
@@ -72,6 +68,7 @@
 			<td class="text-end">
 				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="btnBack()">리스트</button>
 			</td>
+			
 		</tr>
 	</table>
 </div>
@@ -80,7 +77,7 @@
 function btnBack() {
 	
 	var url = '${pageContext.request.contextPath}/study/home/${studyNum}/list';
-	var query = '${query}';
+	var query = '${query}'+"&categoryNum="+${categoryNum};
 	
 	// console.log(query);
 	var selector = "#myTabContent";
@@ -91,6 +88,33 @@ function btnBack() {
 	};
 	ajaxFun(url, "get", query, "html", fn);
 	
+}
+
+function deleteBoard(boardNum) {
+	if(! confirm("게시글을 삭제하시겠습니까 ?")) {
+		return false;
+	}
+	var url = "${pageContext.request.contextPath}/study/home/remove";
+	var query = "categoryNum="+${categoryNum}+"&boardNum="+boardNum+"&studyNum="+${studyNum};
+	var fn = function(data) {
+		listPage(1);
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+function amendArticle() {
+	var url = '${pageContext.request.contextPath}/study/home/'+${studyNum}+'/list/update';
+	var query = "studyNum="+${studyNum}+"&categoryNum="+${categoryNum}+"&boardNum="+${dto.boardNum}+"&page="+${page};
+	
+	var selector = "#myTabContent";
+	
+	var fn = function(data) {
+		console.log(data);
+		$(".box").empty();
+		$(selector).html(data);
+	}
+	ajaxFun(url, "get", query, "html", fn);
 }
 </script>
 		

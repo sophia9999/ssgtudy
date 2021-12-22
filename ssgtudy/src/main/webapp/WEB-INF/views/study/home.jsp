@@ -54,14 +54,15 @@
 			           			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
 				           		<hr>
 			           			<h4>${dto.studyName}</h4>
-			           			<button type="button" class="btn btn-primary btnReport">스터디신고</button>
+			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
 		           			<div class="text-center p-2">
 		           				<hr>
 			           			<h4>${dto.studyName}</h4>
-			           			<button type="button" class="btn btn-primary btnReport" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
 			           	</c:when>
@@ -125,7 +126,7 @@
       </div>
       <div class="modal-body">
       	<form class="form form-horizontal" name="reportForm" method="post">
-        	<textarea class="form-control" name="reason" style="height: 200px; resize: none;" placeholder="신고사유를 적어주세요."></textarea>
+        	<textarea class="form-control reason" name="reason" style="height: 200px; resize: none;" placeholder="신고사유를 적어주세요."></textarea>
         	<input type="hidden" name="studyNum" value="${dto.studyNum}">
         </form>
       </div>
@@ -353,30 +354,28 @@ $(function() {
 $(function() {
 	$(".btnReport").click(function() {
 		var f = document.reportForm;
-		
-		var studyNum = f.studyNum.value;
 		var reason = f.reason.value.trim();
-
 		if(! reason) {
 			alert("사유는 필수 입력입니다.");
 			return false;
 		}
 		
-		var query = "studyNum="+studyNum+"&reason="+reason;
-		
-		var url = "${pageContext.request.contextPath}/study/report";
-		// location.href = url; 
-		var fn = function(data) {
+		var query = $(f).serialize();
+		var url = "${pageContext.request.contextPath}/study/report"; 
+		 var fn = function(data) {
 			// console.log(data);
 			if(data.status == 'true') {
 				alert("신고 접수가 완료되었습니다.");
-				// location.href = "${pageContext.request.contextPath}/";
+				$("#exampleModal").modal("hide");
+				$(".reason").val("");
 			} else if(data.status == '1') {
 				alert("이미 신고한 이력이 있습니다.");
+				$("#exampleModal").modal("hide");
+				$(".reason").val("");
 			}
 		}
 		
-		ajaxFun(url, "post", query, "json", fn);
+		ajaxFun(url, "post", query, "json", fn); 
 		
 	});
 });

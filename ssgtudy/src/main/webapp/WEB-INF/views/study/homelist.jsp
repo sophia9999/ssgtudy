@@ -35,6 +35,9 @@
     <c:if test="${dataCount == '0' }">
 		<div class="p-3"></div>
 	</c:if>
+	<c:if test="${not empty message}">
+		<div class="p-3 text-center">${message.msg}</div>
+	</c:if>
 </div>
 
 <form class="form form-horizontal" name="listSearch" method="post">
@@ -124,9 +127,10 @@ $(function() {
 		
 		var selector = "#myTabContent";
 		var fn = function(data){
-			console.log("여기서 여러번 가짐"); // 여기가 문제인데 왜 여러번가지는거냐..ㅠ
+			// console.log("여기서 여러번 가짐"); // 여기가 문제인데 왜 여러번가지는거냐..ㅠ
 			$(".box").empty();
 			$(selector).html(data);
+			
 		};
 		ajaxFun(url, "get", query, "html", fn);
 		

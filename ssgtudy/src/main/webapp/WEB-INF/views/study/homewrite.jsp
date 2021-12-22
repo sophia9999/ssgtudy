@@ -57,14 +57,15 @@ function sendOk() {
 		return false;
 	</c:if>
 	
-	f.action="${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}";
+	// f.action="${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}";
 	// f.submit();
 	
 	var url ='${pageContext.request.contextPath}/study/home/${studyNum}/list/${mode}';
-	var query = "subject="+f.subject.value.trim()+"&categoryNum="+f.categoryNum.value.trim()+"&content="+f.content.value;
+	var query = $(f).serialize();
 	var fn = function(data){
 		// console.log(data);
-		listPage(1);
+		// listPage(1);
+		location.href = '${pageContext.request.contextPath}/study/home/${studyNum}';
 	};
 	ajaxFun(url, "post", query, "html", fn);
 }
@@ -90,7 +91,7 @@ function sendOk() {
 				<select name="categoryNum" class="form-select">
 					<option value="">:: 카테고리 선택 ::</option>
 					<c:forEach var="vo" items="${categoryList}">
-						<option value="${vo.CATEGORYNUM}" ${dto.CATEGORYNUM==vo.CATEGORYNUM?"selected='selected'":""}>${vo.CATEGORYNAME}</option>
+						<option value="${vo.CATEGORYNUM}" ${dto.categoryNum==vo.CATEGORYNUM?"selected='selected'":""}>${vo.CATEGORYNAME}</option>
 					</c:forEach>
 				</select>
 			</div>

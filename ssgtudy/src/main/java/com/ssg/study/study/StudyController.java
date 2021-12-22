@@ -27,7 +27,7 @@ import com.ssg.study.member.SessionInfo;
 @Controller("Study.studyController")
 @RequestMapping("/study/*")
 public class StudyController {
-	
+
 	@Autowired
 	private StudyService service;
 	
@@ -828,6 +828,7 @@ public class StudyController {
 			dto = service.readStudy(map);
 		} catch (Exception e) {
 			status = "false";
+			e.printStackTrace();
 		}
 		
 		model.addAttribute("categoryList", categoryList);
@@ -856,11 +857,15 @@ public class StudyController {
 			map.put("studyNum", studyNum);
 			// 스터디 회원아니면
 			Study vo = service.readStudy(map);
+			
+			Map<String, Object> message = new HashMap<String, Object>();
 			if(vo == null) {
-				return "redirect:/study/home/"+studyNum;
-			} else if (vo.getRole() <= 1) {
-				// 스터디 일반멤버 or 관리자가 아니면
-				return "redirect:/study/home/"+studyNum;
+				message.put("msg", "멤버가 아닙니다.");
+				return "study/homelist";
+				
+			} else if (vo.getRole() < 1) {
+				message.put("msg", "대기 중에는 작성이 불가합니다.");
+				return "study/homelist";
 			}
 
 			dto.setUserId(userId);
@@ -871,6 +876,7 @@ public class StudyController {
 			return "study/homelist";
 		}
 	
+		// AJAX - HTML
 	@RequestMapping(value = "home/{studyNum}/article")
 	public String articleByCategory(
 			@RequestParam(value = "page")String page,
@@ -882,6 +888,7 @@ public class StudyController {
 			@RequestParam int boardNum,
 			HttpSession session,
 			HttpServletRequest req) throws Exception {
+
 		keyword = URLDecoder.decode(keyword, "utf-8");
 		Map<String, Object> map = new HashMap<String, Object>();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");	
@@ -895,22 +902,25 @@ public class StudyController {
 			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
 		}
 		
-		service.updateArticleByCategory(boardNum);
+		service.updateHitCountByCategory(boardNum); // 조회수증가
 		
+		Map<String, Object> message = new HashMap<String, Object>();
 		Study vo = service.readStudy(map); // 이 스터디 멤버가 아니면 못읽어요
 		Study dto = null;
 		if (vo == null) {
-			return "redirect:/study/study/home/"+studyNum;
+			message.put("msg", "멤버가 아니므로 읽을 수 없습니다.");
 		} else if(vo.getRole() >= 1) { // 일반멤버부터 읽을 수 있습니다.
 			dto = service.readArticleByCategory(boardNum);
 		}
 		
 		// CKEditor 사용했으므로 심볼 안바꿔도됨.
 		
+		model.addAttribute("studyNum", studyNum);
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
-		
+		model.addAttribute("message", message);
+		model.addAttribute("categoryNum", categoryNum);
 		return "/study/homearticle";
 	}
 		
@@ -1171,5 +1181,94 @@ public class StudyController {
 		model.put("status", status);
 		model.put("studyNum", studyNum);
 		return model;
+	}
+	
+	@RequestMapping(value = "home/remove")
+	public String studyArticleRemove(@RequestParam int boardNum,
+			@RequestParam int categoryNum,
+			@RequestParam int studyNum,
+			HttpSession session
+			) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		// 멤버쉽가져오기용
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study vo = service.readStudy(map);
+		
+		Study dto = new Study();
+		dto = service.readArticleByCategory(boardNum);
+		
+		if(dto.getUserId().equals(userId)) { 
+			service.deleteEachStudyBoard(boardNum);	
+		} else if( vo.getRole() > 10 || info.getMembership() > 50) {
+			service.deleteEachStudyBoard(boardNum);
+		}
+		
+		return "study/homelist";
+	}
+	
+	@RequestMapping(value = "home/{studyNum}/list/update", method = RequestMethod.GET)
+	public String studyArticleUpdateForm(
+			@RequestParam String page,
+			@RequestParam int boardNum,
+			@RequestParam int categoryNum,
+			@PathVariable int studyNum,
+			Model model,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		Study dto = service.readArticleByCategory(boardNum);
+		if(! dto.getUserId().equals(userId) ) { 
+			return "study/home/"+studyNum;
+		}
+		
+		List<Map<String, Object>> categoryList = service.readCategory(studyNum);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study studyDto = service.readStudy(map);
+		
+		model.addAttribute("studyDto", studyDto);
+		model.addAttribute("studyNum", studyNum);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("page", page);
+		model.addAttribute("mode", "update");
+		model.addAttribute("dto", dto);
+		
+		return "study/homewrite";
+	}
+	
+	@RequestMapping(value = "home/{studyNum}/list/update", method = RequestMethod.POST)
+	public String studyArticleUpdateSubmit(@RequestParam int boardNum,
+			@RequestParam int categoryNum,
+			@PathVariable int studyNum,
+			@RequestParam String subject,
+			@RequestParam String content,
+			HttpSession session,
+			Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+	
+		Study dto = service.readArticleByCategory(boardNum);
+		
+		// 작성자가 아니면
+		if(! dto.getUserId().equals(userId) ) { 
+			return "study/homelist";
+		}
+		
+		// 업데이트에 쓸 객체
+		Study vo = new Study();
+		vo.setBoardNum(boardNum);
+		vo.setSubject(subject);
+		vo.setContent(content);
+		service.updateArticleByCategory(vo);
+		
+		return "study/homelist";
 	}
 }
