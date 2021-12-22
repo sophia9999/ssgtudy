@@ -37,5 +37,6 @@ public interface BoardService {
 	public int replyLikeCount(int replyNum);
 	public boolean userReplyLiked(Map<String, Object> map ) throws Exception;
 	
+	public int insertBbsReport(Map<String, Object> map) throws Exception;
 	
 }

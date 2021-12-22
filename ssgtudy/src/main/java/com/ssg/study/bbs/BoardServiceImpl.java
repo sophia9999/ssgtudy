@@ -376,4 +376,14 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return result;
 	}
+
+	@Override
+	public int insertBbsReport(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("bbs.insertBbsReport", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
 }

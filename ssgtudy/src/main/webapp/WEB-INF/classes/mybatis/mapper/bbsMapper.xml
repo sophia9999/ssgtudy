@@ -242,4 +242,9 @@
 	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.bbs.Reply">
 		SELECT replyNum, userId FROM bbs_replylike WHERE replyNum = #{replyNum}
 	</select>
+	
+	<insert id="insertBbsReport" parameterType="map">
+		INSERT INTO bbs_report(bbsNum, userId, reason)
+		VALUES (#{bbsNum}, #{userId}, #{reason})
+	</insert>
 </mapper>

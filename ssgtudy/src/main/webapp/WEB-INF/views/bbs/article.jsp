@@ -293,6 +293,36 @@ $(function(){
 		ajaxFun(url, "post", query, "json", fn);
 	});
 });
+
+// 신고
+$(function(){
+	$(".btnReport").click(function(){
+		var f = document.reportForm;
+		
+		var bbsNum = f.bbsNum.value;
+		var reason = f.reason.value.trim();
+		
+		if(!reason){
+			alert("필수 입력 사항입니다.");
+			return false;
+		}
+		
+		var query = "bbsNum="+bbsNum+"&reason="+reason;
+		
+		var url = "${pageContext.request.contextPath}/bbs/report";
+		
+		var fn = function(data){
+			if(data.status=="true"){
+				alert("신고 접수가 완료되었습니다.");
+			} else if(data.status=='1'){
+				alert("이미 신고한 이력이 있습니다.");
+			}
+		}
+		ajaxFun(url, "post", query, "json", fn);
+	});
+	
+});
+
 </script>
 </head>
 <body>
@@ -319,7 +349,9 @@ $(function(){
                            		</td>
                            		<td align="right">
                            			${dto.reg_date} &nbsp|&nbsp 조회 ${dto.hitCount}
-                           			<span class='notifyReply' style="cursor:pointer"> &nbsp|&nbsp 신고</span>
+                           			<!-- <span class='btnReport' style="cursor:pointer"> &nbsp|&nbsp 신고</span> -->
+                           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                           				style="border: white; background: white; color: #F15F5F">신고</button>
                            		</td>
                            </tr> 
                            <tr style="border-bottom:white">
@@ -357,6 +389,7 @@ $(function(){
                            		</td>
                            </tr>  
                        </table>
+	                  
                       	<div class="col-md-2 justify-content-start">
                       		<button type="button"  class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/list?${query}';">리스트</button>	
                       		<c:choose>
@@ -400,4 +433,26 @@ $(function(){
            </div>
        </div>
    </div>
+   
+   <!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">게시글 신고</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		      	<form class="form form-horizontal" name="reportForm" method="post">
+		        	<textarea class="form-control" name="reason" style="height: 200px; resize: none;" placeholder="신고사유를 적어주세요."></textarea>
+		        	<input type="hidden" name="bbsNum" value="${dto.bbsNum}">
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+		        <button type="button" class="btn btn-danger btnReport">신고하기</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 </body>

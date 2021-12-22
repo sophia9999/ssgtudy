@@ -519,4 +519,37 @@ public class BoardController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value = "report")
+	@ResponseBody
+	public Map<String, Object> memberWithdraw(@RequestParam(value = "bbsNum") int bbsNum,
+			@RequestParam String reason, 
+			HttpSession session) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String status = "true";
+		// 신고시에 필요한 유저 id
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		map.put("userId", userId);
+		map.put("bbsNum", bbsNum);
+		map.put("reason", reason);
+		
+		
+		try {
+			int result = service.insertBbsReport(map);
+			if( result < 1) {
+				status = "1"; 
+			}
+		} catch (Exception e) {
+			status = "400";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("status", status);
+		
+		return model;
+	}
+
 }	
