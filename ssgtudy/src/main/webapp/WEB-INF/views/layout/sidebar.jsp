@@ -91,13 +91,10 @@
                                     <a href="${pageContext.request.contextPath}/my/list">내가 쓴 글</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/my/replylist">내가 쓴 댓글</a>
-                                </li>      
-                                <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/my/recommend">내가 추천한 글</a>
                                 </li>    
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/my/todolist">나의 할 일</a>
+                                    <a href="${pageContext.request.contextPath}/todo/list">나의 할 일</a>
                                 </li>   
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/my/calendar">나의 일정</a>
@@ -114,7 +111,7 @@
 		                           </a>
 	                                	<ul class="submenu ">
 		                                <li class="submenu-item ">
-		                                    <a href="${pageContext.request.contextPath}/note/receive/noteForm">쪽지함</a>
+		                                    <a href="${pageContext.request.contextPath}/note/receive/noteForm">보낸쪽지함</a>
 		                                </li>
 		                                 
 		                                <li class="submenu-item ">

@@ -13,13 +13,22 @@ public class Todo {
 	private String reg_date;
 	
 	private String userId;
+	private String nickName;
 	
-	private int todo_fileNum;
-	private int originalFilename;
-	private int saveFilename;
+	private int fileNum;
 	private long fileSize;
+	private String saveFilename;
+	private String originalFilename;
 	private List<MultipartFile> selectFile;
 	private long gap;
+
+	
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public int getListNum() {
 		return listNum;
 	}
@@ -56,22 +65,22 @@ public class Todo {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public int getTodo_fileNum() {
-		return todo_fileNum;
+	public int getfileNum() {
+		return fileNum;
 	}
-	public void setTodo_fileNum(int todo_fileNum) {
-		this.todo_fileNum = todo_fileNum;
+	public void setfileNum(int fileNum) {
+		this.fileNum = fileNum;
 	}
-	public int getOriginalFilename() {
+	public String getOriginalFilename() {
 		return originalFilename;
 	}
-	public void setOriginalFilename(int originalFilename) {
+	public void setOriginalFilename(String originalFilename) {
 		this.originalFilename = originalFilename;
 	}
-	public int getSaveFilename() {
+	public String getSaveFilename() {
 		return saveFilename;
 	}
-	public void setSaveFilename(int saveFilename) {
+	public void setSaveFilename(String saveFilename) {
 		this.saveFilename = saveFilename;
 	}
 	public long getFileSize() {

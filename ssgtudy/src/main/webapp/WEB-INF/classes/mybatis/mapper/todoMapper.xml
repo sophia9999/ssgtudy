@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="todo">
+	
+	<select id="seq" resultType="Integer">
+		SELECT todo_seq.NEXTVAL FROM dual
+	</select>
+	
+	<insert id="insertTodo" parameterType="com.ssg.study.todo.Todo">
+		INSERT INTO todo(todoNum, subject, content, reg_date, userId)
+			VALUES (#{todoNum}, #{subject}, #{content}, SYSDATE, #{userId})
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="condition=='all'">
+				(
+					INSTR(subject, #{keyword} ) &gt; 0 OR
+						DBMS_LOB.INSTR(content,#{keyword}) &gt;0
+				)	
+			</when>	
+			<when test="condition=='content'">
+				DBMS_LOB.INSTR(content,#{keyword}) &gt;0
+			</when>
+			<when test="condition=='reg_date'">
+				(
+					TO_CHAR(t.reg_date, 'YYYY-MM-DD') = #{keyword} OR
+						TO_CHAR(t.reg_date, 'YYYYMMDD') = #{keyword}
+				)
+			</when>
+			<otherwise>
+				INSTR(${condition}, #{keyword}) &gt; 0
+			</otherwise>			
+		</choose>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM todo t
+		JOIN member_detail m ON t.userId = m.userId
+		<where>
+			<if test="keyword!=null and keyword!=''">
+				<include refid="where-list"/>
+			</if>
+			AND t.userId = #{userId}
+		</where>
+	</select>
+	
+	
+	<select id="listTodo" parameterType="map" resultType="com.ssg.study.todo.Todo">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, th.* FROM (
+				SELECT t.todoNum, subject, content, 
+					TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date
+			FROM todo t	
+			JOIN member_detail m ON t.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!=''">
+					<include refid="where-list"/>
+				</if>
+			    AND t.userId = #{userId} 
+			</where>
+			ORDER BY todoNum DESC
+			) th WHERE ROWNUM &lt;= #{end}
+		)WHERE rnum &gt;= #{start}
+	</select>
+	
+	
+	<select id="readTodo" parameterType="Integer" resultType="com.ssg.study.todo.Todo">
+		SELECT t.todoNum, t.userId, subject, content, 
+			TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date	
+		FROM todo t
+		JOIN member_detail m ON t.userId = m.userId
+		WHERE todoNum = #{todoNum}
+	</select>
+	
+	<select id="preReadTodo" parameterType="map" resultType="com.ssg.study.todo.Todo">
+		SELECT * FROM ( 
+			SELECT todoNum, subject
+			FROM todo t
+			JOIN member_detail m ON t.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!='' ">
+					<include refid="where-list"/>
+				</if>
+				AND (todoNum &gt; #{todoNum} )
+			</where>
+			ORDER BY todoNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<select id="nextReadTodo" parameterType="map"
+		resultType="com.ssg.study.todo.Todo">
+		SELECT * FROM ( 
+			SELECT todoNum, subject
+			FROM todo t
+			JOIN member_detail m ON t.userId = m.userId 
+			<where>
+				<if test="keyword!=null and keyword!='' ">
+					<include refid="where-list"/>
+				</if>
+				AND (todoNum &lt; #{todoNum} )
+			</where>
+			ORDER BY todoNum DESC
+		) WHERE ROWNUM = 1 
+	</select>
+	
+	<update id="updateTodo" parameterType="com.ssg.study.todo.Todo">
+		UPDATE todo SET subject=#{subject}, content=#{content}
+		WHERE todoNum = #{todoNum}
+	</update>
+	
+	<delete id="deleteTodo" parameterType="Integer">
+		DELETE FROM todo WHERE todoNum=#{todoNum}
+	</delete>
+	
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM todoNum_file WHERE ${field}=#{todoNum}	
+	</delete>
+	
+	<select id="insertFile" parameterType="com.ssg.study.todo.Todo">
+		INSERT INTO todoNum_file ( fileNum, originalFilename, saveFilename, todoNum, fileSize )
+		VALUES (todo_file_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{todoNum}, #{fileSize})
+	</select>
+	
+	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.todo.Todo">
+		SELECT fileNum, originalFilename, saveFilename, todoNum, fileSize
+		FROM todoNum_file
+		WHERE todoNum = #{todoNum}
+	</select>
+	
+	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.todo.Todo">
+		SELECT fileNum, saveFilename, originalFilename, fileSize 
+		FROM todoNum_file
+		WHERE fileNum=#{fileNum}
+	</select>
+	
+</mapper>

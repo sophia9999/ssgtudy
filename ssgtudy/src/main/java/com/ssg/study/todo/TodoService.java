@@ -15,7 +15,7 @@ public interface TodoService {
 	
 	public void insertFile(Todo dto) throws Exception;
 	public List<Todo> listFile(int todoNum);
-	public Todo readFile(int todo_fileNum);
+	public Todo readFile(int fileNum);
 	public void deleteFile(Map<String, Object> map)throws Exception;
 	
 }

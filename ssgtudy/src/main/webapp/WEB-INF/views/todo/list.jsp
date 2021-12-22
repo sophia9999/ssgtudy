@@ -36,9 +36,9 @@ function searchList(){
                             	<table class="table table-lg" style="text-align: center">
                                 	<thead>
                                     	<tr>
-                                        	<th style="width:15%">번호</th>
-                                        	<th style="width:25%">제목</th>
-                                         	<th style="width:45%">내용</th>
+                                        	<th style="width:10%">번호</th>
+                                        	<th style="width:10%">제목</th>
+                                         	<th style="width:65%">내용</th>
                                         	<th style="width:15%">등록일</th>
                                         </tr>
                                     </thead>
@@ -46,7 +46,9 @@ function searchList(){
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td> 
-	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</a></td>
+	                                        	<td>
+	                                        		<a href="${articleUrl}&todoNum=${dto.todoNum}">${dto.subject}</a>
+	                                        	</td>
 	                                        	<td class="text-bold-500">${dto.content}</td>
 												<td>${dto.reg_date}</td>
 	                                    	</tr>
@@ -64,7 +66,7 @@ function searchList(){
             
             
             <form class="form form-horizontal" name="searchForm"
-            	action="${pageContext.request.contextPath}/bbs/list" method="post">
+            	action="${pageContext.request.contextPath}/todo/list" method="post">
 				<div class="form-body">
 				    <div class="row" >
 				    	<div class="col-md-3 justify-content-center">                                         
