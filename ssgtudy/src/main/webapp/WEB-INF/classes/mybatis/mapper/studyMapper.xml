@@ -28,6 +28,9 @@
 		INSERT INTO study(studyNum, studyGoal, studyName, studyStatus)
 		VALUES (#{studyNum}, #{studyGoal}, #{studyName}, 0)
 	</insert>
+	<delete id="deleteStudy" parameterType="Integer">
+		DELETE FROM study WHERE studyNum = #{studyNum}
+	</delete>
 	
 	<update id="updateStudy" parameterType="com.ssg.study.study.Study" >
 		UPDATE study SET studyGoal=#{studyGoal}, studyName=#{studyName}

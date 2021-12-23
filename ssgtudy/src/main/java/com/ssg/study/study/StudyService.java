@@ -26,6 +26,7 @@ public interface StudyService {
 	public List<Study> studyHomeList(String userId) throws Exception;
 	public Study readStudy(Map<String, Object> map) throws Exception;
 	public Study visitStudy(int studyNum) throws Exception;
+	public int deleteStudy(int studyNum) throws Exception;
 	
 	// 스터디 신고
 	public int insertStudyReport(Map<String, Object> map) throws Exception;

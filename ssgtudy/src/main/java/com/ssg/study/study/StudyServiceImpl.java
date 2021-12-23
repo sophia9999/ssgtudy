@@ -475,5 +475,15 @@ public class StudyServiceImpl implements StudyService {
 		return result;
 	}
 
+	@Override
+	public int deleteStudy(int studyNum) throws Exception {
+		int result=0;
+		try {
+			result = dao.deleteData("study.deleteStudy", studyNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 
 }

@@ -291,7 +291,7 @@ public class StudyController {
 		model.addAttribute("listCategory", listMap);
 		model.addAttribute("dto", dto);
 		model.addAttribute("categoryList", categoryList);
-		
+		model.addAttribute("studyNum", studyNum);
 		return "study/addCategory";
 	}
 	
@@ -1271,4 +1271,65 @@ public class StudyController {
 		
 		return "study/homelist";
 	}
+	
+	@RequestMapping(value = "study/purge")
+	public String purgeStudy(@RequestParam int studyNum,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+	
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		
+		// 스터디 장이 아니면 삭제 불가
+		if( dto.getRole() != 20) {
+			return "redirect:/study/home/"+studyNum;
+		}
+		
+		service.deleteStudy(studyNum);
+		
+		return "redirect:/study/list";
+	}
+	
+	// AJAX - JSON 카테고리이름 변경
+	@RequestMapping(value = "study/changeCategory")
+	@ResponseBody
+	public Map<String, Object> changeCategoryName(
+			@RequestParam String categoryName,
+			@RequestParam int categoryNum,
+			@RequestParam int studyNum,
+			HttpSession session
+			) throws Exception {
+		String status = "true";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		// 세션에서 사용자 정보가져오기
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		// 사용자가 스터디장인지 확인
+		map.put("userId", userId);
+		map.put("studyNum", studyNum);
+		Study dto = service.readStudy(map);
+		// 스터디 장이 아니면 수정하지 못하도록 막기
+		if( dto.getRole() < 20) { 
+			status = "400";
+		}
+		
+		// 업데이트에 사용하도록 map 클리어하기
+		map.clear(); 
+		
+		// 카테고리변경에 사용
+		map.put("categoryName", categoryName);
+		map.put("categoryNum", categoryNum);
+		
+		service.updateCategory(map);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("status", status);
+		return model;
+	}
+	
 }

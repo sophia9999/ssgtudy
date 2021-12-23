@@ -37,7 +37,7 @@
 										${list.CATEGORYNAME}
 									</td>
 									<td>
-										<button type="button" class="btn btn-primary" onclick="updateCtgr('${list.CATEGORYNUM}');">이름수정</button>
+										<button type="button" class="btn btn-primary updateCtgr" data-bs-toggle="modal" data-bs-target="#changeModal" data-categoryNum="${list.CATEGORYNUM}">변경</button>
 										<button type="button" class="btn btn-danger" onclick="deleteCtgr('${list.CATEGORYNUM}');">삭제</button>
 									</td>
 								</tr>
@@ -60,9 +60,32 @@
 		</div>
 	</div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changeModalLabel">카테고리이름 변경</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+      	<form class="form form-horizontal changeCtgrForm btn-group" style="width: 95%;" name="changeCtgrForm" method="post">
+        	<input type="text" class="form-control changeCtgrName" name="categoryName" placeholder="변경할 이름을 적어주세요.">
+        	<input type="hidden" name="studyNum" value="${studyNum}">
+        	<button type="button" class="input-group-text btn btn-primary" onclick="updateCtgr()">변경하기</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script type="text/javascript">
+
+
 $(function() {
 	$("a[role='tab']").on("click", function(e){
     	listPage(1);
@@ -105,7 +128,7 @@ function categoryList() { // 새로고침
 
 function add() {
 	var f = document.myForm;
-	var $categoryName = $(".categoryName").val();
+	var $categoryName = $(".categoryName").val().trim();
 	var $studyNum = $(".studyNum").val();
 	if(! $categoryName.trim() ){
 		$(".categoryName").focus();
@@ -121,14 +144,30 @@ function add() {
 	ajaxFun(url, "post", query, "html", fn);
 }
 
-function updateCtgr(categoryNum) {
-	var $categoryName = $(".categoryName").val();
-	var query = "categoryNum=" + categoryNum + "categoryName=" + $categoryName;
-	var url = "${pageContext.request.contextPath}/study/updateCategory";
-	var fn = function() {
-		categoryList();
+function updateCtgr() {
+	var categoryNum = $(".updateCtgr").attr("data-categoryNum");
+	// console.log(categoryNum);
+	var categoryName = $(".changeCtgrName").val().trim();
+	// console.log(categoryName);	
+	if(! categoryName) {
+		alert("변경할 이름을 적어주세요.");
+		return false;
+	}
+	
+	var q = $(".changeCtgrForm").serialize();
+	// console.log(q);
+	
+	var url = "${pageContext.request.contextPath}/study/changeCategory";
+	var query = q + "&categoryNum=" + categoryNum;
+	var fn = function(data) {
+		
+		if(data.status == 'true') {
+			$("#changeModal").modal("hide");
+			categoryList();
+		}
+		
 	};
-	ajaxFun(url, "get", query, "json", fn);
+	ajaxFun(url, "post", query, "json", fn);
 }
 
 function deleteCtgr(categoryNum) {
@@ -139,6 +178,7 @@ function deleteCtgr(categoryNum) {
 	var query = "categoryNum=" + categoryNum;
 	var url = "${pageContext.request.contextPath}/study/deleteCategory";
 	var fn = function() {
+		
 		categoryList();
 	};
 	ajaxFun(url, "get", query, "json", fn);

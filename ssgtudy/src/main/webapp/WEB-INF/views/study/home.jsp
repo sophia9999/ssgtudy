@@ -38,13 +38,16 @@
 			           		<hr>
 			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
-			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button><br>  	
+			           			<button type="button" class="btn btn-success" onclick="addLotto('${dto.studyNum}')">추첨 응모</button><br>
+			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button>
 			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 관리</button>
 			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
 			         		<hr>
 			         			<h6><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> DANGEROUS ZONE</h6>
 			         			<p class="m-3 fw-bold">스터디 비활성화 후 활성화를 위해서는 관리자에게 쪽지로 요청해야합니다. 활성화를 위해서는 최소 몇 일이 걸릴 수도 있습니다. 신중하게 선택해주세요.</p>
-			         			<button type="button" class="btn btn-dark btnUpdateStudy" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
+			         			<p class="m-3 fw-bold">스터디 삭제 시 모든 정보들이 삭제됩니다.</p>
+			         			<button type="button" class="btn btn-dark" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
+			         			<button type="button" class="btn btn-dark" onclick="deleteStudy('${dto.studyNum}')">스터디 삭제</button>
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role > 1 }">
@@ -323,6 +326,18 @@ $(function () {
 	listMember(1);
 })
 
+function addLotto(studyNum) {
+	// console.log(studyNum);
+	// TODO
+};
+
+function deleteStudy(studyNum) {
+	// console.log(studyNum);
+	if(! confirm("스터디 삭제를 삭제하시겠습니까 ? ")) {
+		return false;
+	}
+	location.href = "${pageContext.request.contextPath}/study/purge?studyNum="+studyNum;
+}
 
 $(function() {
 	$(".btnAddQuestCount").click(function() {
