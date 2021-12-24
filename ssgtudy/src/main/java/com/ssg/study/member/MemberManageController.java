@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -86,27 +87,50 @@ public class MemberManageController {
 	
 	@RequestMapping(value="stateCodelist" ,method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> stateCodelist(String userId) {
+	public Map<String, Object> stateCodelist(
+					@RequestParam(defaultValue = "") String keyword			
+					,@RequestParam(defaultValue = "10")String row
+					,@RequestParam(defaultValue = "1")String pageNum) {
+		Map<String, Object> model = new HashMap<String, Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Member> list = null;
-		try {			
-			list = service.readStateCode();
+		try {
+			Integer dataCount = service.readCnt(keyword); // 49 
+			int rows = Integer.parseInt(row);
+			int pageNums = Integer.parseInt(pageNum);
+			
+			int start = rows*(pageNums-1)+1;
+			int end = rows*pageNums;
+			
+			int totalPage = dataCount/rows;  
+			totalPage = dataCount%rows==0? totalPage+0: totalPage+1;						
+			
+			map.put("start", start);
+			map.put("end",end );
+			map.put("keyword", keyword);
+			list = service.readStateCode(map);
+			
+			model.put("totalPage", totalPage);
+			model.put("now", pageNums);
+			
 		} catch (Exception e) {
 		}
 		
-		map.put("list", list);
+		model.put("list", list);
 		
-		return map;
+		return model;
 	}
 	
 	@RequestMapping(value="updateStateCode" ,method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> updateStateCode(String userId,int stateCode) {
+	public Map<String, Object> updateStateCode(String userId,String stateCode) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		String result = "false";
-		try {			
-			map.put("stateCode", stateCode);
+		Integer state = Integer.parseInt(stateCode);
+		try {
+			
+			map.put("stateCode", state);
 			map.put("userId", userId);
 			
 			service.updateStateCode(map);
@@ -115,7 +139,7 @@ public class MemberManageController {
 		} catch (Exception e) {
 		}
 		
-		
+		model.put("state", state);
 		model.put("result", result);
 		
 		return model;

@@ -13,6 +13,7 @@ public interface MemberService {
 	public void insertMember(Member dto) throws Exception;
 	public void updateMember(Member dto) throws Exception;
 	public void updateAdmin(Map<String, Object> map) throws Exception;
-	public List<Member> readStateCode();
+	public List<Member> readStateCode(Map<String, Object> map);
 	public void updateStateCode(Map<String, Object> map) throws Exception;
+	public Integer readCnt(String keword);
 }

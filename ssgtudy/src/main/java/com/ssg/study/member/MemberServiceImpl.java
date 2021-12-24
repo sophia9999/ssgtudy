@@ -112,10 +112,10 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<Member> readStateCode() {
+	public List<Member> readStateCode(Map<String, Object> map) {
 		List<Member> list = null;
 		try {
-			list = dao.selectList("member.readStateCode");
+			list = dao.selectList("member.readStateCode",map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,6 +131,18 @@ public class MemberServiceImpl implements MemberService{
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public Integer readCnt(String keword) {
+		Integer cnt = 0;
+		
+		try {
+			cnt = dao.selectOne("member.readCount",keword);
+		} catch (Exception e) {
+		}
+		
+		return cnt;
 	}
 
 }

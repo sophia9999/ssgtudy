@@ -70,15 +70,26 @@
 		UPDATE member_detail SET membership=#{membership}  WHERE userId = #{userId}
 	</update>
 	
-	<select id="readStateCode" resultType="com.ssg.study.member.Member">
-		SELECT userId,stateCode,TO_CHAR(join_date, 'YYYY-MM-DD') join_date,TO_CHAR(edit_date, 'YYYY-MM-DD') edit_date,TO_CHAR(last_date, 'YYYY-MM-DD') last_date
-		FROM member
-		WHERE stateCode &lt; 10
+	<select id="readStateCode" parameterType="Map" resultType="com.ssg.study.member.Member">
+		  SELECT * FROM(
+			    SELECT ROWNUM rnum, td.* FROM(
+			       SELECT userId,stateCode,TO_CHAR(join_date, 'YYYY-MM-DD') join_date,TO_CHAR(edit_date, 'YYYY-MM-DD') edit_date,TO_CHAR(last_date, 'YYYY-MM-DD') last_date
+					FROM member
+					WHERE stateCode &lt; 10 AND userId like '%'||#{keyword}||'%'
+			    )td
+			    WHERE ROWNUM &lt;= #{end}
+			   )
+			   WHERE rnum &gt;= #{start}				
 	</select>
 	
 	<update id="updateStateCode" parameterType="Map">
 		UPDATE member SET stateCode=#{stateCode}  WHERE userId = #{userId}		
 	</update>
 	
+	<select id="readCount" parameterType="String" resultType="Integer">
+		SELECT NVL(COUNT(*),0) count
+		FROM member
+		WHERE stateCode &lt; 10 AND userId like '%'||#{keyword}||'%'
+	</select>
 	
 </mapper>
