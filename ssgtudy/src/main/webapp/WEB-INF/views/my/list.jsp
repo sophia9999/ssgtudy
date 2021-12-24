@@ -58,9 +58,7 @@
 					<div class="row"> 
 						<div class="col-md-4 form-group">                                                           
 						</div>                                      
-						<div class="col-md-3 form-group">
-							<input type="text" id="first-name" class="form-control" name="fname" placeholder="검색">                                          
-						</div>
+						
 						
 					</div>
 				</div>

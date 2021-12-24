@@ -78,6 +78,60 @@ public class MyController {
 		
 		return ".my.list";
 		}
+	
+	
+	// 추천글 리스트
+		@RequestMapping(value = "recommend")
+		public String recommend(
+				@RequestParam(value = "page", defaultValue = "1") int current_page,
+				HttpServletRequest req,
+				HttpSession session,
+				Model model) throws Exception {
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			String cp = req.getContextPath();
+			
+			int rows = 5;
+			int dataCount;
+			int total_page;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			int start = (current_page - 1) * rows + 1;
+			int end = current_page * rows;
+			map.put("userId", info.getUserId());
+			map.put("start", start);
+			map.put("end", end);
+			
+			
+			dataCount = service.dataCount(map);
+			total_page = myUtil.pageCount(rows, dataCount);
+			if(current_page > total_page) {
+				current_page = total_page;
+			}	
+			List<MyBoard> list = service.myList(map);
+			
+			int listNum, n = 0;
+			for (MyBoard dto : list) {
+				listNum = dataCount - (start + n -1);
+				dto.setListNum(listNum);
+				n++;
+			}
+			
+			String listUrl = cp + "/my/recommend";
+			
+			
+			String paging = myUtil.paging(current_page, total_page, listUrl);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("page", current_page);
+			model.addAttribute("dataCount", dataCount);
+			model.addAttribute("total_page", total_page);
+			model.addAttribute("paging", paging);		
+			
+			
+			return ".my.recommend";
+			}
 	}
 	
 

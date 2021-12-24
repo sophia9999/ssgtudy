@@ -6,16 +6,53 @@
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
 				SELECT 'bbs/article?bbsNum=' boardUrl, '자유게시판' boardTitle, bbsNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
-			 	FROM bbs WHERE userId = #{userId}
+			 	FROM bbs 
+			 	WHERE userId = #{userId}
+			 	UNION ALL			 	
+				SELECT 'study/home/${studyNum}article?boardNum=${boardNum}' boardUrl, '스터디 게시판' boardTitle, boardNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM study_Board 
+			 	WHERE userId = #{userId}	 	
+			 	UNION ALL			 	
+			 	SELECT 'study/article?Num=' boardUrl, '스터디 홍보 게시판' boardTitle, boardNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM study_ad 
+			 	WHERE userId = #{userId}	 	
 			 	UNION ALL
-				SELECT 'studyBoard/article?boardNum=' boardUrl, '스터디 게시판' boardTitle, boardNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
-			 	FROM study_Board_1 WHERE userId = #{userId}	 	
-			 	UNION ALL
+			 	SELECT 'communtiy/article?boardNum=' boardUrl, ' 커뮤니티 게시판 ' boardTitle, boardNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			 	FROM community 
+			 	WHERE userId = #{userId}
+			 	UNION ALL			 				 				 	
 				SELECT 'qna/article?qnaNum=' boardUrl, '질문과 답변' boardTitle, qnaNum num, subject, hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
-			 	FROM qna WHERE userId = #{userId} and groupNum = 0
-			 	ORDER BY boardTitle, reg_date DESC			
+			 	FROM qna 
+			 	WHERE userId = #{userId} 
+		 	ORDER BY boardTitle, reg_date DESC			
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="myreclist" parameterType="map" resultType="com.ssg.study.my.MyBoard">
+		SELECT * FROM (						
+			SELECT 'bbs/article?bbsNum=' boardUrl, '자유게시판' boardTitle, b.bbsNum num, b.subject, b.hitCount, b.to_char(reg_date, 'YYYY-MM-DD') reg_date						
+			FROM bbs_like bl
+			JOIN bbs b ON b.bbsNum = bl.bbsNum
+			WHERE bl.userId = #{userId}
+			UNION ALL
+
+			SELECT 'community/article?boardNum=' boardUrl, ' 커뮤니티 게시판 ' boartTitle, c.boardNum num, c.subject, c.hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			FROM community_like cl
+			JOIN community c ON c.boardNum = cl.boardNum
+			WHERE cl.userId = #{userId}
+			UNION ALL	
+					 				 				 	
+			SELECT 'qna/article?qnaNum=' boardUrl, '질문과 답변' boardTitle, q.qnaNum num, q.subject, q.hitCount, to_char(reg_date, 'YYYY-MM-DD') reg_date
+			FROM qna_like ql 
+			JOIN qna q ON c.qnaNum = ql.qnaNum
+			WHERE ql.userId = #{userId}
+			
+		 	ORDER BY boardTitle, reg_date DESC			
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}			
+		
+	
 	</select>
 	
 	<select id="dataCount" parameterType="String" resultType="Integer"> 
@@ -24,10 +61,16 @@
 		 	FROM bbs WHERE userId = #{userId}
 		 	UNION ALL
 			SELECT boardNum num, subject
-		 	FROM study_Board_1 WHERE userId = #{userId}	 	
+		 	FROM study_Board WHERE userId = #{userId}	 	
+		 	UNION ALL
+		 	SELECT boardNum num, subject
+		 	FROM study_ad WHERE userId = #{userId}	 	
 		 	UNION ALL
 			SELECT qnaNum num, subject
-		 	FROM qna WHERE userId = #{userId} and groupNum = 0
+		 	FROM qna WHERE userId = #{userId}
+		 	UNION ALL
+		 	SELECT boardNum num, subject
+		 	FROM community WHERE userId = #{userId}	 	 
 		)
 	</select>
 	
