@@ -132,7 +132,7 @@
                                     <a href="${pageContext.request.contextPath}/bbs/list">자유게시판</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/qna/list">질문답변게시판</a>
+                                    <a href="${pageContext.request.contextPath}/qna/list">QnA</a>
                                 </li>  
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/notice/list">공지사항</a>
@@ -168,11 +168,11 @@
                                     <a href="${pageContext.request.contextPath}/study/rank">스터디 순위</a>
                                 </li>  
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/study/ad">스터디 홍보 게시판</a>
+                                    <a href="${pageContext.request.contextPath}/study/ad">스터디 홍보</a>
                                 </li>
                                 <c:if test="${not empty sessionScope.member}">
 									<li class="submenu-item ">
-	                                    <a href="${pageContext.request.contextPath}/study/list">나의 스터디 리스트</a>
+	                                    <a href="${pageContext.request.contextPath}/study/list">나의 스터디</a>
 	                                </li>   
                                 </c:if>                    
                             </ul>

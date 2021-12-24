@@ -315,5 +315,25 @@
 		DELETE FROM study_board WHERE boardNum = #{boardNum}
 	</delete>
 	
-	<select id=""></select>
+	<select id="manageStudyList" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT DISTINCT s.studyNum, studyName, studyStatus, COUNT(reason) OVER(PARTITION BY s.studyNum) reportCount
+		        FROM study s
+		        LEFT OUTER JOIN study_report sr ON s.studyNum = sr.studyNum
+		        <where>
+		        	<if test="keyword != null and keyword != '' ">
+					    AND INSTR(studyName, #{keyword}) &gt;= 1
+					</if>
+		        </where>
+		    ) tb WHERE ROWNUM &lt;= 10
+		) WHERE rnum &gt;= 1
+	</select>
+	
+	<select id="reasonList" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT s.studyNum, studyName, reason, userId 
+		FROM study_report sr
+		JOIN study s ON sr.studyNum = s.studyNum
+		WHERE s.studyNum = #{studyNum}
+	</select>
 </mapper>

@@ -27,6 +27,7 @@ public class Study {
 	private int categoryNum; // 홈에서 카테고리별 리스트 불러올 때
 	
 	private String reason; // 스터디 신고할 때
+	private int reportCount; // 관리자 스터디 리스트에서 신고당한 횟수 볼 때
 	
 	public int getRank() {
 		return rank;
@@ -186,5 +187,13 @@ public class Study {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public int getReportCount() {
+		return reportCount;
+	}
+
+	public void setReportCount(int reportCount) {
+		this.reportCount = reportCount;
 	}
 }
