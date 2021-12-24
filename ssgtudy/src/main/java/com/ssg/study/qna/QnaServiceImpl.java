@@ -106,7 +106,7 @@ public class QnaServiceImpl implements QnaService {
 	public Qna nextReadBoard(Map<String, Object> map) {
 		Qna dto = null;
 		try {
-			dto = dao.selectOne("qna.preReadBoard", map);
+			dto = dao.selectOne("qna.nextReadBoard", map);
 		} catch (Exception e) {
 		}
 		return dto;
