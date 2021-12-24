@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface MyService {
 	public List<MyBoard> myList(Map<String, Object> map);
+	
+	public List<MyBoard> recList(Map<String, Object> map);
 
 	public int dataCount(Map<String, Object>map);
 

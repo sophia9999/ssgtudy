@@ -26,6 +26,17 @@ public class MyServiceImpl implements MyService {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<MyBoard> recList(Map<String, Object> map) {
+		List<MyBoard> list = null;
+		try {
+			list = dao.selectList("my.recList", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
@@ -38,6 +49,7 @@ public class MyServiceImpl implements MyService {
 		}
 		return result;
 	}
+
 
 	
 }

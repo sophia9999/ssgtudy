@@ -9,6 +9,15 @@ public class MyBoard {
 	private String reg_date;
 	private int listNum;
 	
+	
+	private int boardLikeCount;
+	
+	public int getBoardLikeCount() {
+		return boardLikeCount;
+	}
+	public void setBoardLikeCount(int boardLikeCount) {
+		this.boardLikeCount = boardLikeCount;
+	}
 	public int getNum() {
 		return num;
 	}

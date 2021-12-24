@@ -39,9 +39,9 @@
                                     <tbody>
                                     	<c:forEach var="dto" items="${list}">
 	                                    	<tr>
-	                                        	<td class="text-bold-500">${dto.bbsNum}</td>
-	                                        	<td><a href="${articleUrl}&bbsNum=${dto.bbsNum}">${dto.subject}</td>
-	                                        	<td class="text-bold-500">${dto.nickName}</td>
+	                                        	<td class="text-bold-500">${dto.listNum}</td>
+	                                        	<td class="text-bold-500">${dto.boardTitle}</td>
+	                                        	<td><a href="${pageContext.request.contextPath}/${dto.boardUrl}${dto.num}&page=1">${dto.subject}</a></td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
 	                                    	</tr>
@@ -58,9 +58,7 @@
 					<div class="row"> 
 						<div class="col-md-4 form-group">                                                           
 						</div>                                      
-						<div class="col-md-3 form-group">
-							<input type="text" id="first-name" class="form-control" name="fname" placeholder="검색">                                          
-						</div>
+						
 						<div class="col-md-1 form-group">                                                     
 							<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
 						</div>				                                                   
