@@ -245,6 +245,7 @@
 	
 	<insert id="insertQnaReport" parameterType="map">
 		INSERT INTO qna_report(qnaNum, userId, reason)
-		VALUES (#{qnaNum}, #{userId}, #{reason})
+		VALUES (#{qnaNum}, #{userId}, #{reason})     
 	</insert>
+	
 </mapper>
