@@ -126,17 +126,11 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/study/pauselist">스터디 정지</a>
+                                    <a href="${pageContext.request.contextPath}/studyManage/all">스터디 목록</a>
                                 </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/study/all">스터디 목록</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/study/reportlist">신고 스터디 목록</a>
-                                </li>
-                               
+
 								<li class="submenu-item ">
-	                                    <a href="${pageContext.request.contextPath}/study/lotto">스터디 추첨</a>
+	                                    <a href="${pageContext.request.contextPath}/studyManage/lotto">스터디 추첨</a>
 	                             </li>   
                                                 
                             </ul>

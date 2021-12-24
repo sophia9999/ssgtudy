@@ -117,8 +117,6 @@
 		                                <li class="submenu-item ">
 		                                    <a href="${pageContext.request.contextPath}/note/noteWrite">쪽지보내기</a>
 		                                </li>    
-				                                
-				                            
                                    		</ul>
                                 </li>    
                             </ul>
@@ -199,6 +197,20 @@
                             <ul class="submenu ">
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/calendar/test">시험일정</a>
+                                </li>  
+                                                    
+                            </ul>
+                        </li>
+                        
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class="sidebar-link">
+								<i class="icofont-magic"></i>
+                                <span>이벤트</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="${pageContext.request.contextPath}/event/ilist">개인이벤트 응모</a>
+                                    <a href="${pageContext.request.contextPath}/event/glist">그룹이벤트 응모</a>
                                 </li>  
                                                     
                             </ul>
