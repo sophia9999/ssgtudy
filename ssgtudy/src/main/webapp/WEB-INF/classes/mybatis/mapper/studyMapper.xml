@@ -314,4 +314,6 @@
 	<delete id="deleteEachStudyBoard" parameterType="Integer">
 		DELETE FROM study_board WHERE boardNum = #{boardNum}
 	</delete>
+	
+	<select id=""></select>
 </mapper>

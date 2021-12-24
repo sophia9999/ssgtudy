@@ -57,7 +57,7 @@
 				</c:choose>
 		    	
 				<c:choose>
-		    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50 || studyDto.role >= 10}">
+		    		<c:when test="${studyDto.role >= 10 || sessionScope.member.userId==dto.userId}}">
 		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard('${dto.boardNum}');">삭제</button>
 		    		</c:when>
 		    		<c:otherwise>
@@ -66,7 +66,7 @@
 		    	</c:choose>
 			</td>
 			<td class="text-end">
-				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="btnBack()">리스트</button>
+				<button type="button" class="btn btn-outline-primary me-1 mb-1 btnBack">리스트</button>
 			</td>
 			
 		</tr>
@@ -74,21 +74,24 @@
 </div>
 
 <script type="text/javascript">
-function btnBack() {
-	
-	var url = '${pageContext.request.contextPath}/study/home/${studyNum}/list';
-	var query = '${query}'+"&categoryNum="+${categoryNum};
-	
-	// console.log(query);
-	var selector = "#myTabContent";
-	
-	var fn = function(data){
-		$(".box").empty();
-		$(selector).html(data);
-	};
-	ajaxFun(url, "get", query, "html", fn);
-	
-}
+
+
+$(function() {
+	$("body").on("click", ".btnBack", function() {
+		var url = '${pageContext.request.contextPath}/study/home/${studyNum}/list';
+		var query = '${query}'+"&categoryNum="+${categoryNum};
+		
+		// console.log(query);
+		var selector = "#myTabContent";
+		
+		var fn = function(data){
+			$(".box").empty();
+			$(selector).html(data);
+		};
+		ajaxFun(url, "get", query, "html", fn);
+		
+	});
+});
 
 function deleteBoard(boardNum) {
 	if(! confirm("게시글을 삭제하시겠습니까 ?")) {
@@ -103,6 +106,7 @@ function deleteBoard(boardNum) {
 	ajaxFun(url, "get", query, "html", fn);
 }
 
+<c:if test="${sessionScope.member.userId==dto.userId}">
 function amendArticle() {
 	var url = '${pageContext.request.contextPath}/study/home/'+${studyNum}+'/list/update';
 	var query = "studyNum="+${studyNum}+"&categoryNum="+${categoryNum}+"&boardNum="+${dto.boardNum}+"&page="+${page};
@@ -116,5 +120,6 @@ function amendArticle() {
 	}
 	ajaxFun(url, "get", query, "html", fn);
 }
+</c:if>
 </script>
 		

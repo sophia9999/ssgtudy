@@ -907,8 +907,8 @@ public class StudyController {
 		Map<String, Object> message = new HashMap<String, Object>();
 		Study vo = service.readStudy(map); // 이 스터디 멤버가 아니면 못읽어요
 		Study dto = null;
-		if (vo == null) {
-			message.put("msg", "멤버가 아니므로 읽을 수 없습니다.");
+		if (vo == null || vo.getRole() == 0) {
+			message.put("msg", "일반멤버가 아니므로 읽을 수 없습니다.");
 		} else if(vo.getRole() >= 1) { // 일반멤버부터 읽을 수 있습니다.
 			dto = service.readArticleByCategory(boardNum);
 		}
@@ -916,6 +916,7 @@ public class StudyController {
 		// CKEditor 사용했으므로 심볼 안바꿔도됨.
 		
 		model.addAttribute("studyNum", studyNum);
+		model.addAttribute("studyDto", vo); // 멤버에 따라 관리자이상이면 글삭제가능하도록하기 위함
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
