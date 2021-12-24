@@ -550,5 +550,4 @@ public class QnaController {
 		
 		return model;
 	}
-
 }
