@@ -68,7 +68,7 @@ function createlist(query){
 			      + '<span aria-hidden="true"><i class="bi bi-chevron-right"></i></span>'
 			      + '</a></li>';
 		  $(".pagination").append(pagebtn);
-		
+		$("#row").val(data.row).prop("selected",true);
 	};
 	 ajaxfun("get",url,query,fn);
 }
@@ -163,7 +163,7 @@ $("body").on("change","tbody select",function(){
                                     </div>
                                     <div class="ms-3 name">
                                     	
-                                        <h5 class="font-bold" style="margin: 5px 0px 0px 0px;">관리자 목록</h5>
+                                        <h5 class="font-bold" style="margin: 5px 0px 0px 0px;">유저 관리</h5>
                                     </div>
                                 </div>
                             </div>

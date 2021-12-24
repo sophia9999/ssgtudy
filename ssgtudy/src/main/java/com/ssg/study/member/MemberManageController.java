@@ -109,7 +109,7 @@ public class MemberManageController {
 			map.put("end",end );
 			map.put("keyword", keyword);
 			list = service.readStateCode(map);
-			
+			model.put("row", row);
 			model.put("totalPage", totalPage);
 			model.put("now", pageNums);
 			

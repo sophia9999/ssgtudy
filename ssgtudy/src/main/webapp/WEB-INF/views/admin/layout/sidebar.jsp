@@ -85,10 +85,10 @@
                                     <a href="${pageContext.request.contextPath}/member/report">신고 유저 목록</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/member/manager">관리자 관리</a>
+                                    <a href="${pageContext.request.contextPath}/membermanage/manager">관리자 관리</a>
                                 </li>      
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/member/user">유저관리</a>
+                                    <a href="${pageContext.request.contextPath}/membermanage/user">유저관리</a>
                                 </li>    
                                 
                                 
