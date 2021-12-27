@@ -3,14 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-</head>
-<body>
+
 	<div class="page-title">
 		<div class="row">
 			<div class="col-12 col-md-6 order-md-1 order-last">
@@ -41,7 +34,7 @@
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td>
 	                                        	<td class="text-bold-500">${dto.boardTitle}</td>
-	                                        	<td><a href="${pageContext.request.contextPath}/${dto.boardUrl}${dto.num}&page=1">${dto.subject}</a></td>
+	                                        	<td><a href="${pageContext.request.contextPath}/my/article?num=${dto.num}&tbName=${dto.tbName}&page=${page}">${dto.subject}</a></td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
 	                                    	</tr>
@@ -53,17 +46,10 @@
                     </div>
                 </div>
             </div>
-            <form class="form form-horizontal">
-				<div class="form-body">
-					<div class="row"> 
-						<div class="col-md-4 form-group">                                                           
-						</div>                                      
-						
-						
-					</div>
-				</div>
-			</form>   
+            
+			<div class="page-box">
+				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
+			
 		</div>
 	</section>
-</body>
-</html>

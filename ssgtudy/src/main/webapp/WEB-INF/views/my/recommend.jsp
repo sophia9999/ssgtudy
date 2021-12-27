@@ -30,8 +30,8 @@
                                 	<thead>
                                     	<tr>
                                         	<th style="width:16.66%">번호</th>
-                                        	<th style="width:33.33%">제목</th>
-                                         	<th style="width:16.66%">작성자</th>
+                                        	<th style="width:33.33%">게시판</th>
+                                         	<th style="width:16.66%">제목</th>
                                         	<th style="width:16.66%">등록일</th>
                                         	<th style="width:16.66%">조회수</th>
                                         </tr>
@@ -53,22 +53,11 @@
                     </div>
                 </div>
             </div>
-            <form class="form form-horizontal">
-				<div class="form-body">
-					<div class="row"> 
-						<div class="col-md-4 form-group">                                                           
-						</div>                                      
-						
-						<div class="col-md-1 form-group">                                                     
-							<button type="button" class="btn btn-outline-primary me-1 mb-1">검색</button>
-						</div>				                                                   
-						<div class="col-md-4 d-flex justify-content-end">
-							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/write';">등록</button>
-							<button type="reset" class="btn btn-outline-primary me-1 mb-1">취소</button>
-						</div>
-					</div>
-				</div>
-			</form>   
+            
+			<div class="page-box">
+				${recdataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+			</div>
+			            
 		</div>
 	</section>
 </body>

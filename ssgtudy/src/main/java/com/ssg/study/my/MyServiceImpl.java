@@ -10,10 +10,21 @@ import com.ssg.study.common.dao.CommonDAO;
 
 @Service("my.myService")
 public class MyServiceImpl implements MyService {
-
 	@Autowired
 	private CommonDAO dao;
 	
+	@Override
+	public int dataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("my.dataCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	
 	@Override
 	public List<MyBoard> myList(Map<String, Object> map) {
@@ -28,6 +39,18 @@ public class MyServiceImpl implements MyService {
 	}
 	
 	@Override
+	public MyBoard myReadBoard(Map<String, Object> map) {
+		MyBoard dto = null;
+		
+		try {
+			dto = dao.selectOne("my.myReadBoard", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+	
+	@Override
 	public List<MyBoard> recList(Map<String, Object> map) {
 		List<MyBoard> list = null;
 		try {
@@ -39,17 +62,15 @@ public class MyServiceImpl implements MyService {
 	}
 
 	@Override
-	public int dataCount(Map<String, Object> map) {
+	public int recdataCount(Map<String, Object> map) {
 		int result = 0;
 		
 		try {
-			result = dao.selectOne("my.dataCount", map);
+			result = dao.selectOne("my.recdataCount", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-
-
 	
 }
