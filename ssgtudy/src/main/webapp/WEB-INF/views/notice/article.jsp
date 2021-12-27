@@ -329,8 +329,8 @@ $(function(){
 	<div class="page-title">
 		<div class="row">
 			<div class="col-12 col-md-6 order-md-1 order-last">
-				<h3>QnA</h3>
-				<p class="text-subtitle text-muted">친구들과 서로 묻고 답해요</p>
+				<h3>공지사항</h3>
+				<p class="text-subtitle text-muted">공지사항을 확인해주세요</p>
 			</div>
 		</div>
 	</div>

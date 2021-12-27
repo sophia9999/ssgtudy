@@ -21,8 +21,8 @@ function searchList(){
 	<div class="page-title">
 		<div class="row">
 			<div class="col-12 col-md-6 order-md-1 order-last">
-				<h3>QnA</h3>
-				<p class="text-subtitle text-muted">친구들과 서로 묻고 답해요</p>
+				<h3>공지사항</h3>
+				<p class="text-subtitle text-muted">공지사항을 확인해주세요</p>
 			</div>
 		</div>
 	</div>
@@ -57,7 +57,7 @@ function searchList(){
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
 	                                        	<td class="text-bold-500">
 	                                        		<c:if test="${dto.fileCount != 0}">
-	                                        			<a href="${pageContext.request.contextPath}/qna/zipdownload?qnaNum=${dto.qnaNum}">
+	                                        			<a href="${pageContext.request.contextPath}/notice/zipdownload?nNum=${dto.nNum}">
 	                                        				<i class="bi bi-download text-muted"></i>
 	                                        			</a>
 	                                        		</c:if>
@@ -98,8 +98,14 @@ function searchList(){
 							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="searchList()">검색</button>
 						</div>				                                                   
 						<div class="col-md-2 justify-content-end">
-							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/qna/write';">등록</button>
-							<button type="reset" class="btn btn-outline-primary me-1 mb-1">취소</button>
+							<c:choose>  
+                      			<c:when test="${sessionScope.member.userId=='admin'}">
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/notice/write';">등록</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" style="visibility: hidden;">등록</button>							
+								</c:otherwise>
+							</c:choose>	
 						</div>
 					</div>
 				</div>

@@ -15,15 +15,13 @@
 				<span class="bold"><i class="bi bi-person-circle text-muted"></i>&nbsp&nbsp${vo.nickName}</span>
 			</td>
 			<td width='50%' align='right'>
-				<span class="text-muted">${vo.reg_date}</span> |
+				<span class="text-muted">${vo.reg_date}</span> 
 				<c:choose>
 					<c:when test="${sessionScope.member.userId==vo.userId || sessionScope.member.userId=='admin' }">
 						<span class='deleteReply' data-replyNum='${vo.replyNum}' data-pageNo='${pageNo}'
-							style="cursor:pointer">삭제</span>
+							style="cursor:pointer">| 삭제</span>
 					</c:when>
-					<c:otherwise>
-						<span class='notifyReply' style="cursor:pointer">신고</span>
-					</c:otherwise>
+					
 				</c:choose>
 			</td>
 		</tr>
