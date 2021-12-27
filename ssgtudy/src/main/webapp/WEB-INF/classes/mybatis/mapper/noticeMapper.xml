@@ -73,155 +73,129 @@
 	</select>
 
 
-<!-- 
+
 	<select id="readBoard" parameterType="Integer"
-		resultType="com.ssg.study.qna.Qna">
-		SELECT q.qnaNum, q.userId, subject, nickName, content, hitCount, 
-			TO_CHAR(q.reg_date, 'YYYY-MM-DD') reg_date, NVL(boardLikeCount, 0) boardLikeCount
-		FROM qna q
-		JOIN member_detail m ON q.userId = m.userId
-		LEFT OUTER JOIN (
-			SELECT qnaNum, COUNT(*) boardLikeCount FROM qna_like
-			GROUP BY qnaNum
-		) bc ON q.qnaNum = bc.qnaNum
-		WHERE q.qnaNum = #{qnaNum}
+		resultType="com.ssg.study.notice.Notice">
+		SELECT n.nNum, n.userId, subject, nickName, content, hitCount, 
+			TO_CHAR(n.reg_date, 'YYYY-MM-DD') reg_date
+		FROM notice n
+		JOIN member_detail m ON n.userId = m.userId
+		WHERE n.nNum = #{nNum}
 	</select>
 	
 	<update id="updateHitCount" parameterType="Integer">
-		UPDATE qna SET hitCount=hitCount+1 WHERE qnaNum=#{qnaNum}
+		UPDATE notice SET hitCount=hitCount+1 WHERE nNum=#{nNum}
 	</update>
 	
 	<select id="preReadBoard" parameterType="map"
-		resultType="com.ssg.study.qna.Qna">
+		resultType="com.ssg.study.notice.Notice">
 		SELECT * FROM (
-			SELECT qnaNum, subject
-			FROM qna q
-			JOIN member_detail m ON q.userId = m.userId
+			SELECT nNum, subject
+			FROM notice n
+			JOIN member_detail m ON n.userId = m.userId
 			<where>
 				<if test="keyword!=null and keyword!=''">
 					<include refid="where-list"/>
 				</if>
-				AND (qnaNum &gt; #{qnaNum} )
+				AND (nNum &gt; #{nNum} )
 			</where>
-			ORDER BY qnaNum ASC
+			ORDER BY nNum ASC
 		) WHERE ROWNUM = 1
 	</select>
 	
 	<select id="nextReadBoard" parameterType="map"
-		resultType="com.ssg.study.qna.Qna">
+		resultType="com.ssg.study.notice.Notice">
 		SELECT * FROM (
-			SELECT qnaNum, subject
-			FROM qna q
-			JOIN member_detail m ON q.userId = m.userId
+			SELECT nNum, subject
+			FROM notice n
+			JOIN member_detail m ON n.userId = m.userId
 			<where>
 				<if test="keyword!=null and keyword!=''">
 					<include refid="where-list"/>
 				</if>
-				AND (qnaNum &lt; #{qnaNum} )
+				AND (nNum &lt; #{nNum} )
 			</where>
-			ORDER BY qnaNum DESC
+			ORDER BY nNum DESC
 		) WHERE ROWNUM = 1
 	</select>
 	
-	<update id="updateBoard" parameterType="com.ssg.study.qna.Qna">
-		UPDATE qna SET subject=#{subject}, content=#{content}
-		WHERE qnaNum = #{qnaNum}
+	<update id="updateBoard" parameterType="com.ssg.study.notice.Notice">
+		UPDATE notice SET subject=#{subject}, content=#{content}
+		WHERE nNum = #{nNum}
 	</update>
 	<delete id="deleteBoard" parameterType="Integer">
-		DELETE FROM qna WHERE qnaNum=#{qnaNum}
-	</delete>
- -->	
- 	
-	<!-- 게시글 공감 -->
-<!-- 
-	<insert id="insertBoardLike" parameterType="map">
-		INSERT INTO qna_like (qnaNum, userId) VALUES (#{qnaNum}, #{userId})
-	</insert>
-	
-	<delete id="deleteBoardLike" parameterType="map">
-		DELETE FROM qna_like WHERE qnaNum = #{qnaNum} AND userId = #{userId}
+		DELETE FROM notice WHERE nNum=#{nNum}
 	</delete>
 	
-	<select id="boardLikeCount" parameterType="Integer" resultType="Integer">
-		SELECT COUNT(*) FROM qna_like WHERE qnaNum = #{qnaNum}
-	</select>
-	
-	<select id="userBoardLiked" parameterType="map" resultType="com.ssg.study.qna.Qna">
-		SELECT qnaNum, userId FROM qna_like WHERE qnaNum = #{qnaNum} AND userId = #{userId}
-	</select>
- -->
- 	
 	<!-- 파일 -->
-<!-- 
-	<insert id="insertFile" parameterType="com.ssg.study.qna.Qna">
-		INSERT INTO qna_file ( qnafileNum, originalFilename, saveFilename, qnaNum, fileSize )
-		VALUES (qnafile_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{qnaNum}, #{fileSize})
+
+	<insert id="insertFile" parameterType="com.ssg.study.notice.Notice">
+		INSERT INTO notice_file ( notice_fileNum, originalFilename, saveFilename, nNum, fileSize )
+		VALUES (noticeFile_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{nNum}, #{fileSize})
 	</insert>
 	
-	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.qna.Qna">
-		SELECT qnafileNum, originalFilename, saveFilename, qnaNum, fileSize 
-		FROM qna_file
-		WHERE qnaNum=#{qnaNum}
+	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.notice.Notice">
+		SELECT notice_fileNum, originalFilename, saveFilename, nNum, fileSize 
+		FROM notice_file
+		WHERE nNum=#{nNum}
 	</select>
 	
-	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.qna.Qna">
-		SELECT qnafileNum, originalFilename, saveFilename, qnaNum, fileSize 
-		FROM qna_file
-		WHERE qnafileNum=#{qnafileNum}
+	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.notice.Notice">
+		SELECT notice_fileNum, originalFilename, saveFilename, nNum, fileSize 
+		FROM notice_file
+		WHERE notice_fileNum=#{notice_fileNum}
 	</select>
 	
 	<delete id="deleteFile" parameterType="map">
-		DELETE FROM qna_file WHERE ${field}=#{qnaNum}
+		DELETE FROM notice_file WHERE ${field}=#{nNum}
 	</delete>
- -->	
+
 	<!-- 댓글 -->
-<!--	
-	<insert id="insertReply" parameterType="com.ssg.study.qna.Reply">
-		INSERT INTO qna_reply(replyNum, qnaNum, userId, content, answer, reg_date)
-		VALUES (qnareply_seq.NEXTVAL, #{qnaNum}, #{userId}, #{content}, #{answer}, SYSDATE )
+	<insert id="insertReply" parameterType="com.ssg.study.notice.Reply">
+		INSERT INTO notice_reply(replyNum, nNum, userId, content, answer, reg_date)
+		VALUES (notice_reply_seq.NEXTVAL, #{nNum}, #{userId}, #{content}, #{answer}, SYSDATE )
 	</insert>
 	
-	<select id="listReply" parameterType="map" resultType="com.ssg.study.qna.Reply">
+	<select id="listReply" parameterType="map" resultType="com.ssg.study.notice.Reply">
 		SELECT * FROM (
    			SELECT ROWNUM rnum, tb.* FROM (
-		        SELECT r.replyNum, r.userId, nickName, qnaNum, content, r.reg_date,
+		        SELECT r.replyNum, r.userId, nickName, nNum, content, r.reg_date,
 		            NVL(answerCount, 0) answerCount,
 		            NVL(likeCount, 0) likeCount
-		        FROM qna_reply r
+		        FROM notice_reply r
 		        JOIN member m ON r.userId = m.userId
 		        JOIN member_detail d ON m.userId = d.userId
 		        LEFT OUTER JOIN (
 		            SELECT answer, COUNT(*) answerCount
-		            FROM qna_reply WHERE answer != 0 GROUP BY answer
+		            FROM notice_reply WHERE answer != 0 GROUP BY answer
 		        ) a ON r.replyNum = a.answer
 		        LEFT OUTER JOIN(
 		        	SELECT replyNum, COUNT(*) likeCount
-		        	FROM qna_reply_like GROUP BY replyNum
+		        	FROM notice_replylike GROUP BY replyNum
 		        ) c ON r.replyNum = c.replyNum
-		       WHERE qnaNum=#{qnaNum} AND r.answer=0
+		       WHERE nNum=#{nNum} AND r.answer=0
 		       ORDER BY r.replyNum DESC
 		    ) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
-	
+ 
 	<select id="replyCount" parameterType="map" resultType="Integer">
-		SELECT NVL(COUNT(*),0) FROM qna_reply
-		WHERE qnaNum=#{qnaNum} AND answer=0
+		SELECT NVL(COUNT(*),0) FROM notice_reply
+		WHERE nNum=#{nNum} AND answer=0
 	</select>
 	
 	<delete id="deleteReply" parameterType="map">
-		DELETE FROM qna_reply
+		DELETE FROM notice_reply
 		WHERE replyNum=#{replyNum}
 		<if test="mode=='reply'">
 			OR answer=#{replyNum}
 		</if>
 	</delete>
--->	
+
 	<!-- 댓글의 답글 리스트 -->
-<!--
-	<select id="listReplyAnswer" parameterType="Integer" resultType="com.ssg.study.qna.Reply">
-		SELECT replyNum, qnaNum, r.userId, nickName, content, reg_date, answer
-		FROM qna_reply r
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.ssg.study.notice.Reply">
+		SELECT replyNum, nNum, r.userId, nickName, content, reg_date, answer
+		FROM notice_reply r
 		JOIN member m ON r.userId = m.userId
 		JOIN member_detail d ON m.userId = d.userId
 		WHERE answer = #{answer}
@@ -230,31 +204,25 @@
 	
 	<select id="replyAnswerCount" parameterType="Integer" resultType="Integer">
 		SELECT NVL(COUNT(*),0)
-		FROM qna_reply WHERE answer=#{answer}
+		FROM notice_reply WHERE answer=#{answer}
 	</select>
--->	
+	
 	<!-- 댓글 좋아요 추가 -->
-<!--
 	<insert id="insertReplyLike" parameterType="map">
-		INSERT INTO qna_reply_like(replyNum, userId) VALUES (#{replyNum},#{userId})
+		INSERT INTO notice_replylike(replyNum, userId) VALUES (#{replyNum},#{userId})
 	</insert>
 	
 	<delete id="deleteReplyLike" parameterType="map">
-		DELETE FROM qna_reply_like WHERE replyNum = #{replyNum} AND userId=#{userId}
+		DELETE FROM notice_replylike WHERE replyNum = #{replyNum} AND userId=#{userId}
 	</delete>
 	
 	<select id="replyLikeCount" parameterType="map" resultType="Integer">
-		SELECT NVL(COUNT(*),0) likeCount FROM qna_reply_like
+		SELECT NVL(COUNT(*),0) likeCount FROM notice_replylike
 		WHERE replyNum = #{replyNum}
 	</select>
 	
-	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.qna.Reply">
-		SELECT replyNum, userId FROM qna_reply_like WHERE replyNum = #{replyNum}
+	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.notice.Reply">
+		SELECT replyNum, userId FROM notice_replylike WHERE replyNum = #{replyNum}
 	</select>
-	
-	<insert id="insertQnaReport" parameterType="map">
-		INSERT INTO qna_report(qnaNum, userId, reason)
-		VALUES (#{qnaNum}, #{userId}, #{reason})     
-	</insert>
--->
+
 </mapper>

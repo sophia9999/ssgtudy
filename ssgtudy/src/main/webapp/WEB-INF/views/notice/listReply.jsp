@@ -21,9 +21,7 @@
 						<span class='deleteReply' data-replyNum='${vo.replyNum}' data-pageNo='${pageNo}'
 							style="cursor:pointer">삭제</span>
 					</c:when>
-					<c:otherwise>
-						<span class='notifyReply' style="cursor:pointer">신고</span>
-					</c:otherwise>
+					
 				</c:choose>
 			</td>
 		</tr>

@@ -17,11 +17,11 @@
 }
 </style>
 <script type="text/javascript">
-<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+<c:if test="${sessionScope.member.userId=='admin'}">
 	function deleteBoard(){
 		if(confirm("게시글을 삭제하시겠습니까?")){
-			var query = "qnaNum=${dto.qnaNum}&${query}";
-			var url = "${pageContext.request.contextPath}/qna/delete?" + query;
+			var query = "nNum=${dto.nNum}&${query}";
+			var url = "${pageContext.request.contextPath}/notice/delete?" + query;
 			location.href=url;
 		}
 	}
@@ -46,52 +46,14 @@ function ajaxFun(url, method, query, dataType, fn){
 		}
 	});
 }
-
-//게시글 공감 여부
-$(function(){
-	$(".btnSendBoardLike").click(function(){
-		var $i = $(this).find("i");
-		var userLiked = $i.hasClass("bi-hand-thumbs-up-fill");
-		var msg = userLiked ? "게시글 공감을 취소하시겠습니까?" : "게시글에 공감하십니까?";
-	
-		if(! confirm( msg )) {
-			return false;
-		}
-		
-		var url="${pageContext.request.contextPath}/qna/insertBoardLike";
-		var qnaNum="${dto.qnaNum}";
-		var query = "qnaNum="+qnaNum+"&userLiked="+userLiked;
-	
-		var fn = function(data){
-			var state = data.state;
-			if(state==="true"){
-				if( userLiked ){
-					$i.removeClass("bi-hand-thumbs-up-fill").addClass("bi-hand-thumbs-up");
-				} else {
-					$i.removeClass("bi-hand-thumbs-up-").addClass("bi-hand-thumbs-up-fill");
-				}
-				
-				var count = data.boardLikeCount;
-				$("#boardLikeCount").text(count);
-			} else if(state === "liked"){
-				alert("게시글 공감은 한 번만 가능합니다.");
-			} else if(state === "false"){
-				alert("게시글 공감 처리가 실패했습니다.");
-			}	
-		};
-		
-		ajaxFun(url, "post", query, "json", fn);
-	});
-});
-
 //페이징 처리
 $(function(){
 	listPage(1);
 });
 
 function listPage(page){
-	var url = "${pageContext.request.contextPath}/qna/listReply";
-	var query = "qnaNum=${dto.qnaNum}&pageNo="+page;
+	var url = "${pageContext.request.contextPath}/notice/listReply";
+	var query = "nNum=${dto.nNum}&pageNo="+page;
 	var selector = "#listReply";
 	
 	var fn = function(data){
@@ -103,7 +65,7 @@ function listPage(page){
 //리플 등록
 $(function(){
 	$(".btnSendReply").click(function(){
-		var qnaNum = "${dto.qnaNum}";
+		var nNum = "${dto.nNum}";
 		var $tb = $(this).closest("table");
 		var content = $tb.find("textarea").val().trim();
 		if(! content) {
@@ -112,8 +74,8 @@ $(function(){
 		}
 		content = encodeURIComponent(content);
 		
-		var url = "${pageContext.request.contextPath}/qna/insertReply";
-		var query = "qnaNum=" + qnaNum + "&content=" + content + "&answer=0";
+		var url = "${pageContext.request.contextPath}/notice/insertReply";
+		var query = "nNum=" + nNum + "&content=" + content + "&answer=0";
 		
 		var fn = function(data){
 			$tb.find("textarea").val("");
@@ -140,7 +102,7 @@ $(function(){
 		var replyNum = $(this).attr("data-replyNum");
 		var page = $(this).attr("data-pageNo");
 		
-		var url = "${pageContext.request.contextPath}/qna/deleteReply";
+		var url = "${pageContext.request.contextPath}/notice/deleteReply";
 		var query = "replyNum="+replyNum;
 		
 		var fn = function(data){
@@ -165,7 +127,7 @@ $(function(){
 			return false;
 		}
 		
-		var url = "${pageContext.request.contextPath}/qna/insertReplyLike";
+		var url = "${pageContext.request.contextPath}/notice/insertReplyLike";
 		var query = "replyNum=" + replyNum + "&userReplyLiked=" + userReplyLiked;
 		
 		var fn = function(data){
@@ -192,7 +154,7 @@ $(function(){
 
 //댓글별 답글 리스트
 function listReplyAnswer(answer) {
-	var url = "${pageContext.request.contextPath}/qna/listReplyAnswer";
+	var url = "${pageContext.request.contextPath}/notice/listReplyAnswer";
 	var query = "answer=" + answer;
 	var selector = "#listReplyAnswer" + answer;
 	
@@ -204,7 +166,7 @@ function listReplyAnswer(answer) {
 
 //댓글별 답글 개수
 function countReplyAnswer(answer) {
-	var url = "${pageContext.request.contextPath}/qna/countReplyAnswer";
+	var url = "${pageContext.request.contextPath}/notice/countReplyAnswer";
 	var query = "answer=" + answer;
 	
 	var fn = function(data){
@@ -244,7 +206,7 @@ $(function(){
 //댓글별 답글 등록
 $(function(){
 	$("body").on("click", ".btnSendReplyAnswer", function(){
-		var qnaNum = "${dto.qnaNum}";
+		var nNum = "${dto.nNum}";
 		var replyNum = $(this).attr("data-replyNum");
 		var $td = $(this).closest("td");
 		
@@ -255,8 +217,8 @@ $(function(){
 		}
 		content = encodeURIComponent(content);
 		
-		var url = "${pageContext.request.contextPath}/qna/insertReply";
-		var query = "qnaNum=" + qnaNum + "&content=" + content + "&answer=" + replyNum;
+		var url = "${pageContext.request.contextPath}/notice/insertReply";
+		var query = "nNum=" + nNum + "&content=" + content + "&answer=" + replyNum;
 		
 		var fn = function(data){
 			$td.find("textarea").val("");
@@ -282,7 +244,7 @@ $(function(){
 		var replyNum = $(this).attr("data-replyNum");
 		var answer = $(this).attr("data-answer");
 		
-		var url = "${pageContext.request.contextPath}/qna/deleteReply";
+		var url = "${pageContext.request.contextPath}/notice/deleteReply";
 		var query = "replyNum=" + replyNum;
 		
 		var fn = function(data){
@@ -292,35 +254,6 @@ $(function(){
 		
 		ajaxFun(url, "post", query, "json", fn);
 	});
-});
-
-// 신고
-$(function(){
-	$(".btnReport").click(function(){
-		var f = document.reportForm;
-		
-		var qnaNum = f.qnaNum.value;
-		var reason = f.reason.value.trim();
-		
-		if(!reason){
-			alert("필수 입력 사항입니다.");
-			return false;
-		}
-		
-		var query = "qnaNum="+qnaNum+"&reason="+reason;
-		
-		var url = "${pageContext.request.contextPath}/qna/report";
-		
-		var fn = function(data){
-			if(data.status=="true"){
-				alert("신고 접수가 완료되었습니다.");
-			} else if(data.status=='1'){
-				alert("이미 신고한 이력이 있습니다.");
-			}
-		}
-		ajaxFun(url, "post", query, "json", fn);
-	});
-	
 });
 
 </script>
@@ -341,7 +274,7 @@ $(function(){
                    <div class="table-responsive">
                        <table class="table table-lg">
                            <tr>
-	                           <td colspan="2" align="center">${dto.subject}</td>
+	                           <td colspan="2" align="center">[공지]&nbsp${dto.subject}</td>
                            </tr>
                            <tr>
                            		<td width="50%">
@@ -349,24 +282,20 @@ $(function(){
                            		</td>
                            		<td align="right">
                            			${dto.reg_date} &nbsp|&nbsp 조회 ${dto.hitCount}
-                           			<!-- <span class='btnReport' style="cursor:pointer"> &nbsp|&nbsp 신고</span> -->
+                           			<!-- <span class='btnReport' style="cursor:pointer"> &nbsp|&nbsp 신고</span> 
                            			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                           				style="border: white; background: white; color: #F15F5F">신고</button>
+                           				style="border: white; background: white; color: #F15F5F">신고</button>-->
                            		</td>
                            </tr> 
                            <tr style="border-bottom:white">
 	                           <td colspan="2" height="300px">${dto.content}</td>
                            </tr>
-                           <tr>
-								<td colspan="2" class="text-center p-3">
-									<button type="button" class="btn btn-outline-secondary btnSendBoardLike" title="좋아요"><i class="bi ${userBoardLiked ? 'bi-hand-thumbs-up-fill':'bi-hand-thumbs-up' }"></i>&nbsp;&nbsp;<span id="boardLikeCount">${dto.boardLikeCount}</span></button>
-								</td>
-							</tr>
+                          
                            <c:forEach var="vo" items="${listFile}">
                            		<tr>
                            			<td colspan="2">
                            				파일 : 
-                           				<a href="${pageContext.request.contextPath}/qna/download?qnafileNum=${vo.qnafileNum}">${vo.originalFilename}</a>
+                           				<a href="${pageContext.request.contextPath}/notice/download?notice_fileNum=${vo.notice_fileNum}">${vo.originalFilename}</a>
                            				(<fmt:formatNumber value="${vo.fileSize/1024}" pattern="0.00"/> kb)
                            			</td>
                            		</tr>
@@ -376,7 +305,7 @@ $(function(){
                            		<td colspan="2">
                            			이전글 :
                            			<c:if test="${not empty preReadDto}">
-                           				<a href="${pageContext.request.contextPath}/qna/article?qnaNum=${preReadDto.qnaNum}&${query}">${preReadDto.subject}</a>
+                           				<a href="${pageContext.request.contextPath}/notice/article?nNum=${preReadDto.nNum}&${query}">${preReadDto.subject}</a>
                            			</c:if>
                            		</td>
                            </tr>  
@@ -384,24 +313,24 @@ $(function(){
                            		<td colspan="2">
                            			다음글 :
                            			<c:if test="${not empty nextReadDto}">
-                           				<a href="${pageContext.request.contextPath}/qna/article?qnaNum=${nextReadDto.qnaNum}&${query}">${nextReadDto.subject}</a>
+                           				<a href="${pageContext.request.contextPath}/notice/article?nNum=${nextReadDto.nNum}&${query}">${nextReadDto.subject}</a>
                            			</c:if>
                            		</td>
                            </tr>  
                        </table>
 	                  
                       	<div class="col-md-2 justify-content-start">
-                      		<button type="button"  class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/qna/list?${query}';">리스트</button>	
+                      		<button type="button"  class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/notice/list?${query}';">리스트</button>	
                       		<c:choose>
                       			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
-									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/qna/update?qnaNum=${dto.qnaNum}&page=${page}';">수정</button>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/notice/update?nNum=${dto.nNum}&page=${page}';">수정</button>
 								</c:when>
 								<c:otherwise>
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" style="visibility: hidden;">수정</button>							
 								</c:otherwise>
 							</c:choose>	
 							<c:choose>
-                      			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+                      			<c:when test="${sessionScope.member.userId=='admin'}">
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard();">삭제</button>
 								</c:when>
 								<c:otherwise>
@@ -434,25 +363,4 @@ $(function(){
        </div>
    </div>
    
-   <!-- Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLabel">게시글 신고</h5>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body">
-		      	<form class="form form-horizontal" name="reportForm" method="post">
-		        	<textarea class="form-control" name="reason" style="height: 200px; resize: none;" placeholder="신고사유를 적어주세요."></textarea>
-		        	<input type="hidden" name="qnaNum" value="${dto.qnaNum}">
-		        </form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
-		        <button type="button" class="btn btn-danger btnReport">신고하기</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
 </body>

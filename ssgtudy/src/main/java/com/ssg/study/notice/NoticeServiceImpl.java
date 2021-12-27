@@ -1,13 +1,16 @@
 package com.ssg.study.notice;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssg.study.common.FileManager;
 import com.ssg.study.common.dao.CommonDAO;
+
 
 @Service("notice.noticeService")
 public class NoticeServiceImpl implements NoticeService {
@@ -19,8 +22,34 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Override
 	public void insertBoard(Notice dto, String pathname) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			int seq = dao.selectOne("notice.seq");
+			dto.setnNum(seq);
+			
+			dao.insertData("notice.insertBoard", dto);
+			
+			//파일업로드
+			if(! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFilename = fileManager.doFileUpload(mf, pathname);
+					if(saveFilename == null) {
+						continue;
+					}
+					
+					String originalFilename = mf.getOriginalFilename();
+					long fileSize = mf.getSize();
+					
+					dto.setOriginalFilename(originalFilename);
+					dto.setSaveFilename(saveFilename);
+					dto.setFileSize(fileSize);
+					
+					insertFile(dto);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
@@ -85,14 +114,55 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public void updateBoard(Notice dto, String pathname) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.updateData("notice.updateBoard", dto);
+			
+			if( ! dto.getSelectFile().isEmpty()) {
+				for(MultipartFile mf : dto.getSelectFile()) {
+					String saveFilename = fileManager.doFileUpload(mf, pathname);
+					if(saveFilename == null) {
+						continue;
+					}
+					
+					String originalFilename = mf.getOriginalFilename();
+					long fileSize = mf.getSize();
+					
+					dto.setOriginalFilename(originalFilename);
+					dto.setSaveFilename(saveFilename);
+					dto.setFileSize(fileSize);
+					
+					insertFile(dto);
+				
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public void deleteBoard(int nNum, String pathname, String userId) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			//파일지우기
+			List<Notice> listFile = listFile(nNum);
+			if(listFile != null) {
+				for( Notice dto : listFile) {
+					fileManager.doFileDelete(dto.getSaveFilename(), pathname);
+				}
+			}
+			
+			//파일테이블 내용 지우기
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("field", "nNum");
+			map.put("nNum", nNum);
+			deleteFile(map);
+			
+			dao.deleteData("notice.deleteBoard", nNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override

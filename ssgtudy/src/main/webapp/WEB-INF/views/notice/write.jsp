@@ -33,15 +33,15 @@ function sendOk() {
 		return;
 	}
 
-	f.action = "${pageContext.request.contextPath}/qna/${mode}";
+	f.action = "${pageContext.request.contextPath}/notice/${mode}";
 	f.submit();
 }
 
 <c:if test="${mode=='update'}">
-	function deleteFile(qnafileNum){
-		var url = "${pageContext.request.contextPath}/qna/deleteFile";
-		$.post(url, {qnafileNum : qnafileNum}, function(data){
-			$("#f"+qnafileNum).remove();
+	function deleteFile(notice_fileNum){
+		var url = "${pageContext.request.contextPath}/notice/deleteFile";
+		$.post(url, {notice_fileNum : notice_fileNum}, function(data){
+			$("#f"+notice_fileNum).remove();
 		}, "json");
 	}
 </c:if>
@@ -91,12 +91,12 @@ function sendOk() {
 							
 							<c:if test="${mode=='update'}">
 								<c:forEach var="vo" items="${listFile}">
-									<div id="f${vo.qnafileNum}">
+									<div id="f${vo.notice_fileNum}">
 										<div class="col-md-2">
 											<label>첨부된 파일</label>
 										</div>
 										<div class="col-md-10 form-group">
-											<p><a href="javasript:deleteFile('${vo.qnafileNum}');"></a>
+											<p><a href="javasript:deleteFile('${vo.notice_fileNum}');"></a>
 											${vo.originalFilename}</p>
 										</div>
 									</div>
@@ -105,10 +105,10 @@ function sendOk() {
 							<div class="col-sm-12 d-flex justify-content-end">
 								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시입력</button>
 								<button type="button" class="btn btn-light-secondary me-1 mb-1"
-									onclick="location.href='${pageContext.request.contextPath}/qna/list';">${mode=="update"?"수정취소":"등록취소"}</button>	
+									onclick="location.href='${pageContext.request.contextPath}/notice/list';">${mode=="update"?"수정취소":"등록취소"}</button>	
 								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
 								<c:if test="${mode=='update'}">
-									<input type="hidden" name="qnaNum" value="${dto.qnaNum}">
+									<input type="hidden" name="nNum" value="${dto.nNum}">
 									<input type="hidden" name="page" value="${page}">
 								</c:if>
 							</div>

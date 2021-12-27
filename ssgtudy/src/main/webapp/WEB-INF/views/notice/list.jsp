@@ -49,7 +49,7 @@ function searchList(){
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td> 
 	                                        	<td>
-	                                        		<a href="${articleUrl}&qnaNum=${dto.qnaNum}">${dto.subject}</a>
+	                                        		<a href="${articleUrl}&nNum=${dto.nNum}">[공지]&nbsp${dto.subject}</a>
 	                                        		<c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
 	                                        	</td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
@@ -77,7 +77,7 @@ function searchList(){
             
             
             <form class="form form-horizontal" name="searchForm"
-            	action="${pageContext.request.contextPath}/qna/list" method="post">
+            	action="${pageContext.request.contextPath}/notice/list" method="post">
 				<div class="form-body">
 				    <div class="row" >
 				    	<div class="col-md-3 justify-content-center">                                         
