@@ -16,4 +16,11 @@ public interface MemberService {
 	public List<Member> readStateCode(Map<String, Object> map);
 	public void updateStateCode(Map<String, Object> map) throws Exception;
 	public Integer readCnt(String keword);
+	public Integer readCommCnt();
+	public Integer readlistCnt();
+	public Integer readQnaCnt();
+	public List<Reportmember> readCommuity(Map<String, Object> map);
+	public List<Reportmember> readlist(Map<String, Object> map);
+	public List<Reportmember> readqna(Map<String, Object> map);
+	public void deleteReport(Map<String, Object> map) throws Exception;
 }

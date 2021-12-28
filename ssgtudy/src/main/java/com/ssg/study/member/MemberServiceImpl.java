@@ -145,4 +145,71 @@ public class MemberServiceImpl implements MemberService{
 		return cnt;
 	}
 
+	@Override
+	public List<Reportmember> readCommuity(Map<String, Object> map) {
+		List<Reportmember> list = null;
+		try {
+			list = dao.selectList("member.readcommunity",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<Reportmember> readlist(Map<String, Object> map) {
+		List<Reportmember> list = null;
+		try {
+			list = dao.selectList("member.readlist",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<Reportmember> readqna(Map<String, Object> map) {
+		List<Reportmember> list = null;
+		try {
+			list = dao.selectList("member.readqna",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public void deleteReport(Map<String, Object> map) throws Exception {
+		try {
+			dao.deleteData("member.deleteReport", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public Integer readCommCnt() {
+		Integer cnt = 0;
+		try {
+			cnt = dao.selectOne("member.dataCountReportComm");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+	@Override
+	public Integer readlistCnt() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer readQnaCnt() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

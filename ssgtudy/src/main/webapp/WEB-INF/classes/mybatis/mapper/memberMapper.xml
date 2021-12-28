@@ -92,4 +92,104 @@
 		WHERE stateCode &lt; 10 AND userId like '%'||#{keyword}||'%'
 	</select>
 	
+	<select id="readcommunity" parameterType="Map" resultType="com.ssg.study.member.Reportmember">
+	 SELECT * FROM(
+			    SELECT ROWNUM rnum, td.* FROM(
+					 SELECT com.userId reporteduserId ,com.boardnum num,comr.userId,reason,m.stateCode,'/community/article?page=1&amp;boardNum=' url, -1 replyNum 
+							,'COMMUNITY_REPORT' reportTable,'COMMUNITY' listTable,'boardnum' col  ,'list' type
+					FROM COMMUNITY com
+					JOIN COMMUNITY_REPORT comr ON comr.boardnum = com.boardnum
+					JOIN member m ON com.userId = m.userId
+					UNION ALL
+					
+					SELECT cr.userId reporteduserId ,cr.boardnum num,crr.userId,reason,m.stateCode,'/community/article?page=1&amp;boardNum=' url, cr.replyNum replyNum   
+							,'COMMUNITY_REPLYREPORT' reportTable,'COMMUNITY_REPLY' listTable,'replyNum' col ,'reply' type
+					FROM COMMUNITY_REPLY cr
+					JOIN COMMUNITY_REPLYREPORT crr ON cr.replyNum = crr.replyNum
+					JOIN member m ON cr.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT b.userId reporteduserId ,b.bbsNum num,r.userId,reason,m.stateCode,'/bbs/article?page=1&amp;bbsNum=' url, -1 replyNum   
+							,'bbs_report' reportTable,'bbs' listTable,'bbsNum' col ,'list' type 
+                    FROM bbs b
+                    JOIN bbs_report r ON b.bbsNum = r.bbsNum
+                    JOIN member m ON b.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT br.userId reporteduserId ,br.bbsNum num,brr.userId,reason,m.stateCode,'/bbs/article?page=1&amp;bbsNum=' url, br.replyNum replyNum   
+							,'bbs_replyreport' reportTable,'bbs_reply' listTable,'replyNum' col ,'reply' type 
+                    FROM bbs_reply br
+                    JOIN bbs_replyreport brr ON br.replyNum = brr.replyNum
+                    JOIN member m ON br.userId = m.userId
+                    UNION ALL
+                     
+                    SELECT q.userId reporteduserId ,q.qnaNum num,rq.userId,reason,m.stateCode,'/qna/article?page=1&amp;qnaNum=' url, -1 replyNum   
+							,'qna_report' reportTable,'qna' listTable,'bbsNum' col ,'list' type 
+                    FROM qna q
+                    JOIN qna_report rq ON q.qnaNum = rq.qnaNum
+                    JOIN member m ON q.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT q.userId reporteduserId ,q.qnaNum num,rq.userId,reason,m.stateCode,'/qna/article?page=1&amp;qnaNum=' url, q.replyNum replyNum  
+							,'QnA_replyreport' reportTable,'QnA_reply' listTable,'replyNum' col ,'reply' type 
+                    FROM QnA_reply q
+                    JOIN QnA_replyreport rq ON q.replyNum = rq.replyNum
+                    JOIN member m ON q.userId = m.userId
+		 )td
+			    WHERE ROWNUM &lt;= #{end}
+			   )
+			   WHERE rnum &gt;= #{start}	
+	</select>
+	
+	
+	<delete id="deleteReport" parameterType="Map">	
+		DELETE FROM ${table}
+		WHERE ${col} = #{boardNum} AND userId = #{userId}
+	</delete>
+	
+	<select id="dataCountReportComm" resultType="Integer">
+	SELECT NVL(COUNT(*),0)FROM(
+				SELECT com.userId reporteduserId ,com.boardnum num,comr.userId,reason,m.stateCode,'1' url 
+							,'COMMUNITY_REPORT' reportTable,'COMMUNITY' listTable,'boardnum' col  ,'list' type
+					FROM COMMUNITY com
+					JOIN COMMUNITY_REPORT comr ON comr.boardnum = com.boardnum
+					JOIN member m ON com.userId = m.userId
+					UNION ALL
+					
+					SELECT cr.userId reporteduserId ,cr.boardnum num,crr.userId,reason,m.stateCode,'cum=1' url  
+							,'COMMUNITY_REPLYREPORT' reportTable,'COMMUNITY_REPLY' listTable,'replyNum' col ,'reply' type
+					FROM COMMUNITY_REPLY cr
+					JOIN COMMUNITY_REPLYREPORT crr ON cr.replyNum = crr.replyNum
+					JOIN member m ON cr.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT b.userId reporteduserId ,b.bbsNum num,r.userId,reason,m.stateCode,'cum=1' url  
+							,'bbs_report' reportTable,'bbs' listTable,'bbsNum' col ,'list' type 
+                    FROM bbs b
+                    JOIN bbs_report r ON b.bbsNum = r.bbsNum
+                    JOIN member m ON b.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT br.userId reporteduserId ,br.bbsNum num,brr.userId,reason,m.stateCode,'cum=1' url  
+							,'bbs_replyreport' reportTable,'bbs_reply' listTable,'replyNum' col ,'reply' type 
+                    FROM bbs_reply br
+                    JOIN bbs_replyreport brr ON br.replyNum = brr.replyNum
+                    JOIN member m ON br.userId = m.userId
+                    UNION ALL
+                     
+                    SELECT q.userId reporteduserId ,q.qnaNum num,rq.userId,reason,m.stateCode,'cum=1' url  
+							,'qna_report' reportTable,'qna' listTable,'bbsNum' col ,'list' type 
+                    FROM qna q
+                    JOIN qna_report rq ON q.qnaNum = rq.qnaNum
+                    JOIN member m ON q.userId = m.userId
+                    UNION ALL
+                    
+                    SELECT q.userId reporteduserId ,q.qnaNum num,rq.userId,reason,m.stateCode,'cum=1' url  
+							,'QnA_replyreport' reportTable,'QnA_reply' listTable,'replyNum' col ,'reply' type 
+                    FROM QnA_reply q
+                    JOIN QnA_replyreport rq ON q.replyNum = rq.replyNum
+                    JOIN member m ON q.userId = m.userId
+	)
+	</select>
+	
 </mapper>

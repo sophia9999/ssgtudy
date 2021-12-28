@@ -95,7 +95,7 @@ public class MemberManageController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Member> list = null;
 		try {
-			Integer dataCount = service.readCnt(keyword); // 49 
+			Integer dataCount = service.readCnt(keyword);  
 			int rows = Integer.parseInt(row);
 			int pageNums = Integer.parseInt(pageNum);
 			
@@ -141,6 +141,122 @@ public class MemberManageController {
 		
 		model.put("state", state);
 		model.put("result", result);
+		
+		return model;
+	}
+	
+	
+	@RequestMapping(value="updateReport" ,method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> updateReporttest( Reportmember report) {
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		String result = "ok";
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("stateCode", report.getStateCode());
+			map.put("userId", report.getReportedUserId());
+			
+			service.updateStateCode(map);
+			
+			map.put("userId", report.getUserId());
+			map.put("table",report.getReportTable()); 
+			map.put("col",report.getCol());
+			
+			int num = report.getReplyNum() < 0 ? report.getNum() : report.getReplyNum();					
+			map.put("boardNum",num);
+			
+			service.deleteReport(map);
+			
+			map.put("userId", report.getReportedUserId());
+			map.put("table",report.getListTable()); 
+			service.deleteReport(map);
+			
+			
+			result = "true";
+		
+		} catch (Exception e) {
+		}
+		
+		
+		model.put("report", report);
+		model.put("result", result);
+		
+		return model;
+	}
+	
+	@RequestMapping("/report")
+	public String report(Model model) {
+		
+		
+		return ".admin.memberManage.report";
+	}
+	
+	@RequestMapping(value="reportcomm" ,method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> reportcomm(
+			@RequestParam(defaultValue = "1")String pageNum	) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+	
+		List<Reportmember> list = null;
+		try {
+			
+			Integer dataCount = service.readCommCnt();  
+			int rows = 10;
+			int pageNums = Integer.parseInt(pageNum);
+			
+			int start = rows*(pageNums-1)+1;
+			int end = rows*pageNums;
+			
+			int totalPage = dataCount/rows;  
+			totalPage = dataCount%rows==0? totalPage+0: totalPage+1;						
+			
+			map.put("start", start);
+			map.put("end",end );
+			list = service.readCommuity(map);
+			model.put("totalPage", totalPage);
+			model.put("now", pageNums);
+		
+		} catch (Exception e) {
+		}
+		
+		model.put("list", list);
+		
+		return model;
+	}
+	
+	@RequestMapping(value="reportlist" ,method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> reportlist(
+					) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Reportmember> list = null;
+		try {
+			list = service.readlist(map);
+		} catch (Exception e) {
+		}
+		
+		model.put("list", list);
+		
+		return model;
+	}
+	
+	@RequestMapping(value="reportqna" ,method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> reportqna(
+					) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Reportmember> list = null;
+		try {
+			list = service.readqna(map);
+		} catch (Exception e) {
+		}
+		
+		model.put("list", list);
 		
 		return model;
 	}

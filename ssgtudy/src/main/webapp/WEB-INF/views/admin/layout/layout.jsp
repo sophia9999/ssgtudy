@@ -38,13 +38,49 @@
     
   <!--  <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon"> -->
 
+<style type="text/css">
+.sidebar-wrapper .menu .sidebar-item.active .sidebar-link{
+	background-color: #9e47a9;
+}
+
+.body_admin{	
+    background-color: #fff2f9;
+    color: #652c6c;
+}
+
+a {
+	color: #652c6c;
+}
+
+.pagination.pagination-primary .page-item.active .page-link{
+	background-color: #9e47a9;
+    border-color: #9e47a9;
+    box-shadow: 0 2px 5px rgb(67 94 190 / 30%);
+}
+
+i:not(.bi) {
+	filter: opacity(0.2) drop-shadow(0px 0px 0px red);
+}
+
+.btn-outline-primary{
+	color: #9e47a9;
+    border-color: #9e47a9;
+}
+
+.btn-outline-primary:hover{
+	color: #ffffff;
+    background-color: #9e47a9;
+}
+
+</style>
+
 
 </head>
 
 
 <!-- 템플릿 현구조  -->
 
-<body>
+<body class="body_admin">
 	<div id="app">
 		<div id="sidebar"> 
 			 <tiles:insertAttribute name="sidebar"/>

@@ -45,8 +45,8 @@
 		                    </div>
                         </li>
 
-                        <li class="sidebar-item has-sub active ">
-                            <a href="index.html" class="sidebar-link">
+                        <li class="sidebar-item has-sub  active ">
+                            <a href="index.html" class=" sidebar-link ">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>메인</span>
                             </a>
@@ -82,7 +82,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/member/report">신고 유저 목록</a>
+                                    <a href="${pageContext.request.contextPath}/membermanage/report">신고 유저 목록</a>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/membermanage/manager">관리자 관리</a>
