@@ -97,9 +97,6 @@
                                     <a href="${pageContext.request.contextPath}/todo/list">나의 할 일</a>
                                 </li>   
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/my/calendar">나의 일정</a>
-                                </li>    
-                                <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/member/member">정보수정</a>
                                 </li>    
                                 
