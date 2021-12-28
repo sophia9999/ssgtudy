@@ -210,13 +210,13 @@ $(function() {
 })
 
 
-$(function() {
+/* $(function() {
 	function changeRole(memberNum) {
 		var num = memberNum;
 		var selector = $(this).closest("tr").find("td:eq(2)").html();
 		console.log(num);
 		console.log(selector);
 	}
-});
+}); */
 
 </script>

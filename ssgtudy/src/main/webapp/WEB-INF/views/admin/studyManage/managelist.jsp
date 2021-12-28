@@ -11,8 +11,57 @@ function search() {
 }
 
 function checkReason(studyNum) {
+	var url = "${pageContext.request.contextPath}/studyManage/reasonList";
+	var query = "studyNum="+studyNum;
+	var fn = function(data) {
+		// console.log(data);
+		$(".modal-body tbody").empty();
+		var list = data.reasonList;
+		var out = "";
+		
+		if(list.length == 0) {
+			out += "<div class='pt-3'>신고내역이 존재하지 않습니다.</div>";
+		}
+		
+		for(var i = 0; i<list.length; i++) {
+			out += "<tr>";
+			out += "	<td>"+list[i].userId+"</td>";
+			out += "	<td>"+list[i].reason+"</td>";
+			out += "</tr>";
+		}
+		
+		$(".modal-body tbody").append(out);
+	};
 	
+	ajaxFun(url, "get", query, "json", fn);
 }
+
+$(function() {
+	$("body").on("click", ".changeStatus", function() {
+		
+		var current = $(this).closest("tr").find(".current-status").attr("data-current");
+		var change = $(this).closest("tr").find(".studyActive option:selected").val();
+		
+		if(current == change) {
+			alert("현재 상태와 바꾸려는 상태가 같습니다.");
+			return false;
+		}
+		
+		var studyNum = $(this).attr("data-studyNum");
+		var url = "${pageContext.request.contextPath}/studyManage/changeStatus";
+		var query = "studyNum="+studyNum+"&studyStatus="+change;
+		var fn = function(data) {
+			
+			if(data.status == 'true') {
+				alert("변경이 완료되었습니다.");
+				location.href = "${pageContext.request.contextPath}/studyManage/all";
+			}
+		}
+		
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+
 </script>
 
 <div class="page-title">
@@ -29,6 +78,9 @@ function checkReason(studyNum) {
            	<div class="card">
             	<div class="card-header">
 		        	${dataCount}개(${page}/${total_page} 페이지)
+		        	<div class="text-end">
+		        		<button type="button" class="btn btn-secondary" onclick="javascript:location.href='${pageContext.request.contextPath}/studyManage/all?condition=inactive';">정지스터디보기</button>
+		        	</div>
 		        </div>
                    <div class="card-content">
                    	<div class="card-body">
@@ -39,25 +91,38 @@ function checkReason(studyNum) {
                                        	<th class="col-md-1">번호</th>
                                        	<th class="col-auto">스터디이름</th>
                                        	<th class="col-md-1">상태</th>
-                                       	<th class="col-md-2">상태변경</th>
+                                       	<th class="col-md-3">상태변경</th>
                                        	<th class="col-md-1">신고누적횟수</th> <!-- 내역확인버튼 누르고 모달에서 신고 이유 보여줄 것 -->
                                        	<th class="col-md-2">사유확인</th>
                                       </tr>
                                    </thead>
                                    <tbody>
-                            	       <tr>
+										<c:forEach var="dto" items="${list}">
+										<tr>
                            	             	<td class="text-bold-500">${dto.listNum}</td>
-                                        	<td class="text-bold-500">${dto.studyName}</td>
                                         	<td class="text-bold-500">
-                                        		<a href="#" class="btn icon btn-danger"><i data-feather="times"></i></a>
+                            	            	<c:if test="${dto.studyStatus == '1' }">
+                                        			${dto.studyName}
+                                        		</c:if>
+                                        		<c:if test="${dto.studyStatus == '0' }">
+                                        			<a href="${articleUrl}${dto.studyNum}">${dto.studyName}</a>
+                                        		</c:if>
+                                        	</td>
+                                        	<td class="text-bold-500">
+                                        		<c:if test="${dto.studyStatus == '1' }">
+                                        			<a href="#" class="btn icon btn-danger current-status" data-current="${dto.studyStatus}"></a>
+                                        		</c:if>
+                                        		<c:if test="${dto.studyStatus == '0' }">
+                                        			<a href="#" class="btn icon btn-success current-status" data-current="${dto.studyStatus}"></a>
+                                        		</c:if>
                                         	</td>
 											<td>
 												<div class="input-group">
-					                            	<select name="role" class="select form-select studyActive">
+					                            	<select name="studyStatus" class="select form-select studyActive">
 															<option value="0" ${dto.studyStatus == '0' ? "selected='selected'":"" }>활성화</option>
 															<option value="1" ${dto.studyStatus == '1' ? "selected='selected'":"" }>비활성화</option>
 													</select>
-					                           		<button type="button" class="btn btn-primary" value="${dto.studyStatus}">변경</button>
+					                           		<button type="button" class="btn btn-primary changeStatus" data-studyNum="${dto.studyNum}">변경</button>
 					                            </div>
 											</td>
                                         	<td class="text-bold-500">${dto.reportCount}</td>
@@ -65,21 +130,13 @@ function checkReason(studyNum) {
                                         		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reportReason" onclick="checkReason(${dto.studyNum})">확인하기</button>
                                         	</td>
                                     	</tr>
-                                   	<c:forEach var="dto" items="${list}">
-                                    	<tr>
-                                        	<td class="text-bold-500">${dto.listNum}</td>
-                                        	<td class="text-start"><a href="${articleUrl}&boardNum=${dto.boardNum}">${dto.subject}</a></td>
-                                        	<td class="text-bold-500">${dto.nickName}</td>
-											<td>${dto.reg_date}</td>
-                                        	<td class="text-bold-500">${dto.hitCount}</td>
-                                    	</tr>
-                                   	</c:forEach>	
+                                    	</c:forEach>
                                    </tbody>
                                </table>
                                
                                <div class="page-box text-center">
 								${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
-							</div>
+								</div>
                                
                            </div>
                            <form class="form form-horizontal" name="searchForm" method="post">
@@ -102,7 +159,9 @@ function checkReason(studyNum) {
 									<div class="col-md-1 form-group">                                                     
 										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>
 									</div>				                                                   
-									<div class="col-md-4 justify-content-end text-end"></div>
+									<div class="col-md-4 justify-content-end text-end">
+										<button type="button" class="btn btn-outline-primary" onclick="javascript:location.href='${pageContext.request.contextPath}/studyManage/all';">새로고침</button>
+									</div>
 								</div>
 							</div>
 						</form>   
@@ -113,14 +172,23 @@ function checkReason(studyNum) {
 	</div>
 </section>
 <div class="modal fade" id="reportReason" tabindex="-1" aria-labelledby="reportReasonLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-scrollable">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
 		<div class="modal-content">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="reportReasonLabel">신고사유확인</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        
+	        	<table class="table table-lg">
+	        		<thead>
+	        			<tr class="text-center">
+	        				<td style="width: 25%;">신고자 ID</td>
+	        				<td>이유</td>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+	        		</tbody>
+	        	</table>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>

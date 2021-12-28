@@ -485,5 +485,46 @@ public class StudyServiceImpl implements StudyService {
 		return result;
 	}
 
+	@Override
+	public List<Study> manageStudyList(Map<String, Object> map) throws Exception {
+		List<Study> list = null;
+		try {
+			list = dao.selectList("study.manageStudyList", map);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public int manageStudyDataCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.manageStudyDataCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> reasonList(int studyNum) throws Exception {
+		List<Study> list = null;
+		try {
+			list = dao.selectList("study.reasonList", studyNum);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public int changeStudyStatus(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.changeStudyStatus", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+	
+	
 
 }

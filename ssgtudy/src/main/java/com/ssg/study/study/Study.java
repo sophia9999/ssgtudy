@@ -29,6 +29,11 @@ public class Study {
 	private String reason; // 스터디 신고할 때
 	private int reportCount; // 관리자 스터디 리스트에서 신고당한 횟수 볼 때
 	
+	private String lottoDate; // 추첨일 선정 후 발표 할 때 마감일
+	private int eventNum;
+	private String eventCategory;
+	private String prize;
+	
 	public int getRank() {
 		return rank;
 	}
@@ -195,5 +200,37 @@ public class Study {
 
 	public void setReportCount(int reportCount) {
 		this.reportCount = reportCount;
+	}
+
+	public String getLottoDate() {
+		return lottoDate;
+	}
+
+	public void setLottoDate(String lottoDate) {
+		this.lottoDate = lottoDate;
+	}
+
+	public int getEventNum() {
+		return eventNum;
+	}
+
+	public void setEventNum(int eventNum) {
+		this.eventNum = eventNum;
+	}
+
+	public String getEventCategory() {
+		return eventCategory;
+	}
+
+	public void setEventCategory(String eventCategory) {
+		this.eventCategory = eventCategory;
+	}
+
+	public String getPrize() {
+		return prize;
+	}
+
+	public void setPrize(String prize) {
+		this.prize = prize;
 	}
 }

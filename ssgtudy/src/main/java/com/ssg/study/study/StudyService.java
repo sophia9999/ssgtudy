@@ -68,4 +68,10 @@ public interface StudyService {
 	public int rankDataCount(Map<String, Object> map) throws Exception;
 	public List<Study> rankList(Map<String, Object> map) throws Exception;
 	
+	// 스터디 관리자 페이지
+	public int manageStudyDataCount(Map<String, Object> map) throws Exception;
+	public List<Study> manageStudyList(Map<String, Object> map) throws Exception;
+	public List<Study> reasonList(int studyNum) throws Exception;
+	public int changeStudyStatus(Map<String, Object> map) throws Exception;
+	
 }

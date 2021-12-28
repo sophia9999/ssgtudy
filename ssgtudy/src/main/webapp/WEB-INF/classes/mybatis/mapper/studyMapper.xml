@@ -40,7 +40,7 @@
 		UPDATE study SET studyStatus = 1
 		WHERE studyNum = #{studyNum}		
 	</update>
-	
+
 	<insert id="insertTimes" parameterType="com.ssg.study.study.Study">
 		INSERT INTO times(studyNum, questCount, usedCount) 
 		VALUES(#{studyNum}, 0, 0)
@@ -315,6 +315,18 @@
 		DELETE FROM study_board WHERE boardNum = #{boardNum}
 	</delete>
 	
+	<select id="manageStudyDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM study
+		<where>
+			<if test="keyword != null and keyword != '' ">
+			    AND INSTR(studyName, #{keyword}) &gt;= 1
+			</if>
+			<if test="onlyInactive != null and onlyInactive != ''">
+				AND studyStatus = 1
+			</if>
+		</where>
+	</select>
+	
 	<select id="manageStudyList" parameterType="map" resultType="com.ssg.study.study.Study">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
@@ -325,9 +337,13 @@
 		        	<if test="keyword != null and keyword != '' ">
 					    AND INSTR(studyName, #{keyword}) &gt;= 1
 					</if>
+					<if test="onlyInactive != null and onlyInactive != ''">
+						AND studyStatus = 1
+					</if>
 		        </where>
-		    ) tb WHERE ROWNUM &lt;= 10
-		) WHERE rnum &gt;= 1
+		        ORDER BY reportCount DESC
+		    ) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
 	
 	<select id="reasonList" parameterType="Integer" resultType="com.ssg.study.study.Study">
@@ -336,4 +352,12 @@
 		JOIN study s ON sr.studyNum = s.studyNum
 		WHERE s.studyNum = #{studyNum}
 	</select>
+	
+	<update id="changeStudyStatus" parameterType="map">
+		UPDATE study SET studyStatus = #{studyStatus}
+		WHERE studyNum = #{studyNum}
+	</update>
+	
+	<insert id="insertEvent" parameterType="com.ssg.study.study.Study"></insert>
+	
 </mapper>
