@@ -206,8 +206,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/event/ilist">개인이벤트 응모</a>
-                                    <a href="${pageContext.request.contextPath}/event/glist">그룹이벤트 응모</a>
+                                    <a href="${pageContext.request.contextPath}/event/list">이벤트 응모 및 확인</a>
                                 </li>  
                                                     
                             </ul>
