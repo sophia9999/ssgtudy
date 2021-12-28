@@ -17,7 +17,7 @@
 }
 </style>
 <script type="text/javascript">
-<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
 	function deleteBoard(){
 		if(confirm("게시글을 삭제하시겠습니까?")){
 			var query = "bbsNum=${dto.bbsNum}&${query}";
@@ -393,7 +393,7 @@ $(function(){
                       	<div class="col-md-2 justify-content-start">
                       		<button type="button"  class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/list?${query}';">리스트</button>	
                       		<c:choose>
-                      			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+                      			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/bbs/update?bbsNum=${dto.bbsNum}&page=${page}';">수정</button>
 								</c:when>
 								<c:otherwise>
@@ -401,7 +401,7 @@ $(function(){
 								</c:otherwise>
 							</c:choose>	
 							<c:choose>
-                      			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+                      			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.membership>50}">
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard();">삭제</button>
 								</c:when>
 								<c:otherwise>

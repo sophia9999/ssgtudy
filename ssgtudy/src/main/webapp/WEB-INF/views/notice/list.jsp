@@ -99,7 +99,7 @@ function searchList(){
 						</div>				                                                   
 						<div class="col-md-2 justify-content-end">
 							<c:choose>  
-                      			<c:when test="${sessionScope.member.userId=='admin'}">
+                      			<c:when test="${sessionScope.member.membership>50}">
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/notice/write';">등록</button>
 								</c:when>
 								<c:otherwise>
