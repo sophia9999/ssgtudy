@@ -197,7 +197,7 @@
 		WHERE userId = #{userId}
 	</update>
 	<update id="updateUsedCount" parameterType="map">
-		UPDATE member_detail SET usedCount = #{usedCount}
+		UPDATE member_detail SET lottoUse = lottoUse + #{lottoUse}
 		WHERE userId = #{userId}
 	</update>
 </mapper>

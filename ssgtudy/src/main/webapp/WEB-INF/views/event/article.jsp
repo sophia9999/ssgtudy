@@ -87,6 +87,66 @@ function applyLotto() {
 	}
 	ajaxFun(url, "get", query, "json", fn);
 }
+
+$(function() {
+	$("body").on("click", ".BtnGroupApply", function() {
+		var query = "a=0";
+		var url = "${pageContext.request.contextPath}/event/readStudy";
+		var fn = function(data) {
+			// console.log(data);
+			$(".eventStudyList tbody").empty();
+			var list = data.studyList;			
+			var out = "";
+			for(var i = 0; i < list.length ; i++) {
+				out += "<tr class='text-center'>";
+				out += "		<td><input type='checkbox' value='"+list[i].studyNum+"' name='studyNum' class='checkStudyNum'></input></td>";
+				out += "		<td>"+list[i].studyName+"</td>";
+				out += "		<td>"+(list[i].questCount - list[i].usedCount)+"</td>";
+				out += "</tr>";
+			}
+			console.log(out);
+			$(".eventStudyList tbody").append(out);
+		};
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+
+function btnGroup() {
+	var studyNum = $(".eventStudyList input:checked").val();
+	// console.log(studyNum);
+	var hasPoint = $(".eventStudyList input:checked").closest("tr").find("td:eq(2)").html();
+	// console.log(hasPoint);
+	if( hasPoint < ${dto.needPoint}) {
+		alert("포인트가 부족합니다.");
+	} else {
+		var url = "${pageContext.request.contextPath}/event/studyEventApply";
+		var query = "studyNum="+studyNum+"&needPoint="+${dto.needPoint}+"&eventNum="+${dto.eventNum};
+		var fn = function(data) {
+			// console.log(data);
+			if(data.status == "true") {
+				alert("이벤트 응모가 완료되었습니다.)");
+				$("#selectStudy").modal("hide");
+			} else if(data.status == "duplication") {
+				alert("이미 응모한 이벤트입니다.");
+				$("#selectStudy").modal("hide");
+			} else if(data.status == "needMore") {
+				alert("응모에 필요한 포인트가 부족합니다.");
+				$("#selectStudy").modal("hide");
+			}
+		};
+		
+		ajaxFun(url, "get", query, "json", fn);
+	}
+}
+
+$(function() {
+	$("body").on("click", ".eventStudyList tbody .checkStudyNum", function() {
+		if($(this).prop("checked")) {
+			$(".eventStudyList tbody .checkStudyNum").prop("checked", false);
+			$(this).prop("checked", true);
+		};
+	});
+});
 </script>
 
 <div class="page-title">
@@ -168,17 +228,19 @@ function applyLotto() {
 	</table>
 </div>
 <div class="modal fade" id="selectStudy" tabindex="-1" aria-labelledby="selectStudyLabel" aria-hidden="true">
-	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="selectStudyLabel">응모할 스터디 선택</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        	<table class="table table-lg">
+	        	<table class="table table-lg eventStudyList">
 	        		<thead>
 	        			<tr class="text-center">
-	        				<td></td>
+	        				<th>&nbsp;</th>
+	        				<th>스터디명</th>
+	        				<th>응모가능 포인트</th>
 	        			</tr>
 	        		</thead>
 	        		<tbody>

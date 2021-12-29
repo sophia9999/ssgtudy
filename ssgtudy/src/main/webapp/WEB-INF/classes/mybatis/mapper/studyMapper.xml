@@ -56,7 +56,7 @@
 	</select>
 	
 	<update id="updateUsedCount" parameterType="map">
-		UPDATE times SET usedCount = #{usedCount}
+		UPDATE times SET usedCount = usedCount + #{usedCount}, updateDate = SYSDATE
 		WHERE studyNum = #{studyNum}
 	</update>
 	
@@ -101,9 +101,10 @@
 		WHERE s.studyNum = #{studyNum} and userId= #{userId}
 	</select>
 	<select id="visitStudy" parameterType="Integer" resultType="com.ssg.study.study.Study">
-		SELECT studyNum, studyGoal, studyName, studyStatus
+		SELECT s.studyNum, studyGoal, studyName, studyStatus, usedCount, questCount
 		FROM study s
-		WHERE studyNum = #{studyNum}
+		JOIN times t ON s.studyNum = t.studyNum
+		WHERE s.studyNum = #{studyNum}
 	</select>
 	<select id="readCategory" parameterType="Integer" resultType="map">
 		SELECT categoryNum, categoryName, studyNum 
@@ -427,10 +428,11 @@
 	</insert>
 	
 	<select id="eventStudyList" parameterType="String" resultType="com.ssg.study.study.Study">
-		SELECT s.studyNum, studyName, role
+		SELECT s.studyNum, studyName, role, usedCount, questCount
 		FROM study s
 		JOIN study_member sm ON s.studyNum = sm.studyNum
-		WHERE userId = #{userId} and role = 20;
+		JOIN times t ON s.studyNum = t.studyNum
+		WHERE userId = #{userId} and role = 20 and studyStatus = 0
 	</select>
 	
 	<select id="soloEventDataCount" parameterType="Integer">
@@ -445,6 +447,7 @@
 		INSERT INTO event_winning(winNum, eventNum, userId, studyNum)
 		VALUES(EVENT_WINNING_SEQ.NEXTVAL, #{eventNum}, #{userId, jdbcType=VARCHAR}, #{studyNum, jdbcType=INTEGER} )
 	</insert>
+	
 	<select id="winning" parameterType="map" resultType="com.ssg.study.study.Study">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (

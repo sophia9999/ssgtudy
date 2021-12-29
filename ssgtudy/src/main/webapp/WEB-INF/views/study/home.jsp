@@ -277,6 +277,8 @@ $(function () {
 	
 		var fn = function(data) {
 			// console.log(data);
+			$(".times-write tbody").empty();
+			
 			var out = "";
 			var questCount = data.dto.questCount;
 			var usedCount = data.dto.usedCount;

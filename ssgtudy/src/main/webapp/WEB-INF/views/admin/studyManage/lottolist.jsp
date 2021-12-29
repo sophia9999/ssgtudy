@@ -45,9 +45,9 @@ function search() {
                            	             	<td class="text-bold-500">${dto.listNum}</td>
                                         	<td class="text-bold-500"><a href="${articleUrl}&eventNum=${dto.eventNum}">${dto.subject}</a></td>
                                         	<td class="text-bold-500">${dto.lottoDate}</td>
-											<td class="text-bold-500">${dto.eventCategory}</td>
+											<td class="text-bold-500" data-eventCategory="${dto.eventCategory}">${dto.eventCategory}</td>
                                         	<td class="text-bold-500">
-                                        		<button type="button" class="btn btn-primary" data-eventNum="${dto.eventNum}"  data-bs-toggle="modal" data-bs-target="#checkWinning">확인</button>
+                                        		<button type="button" class="btn btn-primary checkWinningList" data-eventNum="${dto.eventNum}" data-bs-toggle="modal" data-bs-target="#checkWinning">확인</button>
                                         	</td>
                                     	</tr>
                                     	</c:forEach>
@@ -105,8 +105,11 @@ function search() {
 	        		<thead>
 	        			<tr class="text-center">
 	        				<td>
-	        					뽑을 명수/스터디그룹 개수를 입력하세요. <br>
-	        					<input type="number" placeholder="숫자를 입력하세요." class="form-control" name="quantity">
+	        					<p class="text-mute p-2">뽑을 명수/스터디그룹 개수를 입력하세요.</p>
+	        					<div class="btn-group">
+	        						<input type="number" placeholder="숫자를 입력하세요." class="form-control" name="quantity">
+	        						<button type="button" class="lottoWin btn btn-primary" style="width: 100px;">추가</button>
+	        					</div>
 	        				</td>
 	        			</tr>
 	        		</thead>

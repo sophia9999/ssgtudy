@@ -178,7 +178,14 @@ public class EventController {
 			result = service.insertSoloEvent(paramMap);
 			if(result == 0) { // 이미 응모한 이벤트일 경우
 				status = "duplication";
+				model.put("status", status);
+				return model;
 			}
+			
+			paramMap.clear();
+			paramMap.put("userId", userId);
+			paramMap.put("lottoUse", needPoint);
+			memberService.updateUsedCount(paramMap);
 		} catch (Exception e) {
 		}	
 		
@@ -187,5 +194,76 @@ public class EventController {
 		return model;
 	}
 	
+	@RequestMapping(value = "readStudy")
+	@ResponseBody
+	public Map<String, Object> readStudy(HttpSession session) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		String status = "true";
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
+		List<Study> studyList = null;
+		studyList = service.eventStudyList(userId);
+		
+		if(studyList == null) {
+			status = "false";
+			model.put("status", status);
+			return model;
+		}
+		
+		model.put("studyList", studyList);
+		model.put("status", status);
+		return model;
+	}
+	
+	// AJAX - JSON 스터디 응모
+	@RequestMapping(value = "studyEventApply")
+	@ResponseBody
+	public Map<String, Object> studyEventApply(
+			@RequestParam int eventNum,
+			@RequestParam int needPoint,
+			@RequestParam int studyNum,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		String status = "true";
+		
+		if(info == null) {
+			status = "403";
+			model.put("status", status);
+			return model;
+		}
+		
+		Study VO = service.readTimes(studyNum);
+		
+		if(VO.getQuestCount() - VO.getUsedCount() < needPoint) {
+			model.put("status", "needMore");
+			return model;
+		}
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("studyNum", studyNum);
+		paramMap.put("eventNum", eventNum);
+		int result = 0;
+		try {			
+			result = service.insertStudyEvent(paramMap);
+			if(result == 0) { // 이미 응모한 이벤트일 경우
+				status = "duplication";
+				model.put("status", status);
+				return model;
+			}
+			
+			paramMap.clear();
+			paramMap.put("studyNum", studyNum);
+			paramMap.put("usedCount", needPoint);
+			service.updateUsedCount(paramMap);
+		} catch (Exception e) {
+		}	
+		
+		model.put("status", status);
+		
+		return model;
+	}
 	
 }
