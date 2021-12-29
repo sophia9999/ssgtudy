@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			let query = "start="+start.replaceAll("-","")+"&end="+end.replaceAll("-","");
 			
 			let fn = function(data){
-				
+				console.log(data);
 				let list = data.SchoolSchedule.row;
 				let event_list = new Array();
 				for(let vo of list){

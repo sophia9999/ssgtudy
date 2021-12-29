@@ -42,7 +42,11 @@
 .sidebar-wrapper .menu .sidebar-item.active .sidebar-link{
 	background-color: #9e47a9;
 }
-
+.sidebar-wrapper .menu .sidebar-title
+,.sidebar-wrapper .menu .sidebar-link
+,h5{
+	color: #341d49;
+}
 .body_admin{	
     background-color: #fff2f9;
     color: #652c6c;
@@ -59,7 +63,7 @@ a {
 }
 
 i:not(.bi) {
-	filter: opacity(0.2) drop-shadow(0px 0px 0px red);
+	filter: opacity(0.2) drop-shadow(0px 0px 0px #918894);
 }
 
 .btn-outline-primary{
