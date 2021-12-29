@@ -594,6 +594,77 @@ public class StudyServiceImpl implements StudyService {
 		}
 		return dto;
 	}
+
+	@Override
+	public int insertSoloEvent(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertSoloEvent", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int insertStudyEvent(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertStudyEvent", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> eventStudyList(String userId) throws Exception {
+		List<Study> list = null;
+		try {
+			list = dao.selectList("study.eventStudyList", userId);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public int soloEventDataCount(int eventNum) {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.soloEventDataCount", eventNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int studyEventDataCount(int eventNum) {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.studyEventDataCount", eventNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int insertEventWinning(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertEventWinning", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public Study winning(Map<String, Object> map) {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.winning", map);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
+	
 	
 	
 

@@ -20,6 +20,7 @@
 	width: 95%;
 }
 </style>
+
 <script type="text/javascript">
 function sendOk() {
 	var f = document.eventform;
@@ -102,8 +103,8 @@ function sendOk() {
                                         <div class="input-group">
                                         	<select class="form-select eventCategory" name="eventCategory">
                                         		<option value="">:: 이벤트 카테고리 ::</option> 
-                                        		<option value="individual" ${eventCategory=="indiviual"?"selected='selected'":""}>개인</option>
-                                        		<option value="group" ${eventCategory=="group"?"selected='selected'":""}>그룹</option>
+                                        		<option value="individual" ${dto.eventCategory=="individual"?"selected='selected'":""}>개인</option>
+                                        		<option value="group" ${dto.eventCategory=="group"?"selected='selected'":""}>그룹</option>
                                         	</select>
                                         </div>
                                     </div>

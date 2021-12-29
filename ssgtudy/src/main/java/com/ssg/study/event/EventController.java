@@ -14,8 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ssg.study.common.MyUtil;
+import com.ssg.study.member.Member;
+import com.ssg.study.member.MemberService;
 import com.ssg.study.member.SessionInfo;
 import com.ssg.study.study.Study;
 import com.ssg.study.study.StudyService;
@@ -29,6 +32,9 @@ public class EventController {
 	
 	@Autowired
 	private MyUtil myUtil;
+	
+	@Autowired
+	private MemberService memberService;
 	
 	@RequestMapping("list")
 	public String lottoList(
@@ -136,4 +142,50 @@ public class EventController {
 		return ".event.article";
 	}
 
+	// AJAX - JSON 개인 이벤트 응모
+	@RequestMapping(value = "apply")
+	@ResponseBody
+	public Map<String, Object> applyLotto(
+			@RequestParam int eventNum,
+			HttpSession session,
+			@RequestParam int needPoint
+			) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		String status = "true";
+		
+		if(info == null) {
+			status = "403";
+			model.put("status", status);
+			return model;
+		}
+		
+		String userId = info.getUserId();
+		Member MemberVO = null;
+		MemberVO = memberService.readMember(userId);
+		
+		if(MemberVO.getQuestCount() - MemberVO.getLottoUse() < needPoint) {
+			model.put("status", "needMore");
+			return model;
+		}
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", userId);
+		paramMap.put("eventNum", eventNum);
+		int result = 0;
+		try {			
+			result = service.insertSoloEvent(paramMap);
+			if(result == 0) { // 이미 응모한 이벤트일 경우
+				status = "duplication";
+			}
+		} catch (Exception e) {
+		}	
+		
+		model.put("status", status);
+		
+		return model;
+	}
+	
+	
 }

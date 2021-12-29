@@ -23,4 +23,8 @@ public interface MemberService {
 	public List<Reportmember> readlist(Map<String, Object> map);
 	public List<Reportmember> readqna(Map<String, Object> map);
 	public void deleteReport(Map<String, Object> map) throws Exception;
+	
+	// 이벤트 응모/모의고사풀었을 시 추가
+	public int updateQuestCount(Map<String, Object> map) throws Exception;
+	public int updateUsedCount(Map<String, Object> map) throws Exception;
 }

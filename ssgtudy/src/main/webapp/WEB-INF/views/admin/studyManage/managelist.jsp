@@ -2,7 +2,45 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<style type="text/css">
+.btn-primary {
+	background : #9e47a9;
+	border-color : #713479;
+}
 
+.btn-primary:hover {
+	background : #9e47a9;
+	border-color : #713479;
+}
+
+.btn-primary:hover {
+	background : #713479;
+	border-color : #713479;
+}
+
+
+.page-item.active .page-link {
+	background-color : #9e47a9;
+	border-color : #713479;
+}
+
+.page-link {
+	color : #9e47a9;
+}
+
+.btn-outline-primary:hover {
+	border-color : #713479;
+}
+
+.form-control {
+	border : 1px solid #e7d5ea;
+}
+
+.form-select {
+	border : 1px solid #e7d5ea;
+}
+
+</style>
 <script type="text/javascript">
 function search() {
 	var f = document.searchForm;

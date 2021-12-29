@@ -180,7 +180,7 @@ public class StudyManageController {
 		
 		String cp = req.getContextPath();
 		
-		int rows = 2; // 한 화면에 보여주는 게시물 수
+		int rows = 10; // 한 화면에 보여주는 게시물 수
 		int total_page = 0;
 		int dataCount = 0;
 
@@ -297,7 +297,7 @@ public class StudyManageController {
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
 		
-		return "admin.studyManage.lottowrite";
+		return ".admin.studyManage.lottowrite";
 	}
 	
 	@RequestMapping(value = "event/update", method = RequestMethod.POST)
@@ -313,7 +313,26 @@ public class StudyManageController {
 			return "redirect:/member/login";
 		}
 		
+		service.updateEvent(dto);
+		
 		return "redirect:/studyManage/lotto";
 	}
 	
+	@RequestMapping("event/delete")
+	public String deleteEvent(@RequestParam int eventNum, HttpSession session) throws Exception {
+	
+
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		if(info == null) {
+			return "redirect:/member/login";
+		}
+		
+		if(info.getMembership() < 50) {
+			return "redirect:/member/login";
+		}
+		
+		service.deleteEvent(eventNum);
+		return "redirect:/studyManage/lotto";
+	}
 }

@@ -34,7 +34,7 @@ function search() {
                                    	<tr>
                                        	<th class="col-md-1">번호</th>
                                        	<th class="col-md-auto">이벤트제목</th>
-                                       	<th class="col-md-2">추첨일</th>
+                                       	<th class="col-md-2">마감일</th>
                                        	<th class="col-md-2">카테고리</th>
                                        	<th class="col-md-2">당첨 확인</th>
                                       </tr>

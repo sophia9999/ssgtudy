@@ -10,8 +10,8 @@
 </style>
 <script type="text/javascript">
 <c:if test="${sessionScope.member.userId==dto.userId||sessionScope.member.membership>50}">
-	function deleteBoard() {
-	    if(confirm("게시글을 삭제 하시겠습니까 ? ")) {
+	function deleteEvent() {
+	    if(confirm("이벤트를 삭제 하시겠습니까 ? ")) {
 		    var query = "eventNum=${dto.eventNum}";
 		    var url = "${pageContext.request.contextPath}/studyManage/event/delete?" + query;
 	    	location.href = url;
@@ -50,17 +50,39 @@ function ajaxFun(url, method, query, dataType, fn) {
 	});
 }
 function applyLotto() {
-	var userId = "${sessionScope.member.userId}";
+	var date = new Date();
+	var nowY = date.getFullYear();
+	var nowM = date.getMonth()+1;
+	var nowD = date.getDate();
+	
+	var lottoDate = "${dto.lottoDate}";
+	var lottoY = lottoDate.substring(0, 4);
+	var lottoM = lottoDate.substring(5, 7);
+	var lottoD = lottoDate.substring(8, 10);
+
+	if(nowY > lottoY) {
+		alert("지난 이벤트에 응모할 수 없습니다.");
+		return false;
+	} else if(nowY == lottoY && nowM > lottoM) {
+		alert("지난 이벤트에 응모할 수 없습니다.");
+		return false;
+	} else if(nowY == lottoY && nowM == lottoM && nowD > lottoD) {
+		alert("지난 이벤트에 응모할 수 없습니다.");
+		return false;
+	}
+	
 	var eventNum = "${dto.eventNum}";
 	
-	var query = "userId="+userId+"&eventNum="+eventNum;
-	var url = "${pageCcontext.request.contextPath}/studyManage/apply";
+	var query = "eventNum="+eventNum+"&needPoint="+${dto.needPoint};
+	var url = "${pageContext.request.contextPath}/event/apply";
 	var fn  = function(data) {
-		
-		if(data.status === "400") {
-			alert("이미 응모한 이벤트입니다.");
-		} else {
+		// console.log(data);
+		if(data.status == "true") {
 			alert("이벤트 응모가 완료되었습니다.)");
+		} else if(data.status == "duplication") {
+			alert("이미 응모한 이벤트입니다.")
+		} else if(data.status == "needMore") {
+			alert("응모에 필요한 포인트가 부족합니다.")
 		}
 	}
 	ajaxFun(url, "get", query, "json", fn);
@@ -113,7 +135,7 @@ function applyLotto() {
 				<th colspan="2">경품 : ${dto.prize}</th>
 			</tr>
 			<tr>
-				<th colspan="2">추첨일 : ${dto.lottoDate}</th>
+				<th colspan="2">마감일 : ${dto.lottoDate}</th>
 			</tr>
 		</tfoot>
 	</table>

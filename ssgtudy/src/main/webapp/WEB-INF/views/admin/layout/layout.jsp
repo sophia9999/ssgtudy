@@ -121,6 +121,14 @@ i:not(.bi) {
 .text-muted {
 	color : #6f6f6f!important;
 }
+
+a {
+	color : #9900ab;
+}
+
+a:hover {
+	color : #53005d;
+}
 </style>
 
 

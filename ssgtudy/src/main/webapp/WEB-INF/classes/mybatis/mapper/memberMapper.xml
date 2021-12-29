@@ -192,4 +192,12 @@
 	)
 	</select>
 	
+	<update id="updateQuestCount" parameterType="map">
+		UPDATE member_detail SET questCount = #{questCount}
+		WHERE userId = #{userId}
+	</update>
+	<update id="updateUsedCount" parameterType="map">
+		UPDATE member_detail SET usedCount = #{usedCount}
+		WHERE userId = #{userId}
+	</update>
 </mapper>

@@ -394,6 +394,7 @@
 						INSTR(content, #{keyword}) &gt; 0
 					</if>
 				</where>
+				ORDER BY eventNum DESC
 		    ) tb WHERE ROWNUM &lt;=#{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
@@ -416,4 +417,41 @@
 		SELECT studyNum, questCount, usedCount, TO_CHAR(updateDate, 'YYYY-MM-DD') updateDate FROM times WHERE studyNum = #{studyNum}
 	</select>
 	
+	<insert id="insertSoloEvent" parameterType="map">
+		INSERT INTO soloEvent(userId, eventNum)
+		VALUES(#{userId}, #{eventNum})
+	</insert>
+	<insert id="insertStudyEvent" parameterType="map">
+		INSERT INTO studyEvent(studyNum, eventNum)
+		VALUES(#{studyNum}, #{eventNum})
+	</insert>
+	
+	<select id="eventStudyList" parameterType="String" resultType="com.ssg.study.study.Study">
+		SELECT s.studyNum, studyName, role
+		FROM study s
+		JOIN study_member sm ON s.studyNum = sm.studyNum
+		WHERE userId = #{userId} and role = 20;
+	</select>
+	
+	<select id="soloEventDataCount" parameterType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM soloEvent
+		WHERE eventNum = #{eventNum}
+	</select>
+	<select id="studyEventDataCount" parameterType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM studyEvent
+		WHERE eventNum = #{eventNum}
+	</select>
+	<insert id="insertEventWinning" parameterType="map">
+		INSERT INTO event_winning(winNum, eventNum, userId, studyNum)
+		VALUES(EVENT_WINNING_SEQ.NEXTVAL, #{eventNum}, #{userId, jdbcType=VARCHAR}, #{studyNum, jdbcType=INTEGER} )
+	</insert>
+	<select id="winning" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT eventNum, userId 
+		        FROM ${table}
+		        where eventNum = #{eventNum}
+		    ) tb 
+		) WHERE rnum = #{winning}
+	</select>
 </mapper>

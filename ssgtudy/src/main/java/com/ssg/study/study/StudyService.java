@@ -83,4 +83,20 @@ public interface StudyService {
 	public int updateEvent(Study dto) throws Exception;
 	public int deleteEvent(int eventNum) throws Exception;
 	
+	// 이벤트 응모
+	public int insertSoloEvent(Map<String, Object> map) throws Exception;
+	public int insertStudyEvent(Map<String, Object> map) throws Exception;
+	
+	// 그룹응모용 불러오기
+	public List<Study> eventStudyList(String userId) throws Exception;
+	
+	// 응모인원 불러오기
+	public int soloEventDataCount(int eventNum);
+	public int studyEventDataCount(int eventNum);
+	
+	// 당첨자 저장
+	public int insertEventWinning(Map<String, Object> map) throws Exception;
+	
+	// 당첨자 뽑기
+	public Study winning(Map<String, Object> map);
 }

@@ -212,4 +212,24 @@ public class MemberServiceImpl implements MemberService{
 		return null;
 	}
 
+	@Override
+	public int updateQuestCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("member.updateQuestCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int updateUsedCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("member.updateUsedCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
 }
