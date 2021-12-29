@@ -127,12 +127,7 @@
                             <ul class="submenu ">
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/studyManage/all">스터디 목록</a>
-                                </li>  
-
-								<li class="submenu-item ">
-	                                    <a href="${pageContext.request.contextPath}/studyManage/lotto">스터디 추첨</a>
-	                             </li>   
-                                                
+                                </li>      
                             </ul>
                         </li>
                          <li class="sidebar-item  has-sub">

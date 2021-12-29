@@ -76,6 +76,51 @@ i:not(.bi) {
     background-color: #9e47a9;
 }
 
+.btn-primary {
+	background : #9e47a9;
+	border-color : #713479;
+}
+
+.btn-primary:hover {
+	background : #9e47a9;
+	border-color : #713479;
+}
+
+.btn-primary:hover {
+	background : #713479;
+	border-color : #713479;
+}
+
+
+.page-item.active .page-link {
+	background-color : #9e47a9;
+	border-color : #713479;
+}
+
+.page-link {
+	color : #9e47a9;
+}
+
+.btn-outline-primary:hover {
+	border-color : #713479;
+}
+
+.form-control {
+	border : 1px solid #e7d5ea;
+}
+
+.form-select {
+	border : 1px solid #e7d5ea;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+	color : #515152;
+	
+}
+
+.text-muted {
+	color : #6f6f6f!important;
+}
 </style>
 
 
