@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+	<select id="seq" resultType="Integer">
+		SELECT test_seq.NEXTVAL FROM dual
+	</select>
+	<insert id="insertBoard" parameterType="com.ssg.study.test.Mock">
+		INSERT INTO test(testNum, testName, testDate, subName, content, reg_date, userId, hitCount)
+			VALUES (#{testNum}, #{testName}, #{testDate},#{subName},#{content},SYSDATE, #{userId}, 0)
+	</insert>
+ 
+	<sql id="where-list">
+		<choose>
+			<when test="condition=='all'">
+				(
+					INSTR(subject, #{keyword}) &gt; 0 OR
+						DBMS_LOB.INSTR(content,#{keyword}) &gt;0
+				)
+			</when>	
+			<when test="condition=='content'">
+				DBMS_LOB.INSTR(content,#{keyword}) &gt;0
+			</when>
+			<when test="condition=='reg_date'">
+				(
+					TO_CHAR(q.reg_date, 'YYYY-MM-DD') = #{keyword} OR
+						TO_CHAR(q.reg_date, 'YYYYMMDD') = #{keyword}
+				)
+			</when>
+			<otherwise>
+				INSTR(${condition}, #{keyword}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM test t
+		JOIN member_detail m ON t.userId = m.userId
+		<where>
+			<if test="keyword!=null and keyword!=''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<select id="listBoard" parameterType="map" resultType="com.ssg.study.test.Mock">
+		SELECT * FROM ( 
+			SELECT ROWNUM rnum, th.* FROM (    
+				SELECT t.testNum, testName, subName, nickName, content, hitCount, 
+					TO_CHAR(testDate, 'YYYY-MM-DD') testDate,
+					TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date,
+					NVL(fileCount,0) fileCount
+				FROM test t
+				JOIN member_detail m ON t.userId = m.userId
+				LEFT OUTER JOIN(
+					SELECT testNum, COUNT(*) replyCount FROM test_reply
+					WHERE answer=0
+					GROUP BY testNum
+				) rp ON t.testNum = rp.testNum
+				 LEFT OUTER JOIN(
+                   SELECT testNum, COUNT(*) fileCount FROM test_file
+                   GROUP BY testNum
+                ) f ON t.testNum = f.testNum
+		  		<where>
+					<if test="keyword!=null and keyword!=''">
+						<include refid="where-list"/>
+					</if>
+				</where>
+				ORDER BY testNum DESC
+			) th WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+
+	<select id="readBoard" parameterType="Integer"
+		resultType="com.ssg.study.test.Mock">
+		SELECT t.testNum,  testName, subName, nickName, content, hitCount, t.userId, 
+			TO_CHAR(testDate, 'YYYY-MM-DD') testDate,
+			TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date
+		FROM test t
+		JOIN member_detail m ON t.userId = m.userId
+		WHERE t.testNum = #{testNum}
+	</select>
+	
+	<update id="updateHitCount" parameterType="Integer">
+		UPDATE test SET hitCount=hitCount+1 WHERE testNum = #{testNum}
+	</update>
+	
+	<select id="preReadBoard" parameterType="map"
+		resultType="com.ssg.study.test.Mock">
+		SELECT * FROM (
+			SELECT testNum, testName, subName
+			FROM test t
+			JOIN member_detail m ON t.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!=''">
+					<include refid="where-list"/>
+				</if>
+				AND (testNum &gt; #{testNum} )
+			</where>
+			ORDER BY testNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	<select id="nextReadBoard" parameterType="map"
+		resultType="com.ssg.study.test.Mock">
+		SELECT * FROM (
+			SELECT testNum, testName, subName
+			FROM test t
+			JOIN member_detail m ON t.userId = m.userId
+			<where>
+				<if test="keyword!=null and keyword!=''">
+					<include refid="where-list"/>
+				</if>
+				AND (testNum &lt; #{testNum} )
+			</where>
+			ORDER BY testNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+ 	
+	<update id="updateBoard" parameterType="com.ssg.study.test.Mock">
+		UPDATE test SET testName=#{testName}, subName=#{subName}, content=#{content}, originalFilename=#{originalFilename}
+		WHERE testNum = #{testNum}
+	</update>
+	<delete id="deleteBoard" parameterType="Integer">
+		DELETE FROM test WHERE testNum=#{testNum}
+	</delete>
+	
+	<!-- 파일 -->
+	<insert id="insertFile" parameterType="com.ssg.study.test.Mock">
+		INSERT INTO test_file ( test_fileNum, originalFilename, saveFilename, testNum, fileSize )
+		VALUES (testFile_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{testNum}, #{fileSize})
+	</insert>
+	
+	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.test.Mock">
+		SELECT test_fileNum, originalFilename, saveFilename, testNum, fileSize 
+		FROM test_file
+		WHERE testNum=#{testNum}
+	</select>
+	
+	<select id="readFile" parameterType="Integer" resultType="com.ssg.study.test.Mock">
+		SELECT test_fileNum, originalFilename, saveFilename, testNum, fileSize 
+		FROM test_file
+		WHERE test_fileNum=#{test_fileNum}
+	</select>
+	
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM test_file WHERE ${field}=#{testNum}
+	</delete> 
+
+	<!-- 댓글  -->
+	<insert id="insertReply" parameterType="com.ssg.study.test.Reply">
+		INSERT INTO test_reply(replyNum, testNum, userId, content, answer, reg_date)
+		VALUES (test_reply_seq.NEXTVAL, #{testNum}, #{userId}, #{content}, #{answer}, SYSDATE )
+	</insert>
+	
+	<select id="listReply" parameterType="map" resultType="com.ssg.study.test.Reply">
+		SELECT * FROM (
+   			SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT r.replyNum, r.userId, nickName, testNum, content, r.reg_date,
+		            NVL(answerCount, 0) answerCount,
+		            NVL(likeCount, 0) likeCount
+		        FROM test_reply r
+		        JOIN member m ON r.userId = m.userId
+		        JOIN member_detail d ON m.userId = d.userId
+		        LEFT OUTER JOIN (
+		            SELECT answer, COUNT(*) answerCount
+		            FROM test_reply WHERE answer != 0 GROUP BY answer
+		        ) a ON r.replyNum = a.answer
+		        LEFT OUTER JOIN(
+		        	SELECT replyNum, COUNT(*) likeCount
+		        	FROM test_replyLike GROUP BY replyNum
+		        ) c ON r.replyNum = c.replyNum
+		       WHERE testNum=#{testNum} AND r.answer=0
+		       ORDER BY r.replyNum DESC
+		    ) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+ 
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) FROM test_reply
+		WHERE testNum=#{testNum} AND answer=0
+	</select>
+	
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM test_reply
+		WHERE replyNum=#{replyNum}
+		<if test="mode=='reply'">
+			OR answer=#{replyNum}
+		</if>
+	</delete> 
+
+	<!-- 댓글의 답글 리스트 -->
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.ssg.study.test.Reply">
+		SELECT replyNum, testNum, r.userId, nickName, content, reg_date, answer
+		FROM test_reply r
+		JOIN member m ON r.userId = m.userId
+		JOIN member_detail d ON m.userId = d.userId
+		WHERE answer = #{answer}
+		ORDER BY replyNum DESC
+	</select>
+	
+	<select id="replyAnswerCount" parameterType="Integer" resultType="Integer">
+		SELECT NVL(COUNT(*),0)
+		FROM test_reply WHERE answer=#{answer}
+	</select> 
+	
+	<!-- 댓글 좋아요 추가  -->
+	<insert id="insertReplyLike" parameterType="map">
+		INSERT INTO test_replyLike(replyNum, userId) VALUES (#{replyNum},#{userId})
+	</insert>
+	
+	<delete id="deleteReplyLike" parameterType="map">
+		DELETE FROM test_replyLike WHERE replyNum = #{replyNum} AND userId=#{userId}
+	</delete>
+	
+	<select id="replyLikeCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) likeCount FROM test_replyLike
+		WHERE replyNum = #{replyNum}
+	</select>
+	
+	<select id="userReplyLiked" parameterType="map" resultType="com.ssg.study.test.Reply">
+		SELECT replyNum, userId FROM test_replyLike WHERE replyNum = #{replyNum}
+	</select>
+
+</mapper>

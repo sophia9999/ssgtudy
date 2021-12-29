@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
 <div class="reply-info" style="margin: 40px 10px 15px;">
 	<span class='reply-count' style="color:#435EBE;font-weight: 700;">댓글 ${replyCount}개</span>
 	<span>[목록, ${pageNo}/${total_page} 페이지]</span>
@@ -16,13 +15,13 @@
 				<span class="bold"><i class="bi bi-person-circle text-muted"></i>&nbsp&nbsp${vo.nickName}</span>
 			</td>
 			<td width='50%' align='right'>
-				<span class="text-muted">${vo.reg_date}</span> 
+				<span class="text-muted">${vo.reg_date}</span> |
 				<c:choose>
 					<c:when test="${sessionScope.member.userId==vo.userId || sessionScope.member.membership>50 }">
 						<span class='deleteReply' data-replyNum='${vo.replyNum}' data-pageNo='${pageNo}'
-							style="cursor:pointer">| 삭제</span>
+							style="cursor:pointer">삭제</span>
 					</c:when>
-				
+					
 				</c:choose>
 			</td>
 		</tr>
@@ -60,5 +59,4 @@
 
 <div class="page-box">
 	${paging}
-</div>	
-
+</div>							

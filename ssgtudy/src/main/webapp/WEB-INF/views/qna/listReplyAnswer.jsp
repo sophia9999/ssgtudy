@@ -11,7 +11,7 @@
 			<div class='col text-end'>
 				<span class="text-muted">${vo.reg_date}</span> 
 				<c:choose>
-					<c:when test="${sessionScope.member.userId==vo.userId || sessionScope.member.userId=='admin'}">
+					<c:when test="${sessionScope.member.userId==vo.userId || sessionScope.member.membership>50}">
 						<span class='deleteReplyAnswer' data-replyNum='${vo.replyNum}' data-answer='${vo.answer}'
 							style="cursor:pointer">| 삭제</span>
 					</c:when>

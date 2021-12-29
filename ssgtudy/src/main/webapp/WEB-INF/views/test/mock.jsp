@@ -21,8 +21,8 @@ function searchList(){
 	<div class="page-title">
 		<div class="row">
 			<div class="col-12 col-md-6 order-md-1 order-last">
-				<h3>공지사항</h3>
-				<p class="text-subtitle text-muted">공지사항을 확인해주세요</p>
+				<h3>대학수학능력시험</h3>
+				<p class="text-subtitle text-muted">평가원 기출문제입니다.</p>
 			</div>
 		</div>
 	</div>
@@ -49,14 +49,14 @@ function searchList(){
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td> 
 	                                        	<td>
-	                                        		<a href="${articleUrl}&nNum=${dto.nNum}">[공지]&nbsp${dto.subject}</a>
+	                                        		<a href="${articleUrl}&testNum=${dto.testNum}">${dto.testName} - ${dto.subName}</a>
 	                                        	</td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>
 	                                        	<td class="text-bold-500">${dto.hitCount}</td>
 	                                        	<td class="text-bold-500">
 	                                        		<c:if test="${dto.fileCount != 0}">
-	                                        			<a href="${pageContext.request.contextPath}/notice/zipdownload?nNum=${dto.nNum}">
+	                                        			<a href="${pageContext.request.contextPath}/test/zipdownload?testNum=${dto.testNum}">
 	                                        				<i class="bi bi-download text-muted"></i>
 	                                        			</a>
 	                                        		</c:if>
@@ -76,7 +76,7 @@ function searchList(){
             
             
             <form class="form form-horizontal" name="searchForm"
-            	action="${pageContext.request.contextPath}/notice/list" method="post">
+            	action="${pageContext.request.contextPath}/test/mock" method="post">
 				<div class="form-body">
 				    <div class="row" >
 				    	<div class="col-md-3 justify-content-center">                                         
@@ -99,7 +99,7 @@ function searchList(){
 						<div class="col-md-2 justify-content-end">
 							<c:choose>  
                       			<c:when test="${sessionScope.member.membership>50}">
-									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/notice/write';">등록</button>
+									<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/test/write';">등록</button>
 								</c:when>
 								<c:otherwise>
 									<button type="button" class="btn btn-outline-primary me-1 mb-1" style="visibility: hidden;">등록</button>							
