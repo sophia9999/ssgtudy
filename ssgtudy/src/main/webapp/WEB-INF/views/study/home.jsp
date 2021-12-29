@@ -38,7 +38,7 @@
 			           		<hr>
 			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
-			           			<button type="button" class="btn btn-success" onclick="addLotto('${dto.studyNum}')">추첨 응모</button><br>
+			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button><br>
 			         			<button type="button" class="btn btn-primary btnUpdateStudy" onclick="updateStudy('${dto.studyNum}')">이름 및 목표 수정</button>
 			            		<button type="button" class="btn btn-primary btnAddCategory">카테고리 관리</button>
 			         			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
@@ -54,6 +54,7 @@
 			           		<div class="buttons text-center p-2">
 			           		<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
+			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button><br>
 			           			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
 				           		<hr>
 			           			<h4>${dto.studyName}</h4>
@@ -65,6 +66,7 @@
 		           			<div class="text-center p-2">
 		           				<hr>
 			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
@@ -75,6 +77,7 @@
 			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           			<hr>
 			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           		</div>
 			           	</c:when>
@@ -84,6 +87,7 @@
 			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           			<hr>
 			           			<h4>${dto.studyName}</h4>
+			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes">달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
 			           		</div>
@@ -139,6 +143,33 @@
       </div>
     </div>
   </div>
+</div>
+<div class="modal fade" id="checkTimes" tabindex="-1" aria-labelledby="checkTimesLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="checkTimesLabel">달성 횟수 확인</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="times-write table">
+					<thead>
+						<tr class="text-center">
+							<th>달성횟수</th>
+							<th>사용횟수</th>
+							<th>변경날짜</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+					</tbody>
+				</table>
+			</div>
+				<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -238,6 +269,38 @@ $(function() {
 		location.href = url; 
 	});
 });
+
+$(function () {
+	$(".btnCheckTimes").click(function() {
+		var url = "${pageContext.request.contextPath}/study/times";
+		var query = "studyNum=${dto.studyNum}";
+	
+		var fn = function(data) {
+			// console.log(data);
+			var out = "";
+			var questCount = data.dto.questCount;
+			var usedCount = data.dto.usedCount;
+			var updateDate = data.dto.updateDate;
+			if(updateDate == null ) {
+				updateDate = "변경된 이력이 없습니다.";
+			}
+			
+			if(data.status == 'true') {
+				out += "<tr class='text-center'>";
+				out += "	<td>"+ questCount +"</td>";
+				out += "	<td>"+ usedCount +"</td>";
+				out += "	<td>"+ updateDate +"</td>";
+				out += "/<tr>";
+				$(".times-write tbody").append(out);				
+			} else {
+				out += "에러가 발생했습니다.";
+				$(".times-write tbody").append(out);
+			}
+		}
+		
+		ajaxFun(url, "get", query, "json", fn);
+	});
+})
 
 function updateStudy(studyNum) {
 	location.href = "${pageContext.request.contextPath}/study/update?studyNum="+studyNum;

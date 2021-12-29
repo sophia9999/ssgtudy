@@ -127,7 +127,7 @@ $(function() {
 											</td>
                                         	<td class="text-bold-500">${dto.reportCount}</td>
                                         	<td>
-                                        		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reportReason" onclick="checkReason(${dto.studyNum})">확인하기</button>
+                                        		<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#checkWinning" >확인하기</button>
                                         	</td>
                                     	</tr>
                                     	</c:forEach>

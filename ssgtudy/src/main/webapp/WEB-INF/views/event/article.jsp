@@ -13,7 +13,7 @@
 	function deleteBoard() {
 	    if(confirm("게시글을 삭제 하시겠습니까 ? ")) {
 		    var query = "eventNum=${dto.eventNum}";
-		    var url = "${pageContext.request.contextPath}/studyManage/delete?" + query;
+		    var url = "${pageContext.request.contextPath}/studyManage/event/delete?" + query;
 	    	location.href = url;
 	    }
 	}
@@ -70,8 +70,9 @@ function applyLotto() {
 <div class="page-title">
 	<div class="row">
 		<div class="col-12 col-md-6 order-md-1 order-last">
-			<h3><span><i class="icofont-bullhorn"></i></span> 이벤트</h3>
-			<p class="text-subtitle text-muted">개인/스터디별로 이벤트에 응모해봐요:)</p>
+			<h3><span><i class="icofont-magic-alt"></i></span>이벤트</h3>
+			<p class="text-subtitle text-muted">개인/스터디(그룹)별로 이벤트에 응모해봐요:)</p>
+			<p class="text-subtitle text-muted">그룹응모는 스터디장만 가능합니다.</p>
 		</div>
 	</div>
 </div>
@@ -82,6 +83,9 @@ function applyLotto() {
 				<td colspan="2" align="center">
 					<h5>${dto.subject}</h5>
 				</td>
+			</tr>
+			<tr>
+				<th colspan="2" align="center"><h6>응모에 필요한 포인트 : ${dto.needPoint}</h6></th>
 			</tr>
 		</thead>
 		
@@ -94,41 +98,49 @@ function applyLotto() {
 			<tr>
 				<td colspan="2" align="center">
 					<c:choose>
-						<c:when test="${dto.eventCategory == 'indiviual' }">
-							<button type="button" class="btn-danger btn btn-lg" onclick="applyLotto()">이벤트응모하기</button>
+						<c:when test="${dto.eventCategory == 'group' }">
+							<button type="button" class="btn-danger btn btn-lg BtnGroupApply" data-bs-toggle="modal" data-bs-target="#selectStudy">이벤트응모하기</button>
 						</c:when>
 						<c:otherwise>
-							<button type="button" class="btn-danger btn btn-lg BtnGroupApply" data-bs-toggle="modal" data-bs-target="#selectStudy">이벤트응모하기</button>
+							<button type="button" class="btn-danger btn btn-lg" onclick="applyLotto()">이벤트응모하기</button>
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
 		</tbody>
+		<tfoot>
+			<tr>
+				<th colspan="2">경품 : ${dto.prize}</th>
+			</tr>
+			<tr>
+				<th colspan="2">추첨일 : ${dto.lottoDate}</th>
+			</tr>
+		</tfoot>
 	</table>
 				
 	<table class="table table-borderless mb-2 table-lg">
 		<tr>
 			<td width="50%">
 				<c:choose>
-					<c:when test="${sessionScope.member.userId==dto.userId}">
-						<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/studyManage/update?eventNum=${dto.eventNum}&page=${page}';">수정</button>
+					<c:when test="${sessionScope.member.membership>50}">
+						<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/studyManage/event/update?eventNum=${dto.eventNum}&page=${page}';">수정</button>
 					</c:when>
-					<c:otherwise>
-						<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">수정</button>
-					</c:otherwise>
 				</c:choose>
-		    	
 				<c:choose>
-		    		<c:when test="${ sessionScope.member.membership>50}">
-		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard();">삭제</button>
+		    		<c:when test="${sessionScope.member.membership>50}">
+		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteEvent();">삭제</button>
 		    		</c:when>
-		    		<c:otherwise>
-		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" disabled="disabled">삭제</button>
-		    		</c:otherwise>
 		    	</c:choose>
 			</td>
 			<td class="text-end">
-				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/studyManage/all?${query}';">리스트</button>
+				<c:choose>
+		    		<c:when test="${sessionScope.member.membership>50}">
+						<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/studyManage/lotto?${query}';">리스트</button>
+		    		</c:when>
+		    		<c:otherwise>
+		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/event/list?${query}';">리스트</button>
+		    		</c:otherwise>
+		    	</c:choose>
 			</td>
 		</tr>
 	</table>
@@ -144,7 +156,7 @@ function applyLotto() {
 	        	<table class="table table-lg">
 	        		<thead>
 	        			<tr class="text-center">
-	        				<td>
+	        				<td></td>
 	        			</tr>
 	        		</thead>
 	        		<tbody>

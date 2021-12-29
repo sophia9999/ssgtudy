@@ -14,8 +14,8 @@ function search() {
 <div class="page-title">
 	<div class="row">
 		<div class="col-12 col-md-6 order-md-1 order-last">
-			<h3><span><i class="icofont-magic-alt"></i></span>이벤트 관리</h3>
-			<p class="text-subtitle text-muted">이벤트 관리 페이지입니다.</p>
+			<h3><span><i class="icofont-magic-alt"></i></span>이벤트</h3>
+			<p class="text-subtitle text-muted">개인/스터디(그룹)별로 이벤트에 응모해봐요:)</p>
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@ function search() {
                                        	<th class="col-md-auto">이벤트제목</th>
                                        	<th class="col-md-2">추첨일</th>
                                        	<th class="col-md-2">카테고리</th>
-                                       	<th class="col-md-2">당첨정보</th>
+                                       	<th class="col-md-2">당첨 확인</th>
                                       </tr>
                                    </thead>
                                    <tbody>
@@ -45,10 +45,10 @@ function search() {
                            	             	<td class="text-bold-500">${dto.listNum}</td>
                                         	<td class="text-bold-500"><a href="${articleUrl}&eventNum=${dto.eventNum}">${dto.subject}</a></td>
                                         	<td class="text-bold-500">${dto.lottoDate}</td>
-											<td class="text-bold-500">${dto.eventCategory}</td>
-                                        	<td class="text-bold-500">
-                                        		<button type="button" class="btn btn-primary" data-eventNum="${dto.eventNum}"  data-bs-toggle="modal" data-bs-target="#checkWinning">확인</button>
-                                        	</td>
+                                        	<td class="text-bold-500">${dto.eventCategory == 'group' ? '그룹':'개인'}</td>
+											<td class="text-bold-500">
+												<button type="button" class="btn btn-primary" data-eventNum="${dto.eventNum}"  data-bs-toggle="modal" data-bs-target="#checkEvent">확인</button>
+											</td>
                                     	</tr>
                                     	</c:forEach>
                                    </tbody>
@@ -81,9 +81,7 @@ function search() {
 									<div class="col-md-1 form-group">                                                     
 										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>
 									</div>				                                                   
-									<div class="col-md-4 justify-content-end text-end">
-										<button type="button" class="btn btn-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/studyManage/event/write';">글올리기</button>
-									</div>
+									<div class="col-md-4 justify-content-end text-end"></div>
 								</div>
 							</div>
 						</form>   
@@ -93,21 +91,18 @@ function search() {
            </div>
 	</div>
 </section>
-<div class="modal fade" id="checkWinning" tabindex="-1" aria-labelledby="checkWinningLabel" aria-hidden="true">
+<div class="modal fade" id="checkEvent" tabindex="-1" aria-labelledby="checkEventLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="checkWinningLabel">이벤트 당첨 관리</h5>
+	        <h5 class="modal-title" id="checkEventLabel">당첨자 명단</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
 	        	<table class="table table-lg">
 	        		<thead>
 	        			<tr class="text-center">
-	        				<td>
-	        					뽑을 명수/스터디그룹 개수를 입력하세요. <br>
-	        					<input type="number" placeholder="숫자를 입력하세요." class="form-control" name="quantity">
-	        				</td>
+	        				<td>아직 발표되지 않았습니다.</td>
 	        			</tr>
 	        		</thead>
 	        		<tbody>
@@ -120,39 +115,3 @@ function search() {
 	    </div>
 	</div>
 </div>
-
-<script type="text/javascript">
-var isRun = false; // AJAX 중복요청방지용 변수
-
-function login() {
-	location.href="${pageContext.request.contextPath}/member/login";
-}
-
-function ajaxFun(url, method, query, dataType, fn) {
-	$.ajax({
-		type:method,
-		url:url,
-		data:query,
-		dataType:dataType,
-		success:function(data) {
-			fn(data);
-			isRun = false;
-		},
-		beforeSend:function(jqXHR) {
-			jqXHR.setRequestHeader("AJAX", true);
-		},
-		error:function(jqXHR) {
-			if(jqXHR.status === 403) {
-				login();
-				return false;
-			} else if(jqXHR.status === 400) {
-				alert("요청 처리가 실패했습니다.");
-				return false;
-			}
-			console.log(jqXHR.responseText);
-		}
-	});
-}
-
-
-</script>

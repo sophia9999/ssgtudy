@@ -358,6 +358,62 @@
 		WHERE studyNum = #{studyNum}
 	</update>
 	
-	<insert id="insertEvent" parameterType="com.ssg.study.study.Study"></insert>
+	<insert id="insertEvent" parameterType="com.ssg.study.study.Study">
+		INSERT INTO event(eventNum, content, prize, lottoDate, subject, eventCategory, needPoint)
+		VALUES(EVENT_SEQ.NEXTVAL, #{content}, #{prize}, #{lottoDate}, #{subject}, #{eventCategory}, #{needPoint, jdbcType=INTEGER})
+	</insert>
+	<select id="eventDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM event
+		<where>
+			<if test="condition=='all' ">
+				( INSTR(subject, #{keyword}) &gt; 0
+					OR INSTR(content, #{keyword}) &gt; 0 )
+			</if>
+			<if test="condition=='subject' ">
+				INSTR(subject, #{keyword}) &gt; 0
+			</if>
+			<if test="condition=='content' ">
+				INSTR(content, #{keyword}) &gt; 0
+			</if>
+		</where>
+	</select>
+	<select id="eventList" parameterType="map" resultType="com.ssg.study.study.Study">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT eventNum, subject, content, prize, TO_CHAR(lottoDate, 'YYYY-MM-DD') lottoDate, eventCategory, needPoint
+		        FROM event
+		        <where>
+		        	<if test="condition=='all' ">
+						( INSTR(subject, #{keyword}) &gt; 0
+							OR INSTR(content, #{keyword}) &gt; 0 )
+					</if>
+					<if test="condition=='subject' ">
+						INSTR(subject, #{keyword}) &gt; 0
+					</if>
+					<if test="condition=='content' ">
+						INSTR(content, #{keyword}) &gt; 0
+					</if>
+				</where>
+		    ) tb WHERE ROWNUM &lt;=#{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="readEvent" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT eventNum, subject, content, TO_CHAR(lottoDate, 'YYYY-MM-DD') lottoDate, eventCategory, needPoint, prize
+		FROM event
+		WHERE eventNum = #{eventNum}
+	</select>
+	<update id="updateEvent" parameterType="com.ssg.study.study.Study">
+		UPDATE event SET subject = #{subject}, content = #{content}, lottoDate = #{lottoDate}, eventCategory = #{eventCategory},
+				needPoint = #{needPoint}, prize = #{prize}
+		WHERE eventNum = #{eventNum}
+	</update>
+	<delete id="deleteEvent" parameterType="Integer">
+		DELETE FROM event WHERE eventNum = #{eventNum}
+	</delete>
+	
+	<select id="times" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT studyNum, questCount, usedCount, TO_CHAR(updateDate, 'YYYY-MM-DD') updateDate FROM times WHERE studyNum = #{studyNum}
+	</select>
 	
 </mapper>

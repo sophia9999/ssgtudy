@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ssg.study.common.MyUtil;
 import com.ssg.study.member.SessionInfo;
 
-@Controller("Study.studyController")
+@Controller("study.studyController")
 @RequestMapping("/study/*")
 public class StudyController {
 
@@ -1329,6 +1329,22 @@ public class StudyController {
 		service.updateCategory(map);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("status", status);
+		return model;
+	}
+	
+	@RequestMapping(value = "times")
+	@ResponseBody
+	public Map<String, Object> checkTimes(
+			@RequestParam int studyNum
+			) throws Exception {
+		String status = "true";
+		
+		Study dto = service.readTimes(studyNum);
+
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		model.put("dto", dto);
 		model.put("status", status);
 		return model;
 	}

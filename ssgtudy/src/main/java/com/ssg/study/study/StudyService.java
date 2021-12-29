@@ -17,6 +17,7 @@ public interface StudyService {
 	public int updateQuestCount(int studyNum) throws Exception;
 	public int updateUsedCount(Map<String, Object> map) throws Exception;
 	public Study questCountCheck(int studyNum) throws Exception;
+	public Study readTimes(int studyNum) throws Exception;
 	
 	// 나의 스터디 리스트
 	public List<Study> studyList(Map<String, Object> map) throws Exception;
@@ -73,5 +74,13 @@ public interface StudyService {
 	public List<Study> manageStudyList(Map<String, Object> map) throws Exception;
 	public List<Study> reasonList(int studyNum) throws Exception;
 	public int changeStudyStatus(Map<String, Object> map) throws Exception;
+	
+	// 이벤트
+	public int insertEvent(Study dto) throws Exception;
+	public int eventDataCount(Map<String, Object> map);
+	public List<Study> eventList(Map<String, Object>map);
+	public Study readEvent(int eventNum);
+	public int updateEvent(Study dto) throws Exception;
+	public int deleteEvent(int eventNum) throws Exception;
 	
 }

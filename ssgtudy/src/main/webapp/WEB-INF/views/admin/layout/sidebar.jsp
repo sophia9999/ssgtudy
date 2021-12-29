@@ -135,7 +135,18 @@
                                                 
                             </ul>
                         </li>
-                                            
+                         <li class="sidebar-item  has-sub">
+                            <a href="#" class="sidebar-link">
+								<i class="icofont-magic"></i>
+								<span>이벤트 관리</span>
+                            </a>
+                            <ul class="submenu ">
+								<li class="submenu-item ">
+	                                    <a href="${pageContext.request.contextPath}/studyManage/lotto">이벤트 리스트</a>
+	                             </li>   
+                                                
+                            </ul>
+                        </li>                   
                         
                        
                  	</ul>

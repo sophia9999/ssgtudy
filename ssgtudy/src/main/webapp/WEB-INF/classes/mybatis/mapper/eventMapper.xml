@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="event">
+	<select id="readEvent" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT eventNum, subject, content, prize, TO_CHAR(lottoDate, 'YYYY-MM-DD') lottoDate, eventCategory, needPoint
+		FROM event
+	</select>
+</mapper>

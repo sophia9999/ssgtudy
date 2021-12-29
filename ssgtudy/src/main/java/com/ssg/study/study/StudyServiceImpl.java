@@ -524,6 +524,76 @@ public class StudyServiceImpl implements StudyService {
 		}
 		return result;
 	}
+
+	@Override
+	public int insertEvent(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.insertData("study.insertEvent", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int eventDataCount(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = dao.selectOne("study.eventDataCount", map);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public List<Study> eventList(Map<String, Object> map) {
+		List<Study> list = null;
+		try {
+			list = dao.selectList("study.eventList", map);
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	@Override
+	public Study readEvent(int eventNum) {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.readEvent", eventNum);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
+
+	@Override
+	public int updateEvent(Study dto) throws Exception {
+		int result = 0;
+		try {
+			result = dao.updateData("study.updateEvent", dto);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteEvent(int eventNum) throws Exception {
+		int result = 0;
+		try {
+			result = dao.deleteData("study.deleteEvent", eventNum);
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	@Override
+	public Study readTimes(int studyNum) throws Exception {
+		Study dto = null;
+		try {
+			dto = dao.selectOne("study.times", studyNum);
+		} catch (Exception e) {
+		}
+		return dto;
+	}
 	
 	
 

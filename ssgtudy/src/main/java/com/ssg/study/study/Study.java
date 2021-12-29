@@ -33,7 +33,16 @@ public class Study {
 	private int eventNum;
 	private String eventCategory;
 	private String prize;
+	private Integer needPoint;
 	
+	public Integer getNeedPoint() {
+		return needPoint;
+	}
+
+	public void setNeedPoint(Integer needPoint) {
+		this.needPoint = needPoint;
+	}
+
 	public int getRank() {
 		return rank;
 	}

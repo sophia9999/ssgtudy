@@ -2,7 +2,24 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
+<style type="text/css">
+.col-md-2 {
+	text-align: center;
+}
+.ck.ck-editor {
+	max-width: 97%;
+}
+.ck-editor__editable {
+    min-height: 250px;
+}
+.ck-content .image>figcaption {
+	min-height: 25px;
+}
+.card-content {
+	width: 95%;
+}
+</style>
 <script type="text/javascript">
 function sendOk() {
 	var f = document.eventform;
@@ -25,20 +42,29 @@ function sendOk() {
 		return false;
 	}
 	
+	if(! $(".needPoint").val().trim() < 0 ) {
+		alert("필요한 포인트를 입력해주세요.");
+		$(".needPoint").focus();
+		return false;
+	}
+	
 	if(! $(".lottoDate").val().trim() ) {
 		alert("마감일을 입력해주세요.");
 		$(".lottoDate").focus();
 		return false;
 	}
 	
-	if(! $("#content").val().trim() ) {
-		alert("내용을 입력해주세요.");
-		$("#content").focus();
-		return false;
-	}
+	str = window.editor.getData().trim();
+    if(! str) {
+        alert("내용을 입력하세요. ");
+        window.editor.focus();
+        return;
+    }
+	f.content.value = str;
+
 	
-	// f.action = "${pageContext.request.contextPath}/studyManage/${mode=='update'?'update':'write'}";
-	// f.submit();
+	f.action = "${pageContext.request.contextPath}/studyManage/event/${mode=='update'?'update':'write'}";
+	f.submit();
 	
 }
 </script>
@@ -76,7 +102,7 @@ function sendOk() {
                                         <div class="input-group">
                                         	<select class="form-select eventCategory" name="eventCategory">
                                         		<option value="">:: 이벤트 카테고리 ::</option> 
-                                        		<option value="indiviual" ${eventCategory=="indiviual"?"selected='selected'":""}>개인</option>
+                                        		<option value="individual" ${eventCategory=="indiviual"?"selected='selected'":""}>개인</option>
                                         		<option value="group" ${eventCategory=="group"?"selected='selected'":""}>그룹</option>
                                         	</select>
                                         </div>
@@ -87,6 +113,13 @@ function sendOk() {
                                     <div class="col-md-8 form-group">
                                         <input type="text" class="form-control prize"
                                             name="prize" value="${dto.prize}">
+                                    </div>
+                                     <div class="col-md-4">
+                                        <label>응모에 필요한 포인트</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="number" class="form-control needPoint"
+                                            name="needPoint" value="${dto.needPoint}">
                                     </div>
                                     <div class="col-md-4">
                                         <label>이벤트 마감일</label>
@@ -99,7 +132,8 @@ function sendOk() {
                                         <label>이벤트 내용</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <textarea class="form-control" id="content" name="content" style="height: 200px; resize: none;">${dto.content}</textarea>
+                                        <div class="editor">${dto.content}</div>
+										<input type="hidden" name="content" maxlength="1330">
                                         <c:if test="${mode == 'update'}">
                                         	<input type="hidden" value="${dto.eventNum}" name="eventNum">
                                         </c:if>
@@ -121,4 +155,53 @@ function sendOk() {
         </div>
     </div>
 </section>
-<!-- // Basic Horizontal form layout section end -->
+<script type="text/javascript">
+	ClassicEditor
+		.create( document.querySelector( '.editor' ), {
+			fontFamily: {
+	            options: [
+	                'default',
+	                '맑은 고딕, Malgun Gothic, 돋움, sans-serif',
+	                '나눔고딕, NanumGothic, Arial'
+	            ]
+	        },
+	        fontSize: {
+	            options: [
+	                9, 11, 13, 'default', 17, 19, 21
+	            ]
+	        },
+			toolbar: {
+				items: [
+					'heading','|',
+					'fontFamily','fontSize','bold','italic','fontColor','|',
+					'alignment','bulletedList','numberedList','|',
+					'imageUpload','insertTable','sourceEditing','blockQuote','mediaEmbed','|',
+					'undo','redo','|',
+					'link','outdent','indent','|',
+				]
+			},
+			image: {
+	            toolbar: [
+	                'imageStyle:side',
+	                '|',
+	                'imageTextAlternative'
+	            ],
+	
+	            // The default value.
+	            styles: [
+	                'full',
+	                'side'
+	            ]
+	        },
+			language: 'ko',
+			ckfinder: {
+		        uploadUrl: '${pageContext.request.contextPath}/image/upload' // 업로드 url (post로 요청 감)
+		    }
+		})
+		.then( editor => {
+			window.editor = editor;
+		})
+		.catch( err => {
+			console.error( err.stack );
+		});
+</script>
