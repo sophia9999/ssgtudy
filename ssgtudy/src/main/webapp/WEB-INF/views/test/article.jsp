@@ -15,6 +15,10 @@
 	min-height : 70px;
 	min-width: 1000px;
 }
+.pdfpreviewer{
+	width : 700px;
+	height : 1000px;
+}
 </style>
 <script type="text/javascript">
 function deleteBoard(){
@@ -288,7 +292,8 @@ $(function(){
                            </tr> 
                            <tr style="border-bottom:white">
 	                           <td colspan="2" height="300px">${dto.content}</td>
-                          	  	<!-- <iframe src="${pageContext.request.contextPath}/resources/pdf/${dto.originalFilename}" style="width:70px; height:700px;" frameborder="0"></iframe>-->
+	                           <embed id="pdfpreviewer" class="pdfpreviewer" src="${pageContext.request.contextPath}/uploads/mock/${dto.saveFilename}" type="application/pdf">
+                          	   <!-- <iframe src="${pageContext.request.contextPath}/resources/pdf/${dto.originalFilename}" class="testFrame" frameborder="0"></iframe> -->
                            </tr>
                            <c:forEach var="vo" items="${listFile}">
                            		<tr>
