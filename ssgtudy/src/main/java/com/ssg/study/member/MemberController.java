@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ssg.study.school.School;
+import com.ssg.study.school.SchoolService;
+
 
 
 
@@ -26,6 +29,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
 	@Autowired
 	private MemberService service;
+	
+	@Autowired
+	private SchoolService schService;
 
 	
 	@RequestMapping(value = "login", method = RequestMethod.GET)
@@ -41,13 +47,34 @@ public class MemberController {
 			HttpSession session,
 			Model model) {
 
-		Member dto = service.loginMember(userId);
+		Member dto = null;
+		dto = service.loginMember(userId);
 		if (dto == null || !userPwd.equals(dto.getPwd())) {
+			if(dto != null) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("userId", dto.getUserId());
+				map.put("cnt", dto.getFailure_cnt()+1);
+				try {
+					service.updateFailurecnt(map);
+					if((int)map.get("cnt")>=5) {
+						map.put("stateCode", 1);
+						service.updateStateCode(map);
+					}
+				} catch (Exception e) {
+				}
+			}
+			
 			model.addAttribute("message", "아이디 또는 패스워드가 일치하지 않습니다.");
+			model.addAttribute("mode", "login");
 			return "/member/login";
 		} 
 		
 		try { // 로그인 후 최근 로그인 일자 업데이트
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", dto.getUserId());
+			map.put("cnt",0);
+			service.updateFailurecnt(map);
+			
 			service.updateLastLogin(dto.getUserId());
 		} catch (Exception e) {
 		}
@@ -121,6 +148,19 @@ public class MemberController {
 			else dto.setSchoolCode(null);
 			System.out.println(dto.getSchoolCode());
 		
+			School schdto = schService.readSchool(dto.getSchoolCode());
+			
+			if(schdto == null&&dto.getSchoolCode() != null) {
+				School sch = new School();
+				
+				
+				
+				sch.setSchoolCode(dto.getSchoolCode());
+				sch.setSchoolName(dto.getSchoolName());
+				
+				schService.insertSchool(sch);
+			}
+			
 			service.insertMember(dto);
 		} catch (DuplicateKeyException e) {
 			e.printStackTrace();
@@ -174,14 +214,14 @@ public class MemberController {
 							,HttpSession session) {
 		
 		
-		List<Map<String, String>> list = null;
+		
 		Member dto = null;
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		String userId = info.getUserId();
 		try {
-			list = service.readSchool();
+		
 			dto = service.readMember(userId);
-			
+			dto.setSchoolName(info.getSchoolName());
 			if(dto.getTel()!=null) {
 				String[] tel = dto.getTel().split("-");
 				dto.setTel1(tel[0]);
@@ -204,7 +244,7 @@ public class MemberController {
 		}
 		model.addAttribute("mode", "member");
 		model.addAttribute("dto", dto);
-		model.addAttribute("list", list);
+	
 		return "/member/member";
 	}
 	
@@ -222,6 +262,19 @@ public class MemberController {
 			else dto.setSchoolCode(null);
 			System.out.println(dto.getCodeChange_cnt());
 			if(dto.getSchoolCode() != predto.getSchoolCode()) dto.setCodeChange_cnt(dto.getCodeChange_cnt()+1);
+			School schdto = schService.readSchool(dto.getSchoolCode());
+					
+					if(schdto == null&&dto.getSchoolCode() != null) {
+						School sch = new School();
+						
+						
+						
+						sch.setSchoolCode(dto.getSchoolCode());
+						sch.setSchoolName(dto.getSchoolName());
+						
+						schService.insertSchool(sch);
+				}
+			
 			
 			service.updateMember(dto);
 		} catch (DuplicateKeyException e) {

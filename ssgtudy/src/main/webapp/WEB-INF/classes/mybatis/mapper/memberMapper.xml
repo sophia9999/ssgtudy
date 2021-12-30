@@ -8,7 +8,7 @@
 	</resultMap>
 
 	<select id="loginMember" parameterType="String" resultType="com.ssg.study.member.Member">
-		SELECT membership, m.userId,md.schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date,schoolName
+		SELECT membership,failure_cnt, m.userId,md.schoolCode, nickName, userName, pwd, stateCode, join_date, edit_date, last_date,schoolName
 		FROM member m
 		JOIN member_detail md ON m.userId = md.userId
         LEFT OUTER JOIN school s ON s.schoolcode = md.schoolcode
@@ -198,6 +198,11 @@
 	</update>
 	<update id="updateUsedCount" parameterType="map">
 		UPDATE member_detail SET lottoUse = lottoUse + #{lottoUse}
+		WHERE userId = #{userId}
+	</update>
+	
+	<update id="updatefailurecnt" parameterType="map">
+		UPDATE member SET failure_cnt = #{cnt}
 		WHERE userId = #{userId}
 	</update>
 </mapper>

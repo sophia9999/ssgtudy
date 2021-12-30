@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="school">
+	<insert id="insertschool" parameterType="com.ssg.study.school.School">
+		INSERT INTO school(schoolCode, schoolName)
+			VALUES (#{schoolCode}, #{schoolName})
+	</insert>
+	
+	<select id="readSchool" parameterType="Integer" resultType="com.ssg.study.school.School">
+		SELECT schoolCode, schoolName FROM school
+		WHERE schoolCode = #{schoolCode}
+	</select>
+	
+</mapper>

@@ -232,4 +232,14 @@ public class MemberServiceImpl implements MemberService{
 		return result;
 	}
 
+	@Override
+	public void updateFailurecnt(Map<String, Object> map) throws Exception {
+		try {
+			dao.updateData("member.updatefailurecnt", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 }
