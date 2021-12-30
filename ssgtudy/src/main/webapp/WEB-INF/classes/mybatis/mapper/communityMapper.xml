@@ -143,6 +143,17 @@
 		DELETE FROM community WHERE boardNum = #{boardNum}
 	</delete>
 	
+	<delete id="deleteBoardList" parameterType="java.util.List">
+		DELETE FROM community
+		WHERE boardNum IN
+		<foreach collection="list" item="boardNum" index="index"
+			open="(" separator="," close=")">
+			#{boardNum}
+		</foreach>
+	</delete>
+	
+	
+	
 	<insert id="insertBoardLike" parameterType="map">
 		INSERT INTO community_like(boardNum, userId) 
 		VALUES (#{boardNum}, #{userId})

@@ -41,7 +41,7 @@ function sendOk() {
 	<div class="card">
 		<div class="body-title">
 			&nbsp;
-			<h3><i class="fas fa-pen-square"></i> 게시판 글쓰기 </h3>
+			<h3><i class="fas fa-pen-square"></i> 학교 커뮤니티 글쓰기 </h3>
 			&nbsp;
 		</div>
 		<form name="boardForm" method="post" enctype="multipart/form-data">

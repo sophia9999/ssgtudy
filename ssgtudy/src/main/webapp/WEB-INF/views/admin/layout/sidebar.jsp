@@ -80,7 +80,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/list">학교커뮤니티</a>
+                                    <a href="${pageContext.request.contextPath}/community/main">학교커뮤니티</a>
                                 </li>                                                                                  
                             </ul>
                         </li>

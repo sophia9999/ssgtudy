@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.MidiDevice.Info;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -257,7 +256,21 @@ public class CommunityController {
 		return "redirect:/community/main?" + query;
 	}
 	
-	
+	@RequestMapping(value = "deleteList")
+	public String deleteList(
+			@RequestParam List<String> chkRow,
+			HttpSession session) throws Exception {
+		
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "community";
+			
+			service.deleteBoardList(chkRow, pathname, info.getUserId(), info.getMembership());
+		
+		return "redirect:/community/main";
+	}
+
 	@RequestMapping(value = "download")
 	public void download(@RequestParam int fileNum,
 			HttpServletResponse resp,
@@ -568,4 +581,5 @@ public class CommunityController {
 		
 		return "redirect:/community/main";
 	}
+
 }

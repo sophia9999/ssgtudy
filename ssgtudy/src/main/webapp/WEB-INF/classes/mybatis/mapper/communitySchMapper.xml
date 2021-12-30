@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="communitySch">
+	<insert id="insertSchedule" parameterType="com.ssg.study.communitySch.Schedule">
+		INSERT INTO schedule(scheduleNum, scheduleName, startDate, endDate, startTime, endTime, repeat, repeat_cycle, reg_date, scNote, color, schoolCode)
+		VALUES(schedule_seq.NEXTVAL, #{scheduleName}, #{startDate}, 
+		#{endDate, jdbcType=VARCHAR}, 
+		#{startTime, jdbcType=VARCHAR}, 
+		#{endTime, jdbcType=VARCHAR}, #{repeat}, #{repeat_cycle}, SYSDATE, 
+		#{scNote, jdbcType=VARCHAR}, #{color}, #{schoolCode})
+	</insert>
+	
+	<select id="listMonth" parameterType="map" resultType="com.ssg.study.communitySch.Schedule">
+		SELECT scheduleNum id, scheduleName title, startDate, endDate, startTime, endTime, repeat, repeat_cycle, reg_date, scNote, color
+		FROM schedule
+		<where>
+			<if test="schoolCode != null">
+				schoolCode = #{schoolCode, jdbcType = INTEGER}
+			</if>
+			AND
+			( 
+				( 
+					 ( TO_DATE(startDate, 'YYYY-MM-DD') &gt;= TO_DATE(#{start}, 'YYYY-MM-DD')
+						AND TO_DATE(startDate, 'YYYY-MM-DD') &lt;= TO_DATE(#{end}, 'YYYY-MM-DD')
+					 ) OR ( TO_DATE(endDate, 'YYYY-MM-DD') &lt;= TO_DATE(#{start}, 'YYYY-MM-DD') 
+					     AND TO_DATE(endDate, 'YYYY-MM-DD') &lt;= TO_DATE(#{end}, 'YYYY-MM-DD')
+					 )
+				) OR (
+					repeat=1 AND repeat_cycle!=0
+						AND ADD_MONTHS(TO_DATE(startDate, 'YYYY-MM-DD'), 12 * repeat_cycle*TRUNC(((SUBSTR(#{start},1,4)-SUBSTR(startDate,1,4))/repeat_cycle))) &gt;= TO_DATE(#{start}, 'YYYY-MM-DD')
+						AND ADD_MONTHS(TO_DATE(startDate, 'YYYY-MM-DD'), 12 * repeat_cycle*TRUNC(((SUBSTR(#{start},1,4)-SUBSTR(startDate,1,4))/repeat_cycle))) &lt;= TO_DATE(#{end}, 'YYYY-MM-DD')
+			  )
+			)
+		</where>
+		ORDER BY startDate ASC, id DESC
+	</select>
+	
+	<select id="readSchedule" parameterType="Integer" resultType="com.ssg.study.communitySch.Schedule">
+		SELECT scheduleNum, scheduleName, startDate, endDate, startTime, endTime, repeat, repeat_cycle, reg_date, scNote, color
+		FROM schedule
+		WHERE scheduleNum = #{scheduleNum}
+	</select>
+	
+	<update id="updateSchedule" parameterType="com.ssg.study.communitySch.Schedule">
+		UPDATE schedule SET
+			scheduleName=#{scheduleName},
+			color=#{color}, startDate=#{startDate}, 
+			endDate=#{endDate, jdbcType=VARCHAR},
+			startTime=#{startTime, jdbcType=VARCHAR},
+			endTime=#{endTime, jdbcType=VARCHAR},
+			repeat=#{repeat},
+			repeat_cycle=#{repeat_cycle},
+			scNote=#{scNote, jdbcType=VARCHAR}
+		WHERE scheduleNum=#{scheduleNum}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="map">
+		DELETE FROM schedule WHERE scheduleNum=#{scheduleNum}
+	</delete>
+	
+</mapper>
