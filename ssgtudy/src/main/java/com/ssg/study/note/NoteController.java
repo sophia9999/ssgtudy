@@ -115,6 +115,8 @@ public class NoteController {
 			@RequestParam String nickName
 			) throws Exception {
 		
+	
+		
 		model.addAttribute("userId", userId);
 		model.addAttribute("nickName", nickName);
 		

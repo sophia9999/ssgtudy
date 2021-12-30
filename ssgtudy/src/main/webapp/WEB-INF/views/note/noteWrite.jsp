@@ -139,6 +139,7 @@ $(function(){
 		var len1 = $(".dialog-receiver-list ul input[type=checkbox]:checked").length;
 		var len2 = $("#forms-receiver-list input[name=receivers]").length;
 		
+	
 		
 		if(len1 == 0) {
 			alert("추가할 사람을 먼저 선택하세요.");
@@ -203,7 +204,13 @@ $(function(){
 <div class="container">
 	<div class="body-container">	
 		<div class="body-title">
-			<h3><i class="bi bi-messenger"></i> 쪽지함 </h3>
+			<h3><i class="bi bi-messenger"></i> 쪽지함 
+			
+			<c:if test="${not empty userId}">
+				${userId}
+			</c:if>
+			
+			</h3>
 		</div>
 	
 	
