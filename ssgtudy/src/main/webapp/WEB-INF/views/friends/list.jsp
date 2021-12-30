@@ -192,7 +192,7 @@ $("body").on("click",".update",function(){
 	                                    </div>
 	                                   <div class="buttons px-4">
 	                          
-	                                    	<a class='btn btn-sm btn-outline-primary' href="${pageContext.request.contextPath}/note/noteWrite?userId=hong&nickName=홍관리자" >쪽지쓰기 </a>
+	                                    	<a class='btn btn-sm btn-outline-primary' href="${pageContext.request.contextPath}/note/noteWrite?userId=${vo.userId}&nickName=${vo.nickName}" >쪽지쓰기 </a>
 	                                       	<button class='btn btn-sm btn-outline-primary delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>	                             			
 	                                    </div>
                                 	</div>

@@ -205,6 +205,8 @@ $(function(){
 		<div class="body-title">
 			<h3><i class="bi bi-messenger"></i> 쪽지함 </h3>
 		</div>
+	
+	
 		
 		<div class="body-main">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">

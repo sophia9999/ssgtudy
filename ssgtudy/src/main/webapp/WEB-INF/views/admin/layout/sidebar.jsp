@@ -45,35 +45,13 @@
 		                    </div>
                         </li>
 
-                        <li class="sidebar-item has-sub  active ">
-                            <a href="index.html" class=" sidebar-link ">
+                         <li style="cursor: pointer;" class="sidebar-item has-sub active" onclick="location.href='${pageContext.request.contextPath}' ">
+                            <div class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>메인</span>
-                            </a>
-                             <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/">메인페이지</a>
-                                </li>
-                              
-	                       
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/list">최신글</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/list">인기글</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/notice">공지글</a>
-                                </li>    
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/calendar/main">일정</a>
-                                </li>    
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/todaygrape/list">오늘의 포도알</a>
-                                </li>                         
-                            </ul>
+                            </div>
+                            
                         </li>
-                     
 						
                         <li class="sidebar-item  has-sub">
                             <a href="#" class="sidebar-link">
