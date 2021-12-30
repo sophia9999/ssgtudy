@@ -22,44 +22,24 @@
                                                     <tr>
                                                         <th>순위</th>
                                                         <th>스터디명</th>
-                                                        <th>과목</th>
+                                                        <th>달성횟수!</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
+                                                
+                                                    <c:forEach var="r" items="${ranklist}">
+                                                    <tr>                                                  
                                                         <td class="col-3">
                                                             <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">1</p>
+                                                                <p class="font-bold ms-3 mb-0">${r.rank}</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">영사모</p>
+                                                            <p class=" mb-0">${r.studyName}</p>
                                                         </td>
-                                                        <td>영어</td>
+                                                        <td>${r.questCount}</td>                                                 
                                                     </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">2</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">설대 경영 모임</p>
-                                                        </td>
-                                                        <td>수학</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">3</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">국어최고스터디</p>
-                                                        </td>
-                                                        <td>국어</td>
-                                                    </tr>
-                                                    
+                                                    </c:forEach>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -71,7 +51,7 @@
                                     <div class="card-header">
                                     	<h4>
                                     	<i class="bi bi-hand-thumbs-up fs-3"></i>
-                                        인기글
+                                        공지사항
                                         </h4>
                                     </div>
                                     <div class="card-body">
@@ -84,39 +64,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                
+                                                	<c:forEach var="n" items="${noticelist}">
                                                     <tr>
                                                         <td class="col-3">
                                                             <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">1011</p>
+                                                                <p class="font-bold ms-3 mb-0">${n.listNum}</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">영어 잘하는 법 알려드립니다.</p>
+                                                            <p class=" mb-0">
+                                                            	<a href="${pageContext.request.contextPath}/notice/article?page=1&nNum=${n.nNum}">[공지]${n.subject}</a>                
+                                                          </p>
                                                         </td>
                                                         
                                                     </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">2023</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">수능 백일의 기적!</p>
-                                                        </td>
-                                                     
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">1001</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">스터디 잘 운영하는 법</p>
-                                                        </td>
-                                                    
-                                                    </tr>
+                                                	</c:forEach>
+                                                   
                                                     
                                                 </tbody>
                                             </table>
@@ -132,7 +96,7 @@
                                     <div class="card-header">
                                         <h4>
                                         <i class="bi bi-pencil fs-3"></i>
-                                        My study
+                                        	스터디 자랑하기
                                         </h4>
                                     </div>
                                     <div class="card-body">
@@ -145,36 +109,22 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                
+                                                <c:forEach var="ad" items="${adlist}">
+                                                
                                                     <tr>
                                                         <td class="col-4">
                                                             <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">영사모</p>
+                                                                <p class="font-bold ms-3 mb-0">${ad.subject}</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">영어 1등급 목표!</p>
+                                                            <p class=" mb-0">${ad.content}</p>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">수백모</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">서울 고등학교 수학 백점 맞는 사람들의 모임</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">설대 국문과</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">서울대학교 국어국문학과 목표!!</p>
-                                                        </td>
-                                                    </tr>
+                                                    
+                                                </c:forEach>
+                                                
                                                 </tbody>
                                             </table>
                                         </div>
@@ -211,11 +161,21 @@
          
                                     <div class="avatar avatar-xl">
                                     </div>
+                                    
                                     <div class="ms-3 name">
-                                        <h5 class="font-bold">비회원(ID)</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
+                                       
+                                        <c:choose>
+			                       	<c:when test="${not empty sessionScope.member}"> 
+                                        <h5 class="font-bold">${sessionScope.member.nickName}님</h5>
+                                        <h6 class="text-muted mb-0">${sessionScope.member.userId}</h6>               		
+			                       	</c:when>			                                     	
+			                       	<c:otherwise>
+			                       			<span>로그인이 필요합니다.</span>
+			                    	</c:otherwise>
+		                      	</c:choose>
                                     </div>
-                                </div>
+                                  </div>
+                                
                             </div>
                         </div>
                         
@@ -224,69 +184,21 @@
                                 <h4>Friends</h4>
                             </div>
                             <div class="card-content pb-4">
-                                <div class="recent-message d-flex px-4 py-3">
+                            
+                            <c:forEach var="f" items="${friendslist}">
+                             	<div class="recent-message d-flex px-4 py-3">
                                     <div class="avatar avatar-lg">
                                         
                                     </div>
                                     <div class="name ms-4">
-                                        <h5 class="mb-1">Hank Schrader</h5>
-                                        <h6 class="text-muted mb-0">교사</h6>
+                                        <h5 class="mb-1">${f.nickName}</h5>
+                                        <h6 class="text-muted mb-0">${f.userId}</h6>
                                     </div>
                                 </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">Dean Winchester</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">John Dodol</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">Hank Schrader</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                       
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">Dean Winchester</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">John Dodol</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
-                                 <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">John Dodol</h5>
-                                        <h6 class="text-muted mb-0">학생</h6>
-                                    </div>
-                                </div>
+                            
+                            </c:forEach>
+                               
+                              
                             </div>
                         </div>
                        
