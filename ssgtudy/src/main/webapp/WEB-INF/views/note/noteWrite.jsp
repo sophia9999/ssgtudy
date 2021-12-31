@@ -146,7 +146,7 @@ $(function(){
 			return false;			
 		}
 		
-		if(len1 + len2 >= 5) {
+		if(len1 + len2 >= 4) {
 			alert("받는사람은 최대 5명까지만 가능합니다.");
 			return false;
 		}
@@ -171,9 +171,7 @@ $(function(){
 				
 				s = "<input type='hidden' name='receivers' value='"+userId+"'>";
 				$("#forms-receiver-list").append(s);
-				
-				
-			}
+							}
 		});
 		
 		$("#myDialogModal").modal("hide");
@@ -198,6 +196,7 @@ $(function(){
 	});
 
 });
+
 </script>
 
 
@@ -205,10 +204,6 @@ $(function(){
 	<div class="body-container">	
 		<div class="body-title">
 			<h3><i class="bi bi-messenger"></i> 쪽지함 
-			
-			<c:if test="${not empty userId}">
-				${userId}
-			</c:if>
 			
 			</h3>
 		</div>
@@ -243,7 +238,13 @@ $(function(){
 											<button type="button" class="btn btn-light btnReceiverDialog">추가</button>
 										</div>
 										<div class="col">
-											<div class="forms-receiver-name"></div>
+											<div class="forms-receiver-name" >
+												<c:if test="${not empty userId}">
+													<span class='receiver-user btn border px-1'>
+													${nickName} <i class='bi bi-trash' data-userId='"+userId+"'></i></span>
+												</c:if>
+											
+											</div>
 										</div>
 									</div>
 									<small class="form-control-plaintext">한번에 보낼수 있는 최대 인원은 5명입니다.</small>
@@ -264,7 +265,12 @@ $(function(){
 									<button type="button" class="btn btn-dark" onclick="sendOk();">보내기&nbsp;<i class="bi bi-check2"></i></button>
 									<button type="reset" class="btn btn-light">다시입력</button>
 									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/note/send/noteForm';">취소&nbsp;<i class="bi bi-x"></i></button>
-									<div id="forms-receiver-list"></div>
+									<div id="forms-receiver-list">	
+										
+										<c:if test="${not empty userId}">
+										<input type='hidden' name='receivers' value= "${userId}">
+										</c:if>
+									</div>
 								</td>
 							</tr>
 						</table>

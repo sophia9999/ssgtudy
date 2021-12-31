@@ -4,16 +4,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <section class="row">
-                    <div class="col-12 col-lg-9">
+                    <div class="col-12 col-lg-10">
                         
                         <div class="row">
                             <div class="col-6">
                                 <div class="card">
                                     <div class="card-header">
+                                       <a href="${pageContext.request.contextPath}/study/rank">
                                         <h4>
-	                                        <i class="bi bi-trophy fs-3"></i>
+                                        <span style="color: #ffc800;"><i class="icofont-trophy-alt"></i></span>
+	                                        
 	                                        이달의 우수 스터디
                                         </h4>
+                                       </a> 
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -35,7 +38,9 @@
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">${r.studyName}</p>
+                                                       	 	<a href="${pageContext.request.contextPath}/study/home/${r.studyNum}">
+                                                            <span class=" mb-0">${r.studyName}</span>
+                                                           </a> 
                                                         </td>
                                                         <td>${r.questCount}</td>                                                 
                                                     </tr>
@@ -49,10 +54,12 @@
                             <div class="col-6">
                                 <div class="card">
                                     <div class="card-header">
+                                    	<a href="${pageContext.request.contextPath}/notice/list">
                                     	<h4>
                                     	<i class="bi bi-hand-thumbs-up fs-3"></i>
                                         공지사항
                                         </h4>
+                                        </a>
                                     </div>
                                     <div class="card-body">
                                        <div class="table-responsive">
@@ -94,32 +101,34 @@
                             <div class="col-6">
                                 <div class="card">
                                     <div class="card-header">
+                                       <a href="${pageContext.request.contextPath}/study/ad">
                                         <h4>
                                         <i class="bi bi-pencil fs-3"></i>
-                                        	스터디 자랑하기
+                                        	스터디 홍보
                                         </h4>
+                                        </a>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-hover table-lg">
                                                 <thead>
                                                     <tr>
-                                                        <th>&nbsp;&nbsp;Name</th>
-                                                        <th>Comment</th>
+                                                        <th>&nbsp;&nbsp;Number</th>
+                                                        <th>Subject</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 
-                                                <c:forEach var="ad" items="${adlist}">
+                                                <c:forEach var="ad" items="${adlist}" varStatus="status">
                                                 
                                                     <tr>
                                                         <td class="col-4">
                                                             <div class="d-flex align-items-center">
-                                                                <p class="font-bold ms-3 mb-0">${ad.subject}</p>
+                                                                <p class="font-bold ms-3 mb-0">${status.count}</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">${ad.content}</p>
+                                                            <p class=" mb-0"><a href="${pageContext.request.contextPath}/study/ad/article?page=1&boardNum=${ad.boardNum}">${ad.subject}</a></p>
                                                         </td>
                                                     </tr>
                                                     
@@ -154,9 +163,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-3">
+                    <div class="col-12 col-lg-2">
                         <div class="card">
-                            <div class="card-body py-4 px-5">
+                            <div class="card-body py-4 px-5" >
                                 <div class="d-flex align-items-center">
          
                                     <div class="avatar avatar-xl">
@@ -181,7 +190,9 @@
                         
                         <div class="card">
                             <div class="card-header">
+                                <a href="${pageContext.request.contextPath}/friends/list">
                                 <h4>Friends</h4>
+                                </a>
                             </div>
                             <div class="card-content pb-4">
                             
