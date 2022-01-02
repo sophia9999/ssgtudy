@@ -111,9 +111,11 @@ public class NoteController {
 	// 쪽지 보내기 폼
 	@GetMapping("noteWrite")
 	public String writeForm(Model model,
-			@RequestParam String userId,
-			@RequestParam String nickName
+			@RequestParam(required = false) String userId,
+			@RequestParam(required = false) String nickName
 			) throws Exception {
+		
+	
 		
 		model.addAttribute("userId", userId);
 		model.addAttribute("nickName", nickName);

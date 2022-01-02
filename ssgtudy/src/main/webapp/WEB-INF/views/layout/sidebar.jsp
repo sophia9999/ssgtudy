@@ -126,7 +126,7 @@
                                     <a href="${pageContext.request.contextPath}/community/main">커뮤니티</a>
                                 </li>     
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/community/calendar">일정</a>
+                                    <a href="${pageContext.request.contextPath}/communitySch/main">일정</a>
                                 </li>                        
                             </ul>
                         </li>
@@ -200,7 +200,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/chat/free">자유채팅방</a>
+                                    <a href="${pageContext.request.contextPath}/chat/main">자유채팅방</a>
                                 </li>  
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/chat/team">단체채팅방</a>

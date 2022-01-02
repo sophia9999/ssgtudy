@@ -16,6 +16,7 @@ public interface CommunityService {
 	
 	public void updateBoard(Community dto, String pathname) throws Exception;
 	public void deleteBoard(int boardNum, String pathname, String userId, int membership) throws Exception;
+	public void deleteBoardList(List<String> chkRow, String pathname, String userId, int membership) throws Exception;
 	
 	public void insertBoardLike(Map<String, Object> map) throws Exception;
 	public void deleteBoardLike(Map<String, Object> map) throws Exception;

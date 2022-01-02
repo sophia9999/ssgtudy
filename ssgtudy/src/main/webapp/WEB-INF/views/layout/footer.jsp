@@ -9,7 +9,7 @@
             <p>2021 &copy; SSGtudy</p>
           </div>
           <div class="float-end">
-          	<p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by A. Saugi</p>
+          	<p> <span class="text-danger"><i class="bi bi-heart"></i></span> </p>
            </div>
        </div>
     </footer>

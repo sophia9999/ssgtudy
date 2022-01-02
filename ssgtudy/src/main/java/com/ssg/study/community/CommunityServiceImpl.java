@@ -168,6 +168,15 @@ public class CommunityServiceImpl implements CommunityService {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	@Override
+	public void deleteBoardList(List<String> chkRow, String pathname, String userId, int membership) {
+		try {
+			dao.deleteData("community.deleteBoardList", chkRow);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

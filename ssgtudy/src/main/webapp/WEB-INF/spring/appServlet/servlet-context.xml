@@ -77,7 +77,11 @@
             <beans:bean class="com.ssg.study.member.LoginCheckInterceptor"/>
         </interceptor>
     </interceptors>	 
-
+	<!-- 웹 소켓 환경 설정 -->
+	<websocket:handlers>
+		<websocket:mapping handler="mySocketHandler" path="/chat.msg"/>
+	</websocket:handlers>
+	<beans:bean id="mySocketHandler" class="com.ssg.study.chat.MySocketHandler"/>
     <!-- 예외처리 -->
     
     <!-- 

@@ -20,13 +20,40 @@ function searchList() {
 	var f = document.searchForm;
 	f.submit();
 }
+
+$(function(){
+	$("#chkAll").click(function(){
+		$("input[name=chkRow]").prop("checked", $(this).is(":checked"));
+	});
+	
+	$(".btnDeleteList").click(function(){
+		var cnt = $("input[name=chkRow]:checked").length;
+		
+		if(cnt === 0) {
+			alert("삭제할 게시글을 선택해주세요.");
+			return false;
+		}
+		
+		if(confirm("삭제하시겠습니까?")) {
+			var f = document.listForm;
+			f.action = "${pageContext.request.contextPath}/community/deleteList";
+			f.submit();
+		}
+	});
+});
 </script>
 	
 <section class="row">
 	<div class="container">
 		<div class="body-title">
-			<h3><i class="fas fa-school"></i><span> ${sessionScope.member.schoolName} 커뮤니티 게시판 </span></h3>
-											<!-- ${schoolName} 게시판 -->
+			<c:choose>
+				<c:when test="${sessionScope.member.membership > 50}">
+					<h3><i class="fas fa-school"></i><span> 학교 커뮤니티 관리자 모드 </span></h3>
+				</c:when>
+				<c:otherwise>
+					<h3><i class="fas fa-school"></i><span> ${sessionScope.member.schoolName} 우리들 이야기 </span></h3>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		
 		<div class="body-main">
@@ -38,20 +65,27 @@ function searchList() {
 			</div>
 			        
 			<div class="card">
+				<form method="post" name="listForm">
 				<table class="table table-lg">
 					<thead>
 						<tr>
-							<th class="col-1">번호</th>
-							<th class="col-4">제목</th>
-							<th class="col-2">작성자</th>
-							<th class="col-2">작성일</th>
-							<th class="col-1">조회수</th>
-							<th class="col-2">파일</th>
+							<c:if test="${sessionScope.member.membership > 50}">
+								<th><input type="checkbox" name="chkAll" id="chkAll" value="all"></th>
+							</c:if>
+								<th class="col-1">번호</th>
+								<th class="col-4">제목</th>
+								<th class="col-2">작성자</th>
+								<th class="col-2">작성일</th>
+								<th class="col-1">조회수</th>
+								<th class="col-2">파일</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach var="dto" items="${list}">
 							<tr>
+								<c:if test="${sessionScope.member.membership > 50}">
+									<td><input type="checkbox" name="chkRow" value="${dto.boardNum}"></td>
+								</c:if>
 								<td class="text-bold-500">${dto.listNum}</td>
 								<td>
 									<a href="${articleUrl}&boardNum=${dto.boardNum}">
@@ -71,6 +105,8 @@ function searchList() {
 						</c:forEach>
 					</tbody>
 				</table>
+				</form>
+				
 			   <div class="page-box">
 					${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
 				</div>
@@ -78,6 +114,9 @@ function searchList() {
 						<div class="row board-list-footer">
 						<div class="col-md-4 text-start">
 							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/main';">새로고침</button>
+							<c:if test="${sessionScope.member.membership > 50 }">
+								<button type="button" class="btn btn-outline-primary me-1 mb-1 btnDeleteList">선택삭제</button>
+							</c:if>
 						</div>
 						<div class="col-md-4 text-center">
 							<form class="row" name="searchForm" action="${pageContext.request.contextPath}/community/main" method="post">
