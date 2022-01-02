@@ -2,6 +2,7 @@ package com.ssg.study.study;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -321,7 +322,6 @@ public class StudyManageController {
 	@RequestMapping("event/delete")
 	public String deleteEvent(@RequestParam int eventNum, HttpSession session) throws Exception {
 	
-
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		if(info == null) {
@@ -335,4 +335,147 @@ public class StudyManageController {
 		service.deleteEvent(eventNum);
 		return "redirect:/studyManage/lotto";
 	}
+	
+	@RequestMapping("winning")
+	@ResponseBody
+	public Map<String, Object> winning(@RequestParam int eventNum,
+			@RequestParam int quantity,
+			@RequestParam String eventCategory,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> model = new HashMap<String, Object>();
+		String status = "true";
+		
+		if(info == null) {
+			status = "403";
+			model.put("status", status);
+			return model;
+		}
+		
+		if(info.getMembership() < 50) {
+			status = "403";
+			model.put("status", status);
+			return model;
+		}
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		List<Study> winningList = new ArrayList<Study>();
+		
+		eventCategory = URLDecoder.decode(eventCategory, "utf-8");
+		
+		if(eventCategory.equalsIgnoreCase("group")) {
+			// 여기는 그룹응모
+			paramMap.put("eventNum", eventNum);
+			int groupDataCount = service.studyEventDataCount(eventNum);
+			paramMap.clear();
+			
+			paramMap.put("table", "studyEvent");
+			paramMap.put("eventNum", eventNum);
+			
+			if(groupDataCount == 0) { // 응모한 사람이 없으면
+				status = "none";
+				model.put("status", status);
+				
+				return model;
+				
+			} else if(groupDataCount <= quantity) { // 응모한 사람이 quantity 보다 작거나 같으면 다 당첨
+				for(int i = 1; i <= groupDataCount; i++) {
+					paramMap.put("winning", i);
+					Study dto = service.winning(paramMap);
+					winningList.add(dto);
+					model.put("winningList", winningList);
+				}
+				
+				paramMap.clear();
+				paramMap.put("eventNum", eventNum);
+				for(Study vo : winningList) {
+					paramMap.put("studyNum", vo.getStudyNum());
+					service.insertEventWinning(paramMap);
+				}
+				
+				model.put("status", status);
+				
+				return model;
+			} else {
+				for(int i = 0; i < quantity; i++) {
+					int winning = (int)(Math.random() * groupDataCount)+1;
+					paramMap.put("winning", winning);
+					Study dto = service.winning(paramMap);
+					if(dto == null) {
+						i--;
+						continue;
+					} 	
+					winningList.add(dto);				
+				}
+				
+				paramMap.clear();
+				paramMap.put("eventNum", eventNum);
+				for(Study vo : winningList) {
+					paramMap.put("studyNum", vo.getStudyNum());
+					service.insertEventWinning(paramMap);
+				}
+			}
+			
+			
+			
+		} else {
+			paramMap.put("eventNum", eventNum);
+			int soloDataCount = service.soloEventDataCount(eventNum);
+			paramMap.clear();
+			
+			paramMap.put("table", "soloEvent");
+			paramMap.put("eventNum", eventNum);
+			
+			if(soloDataCount == 0) {
+				status = "none";
+				model.put("status", status);
+				
+				return model;
+				
+			} else if(soloDataCount <= quantity) { // 응모한 사람이 quantity 보다 작거나 같으면 
+				for(int i = 1; i <= soloDataCount; i++) {
+					paramMap.put("winning", i);
+					Study dto = service.winning(paramMap);
+					winningList.add(dto);
+					model.put("winningList", winningList);
+				}
+				
+				paramMap.clear();
+				paramMap.put("eventNum", eventNum);
+				for(Study vo : winningList) {
+					paramMap.put("userId", vo.getUserId());
+					service.insertEventWinning(paramMap);
+				}
+				
+				model.put("status", status);
+				
+				return model;
+			} else {
+				for(int i = 0; i < quantity; i++) {
+					int winning = (int)(Math.random() * soloDataCount)+1;
+					paramMap.put("winning", winning);
+					Study dto = service.winning(paramMap);
+					if(dto == null) {
+						i--;
+						continue;
+					} 	
+					winningList.add(dto);				
+				}
+				
+				paramMap.clear();
+				paramMap.put("eventNum", eventNum);
+				for(Study vo : winningList) {
+					paramMap.put("userId", vo.getUserId());
+					service.insertEventWinning(paramMap);
+				}
+			}
+		}
+		
+
+		model.put("winningList", winningList);
+		model.put("status", status);
+		
+		return model;
+	}
+	
 }

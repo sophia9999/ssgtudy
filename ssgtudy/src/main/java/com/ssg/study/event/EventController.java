@@ -266,4 +266,19 @@ public class EventController {
 		return model;
 	}
 	
+	
+	@RequestMapping("showWinningList")
+	@ResponseBody
+	public Map<String, Object> winning(@RequestParam int eventNum) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		String status = "true";
+		List<Study> list = service.winningList(eventNum);
+		if(list.size() == 0 || list == null) {
+			status = "yet";
+		}
+		model.put("list", list);
+		model.put("status", status);
+		
+		return model;
+	}
 }

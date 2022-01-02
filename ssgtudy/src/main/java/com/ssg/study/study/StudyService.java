@@ -99,4 +99,7 @@ public interface StudyService {
 	
 	// 당첨자 뽑기
 	public Study winning(Map<String, Object> map);
+	
+	// 당첨자 리스트
+	public List<Study> winningList(int eventNum);
 }

@@ -93,22 +93,24 @@ function search() {
            </div>
 	</div>
 </section>
-<div class="modal fade" id="checkWinning" tabindex="-1" aria-labelledby="checkWinningLabel" aria-hidden="true">
+<div class="modal fade" id="checkWinning" tabindex="-1"  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="checkWinningLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="checkWinningLabel">이벤트 당첨 관리</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        <button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        	<table class="table table-lg">
+	        	<table class="table table-lg noticeList">
 	        		<thead>
 	        			<tr class="text-center">
-	        				<td>
+	        				<td colspan="2">
 	        					<p class="text-mute p-2">뽑을 명수/스터디그룹 개수를 입력하세요.</p>
 	        					<div class="btn-group">
-	        						<input type="number" placeholder="숫자를 입력하세요." class="form-control" name="quantity">
-	        						<button type="button" class="lottoWin btn btn-primary" style="width: 100px;">추가</button>
+	        						<input type="number" placeholder="숫자를 입력하세요." class="form-control quantity" name="quantity">
+	        						<input type="hidden" name="eventNum" class="paramEventNum" value="">
+	        						<input type="hidden" name="eventCategory" class="paramEventCategory" value="">
+	        						<button type="button" class="lottoWin btn btn-primary" style="width: 160px;" >당첨자뽑기</button>
 	        					</div>
 	        				</td>
 	        			</tr>
@@ -118,7 +120,7 @@ function search() {
 	        	</table>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">창닫기</button>
+	        <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">창닫기</button>
 	      </div>
 	    </div>
 	</div>
@@ -157,5 +159,90 @@ function ajaxFun(url, method, query, dataType, fn) {
 	});
 }
 
+$(function() {
+	$("body").on("click", ".btnModalClose", function() {
+		$(".lottoWin").attr("disabled", false);
+	});
+	
+});
+
+$(function() {
+	$("body").on("click", ".checkWinningList", function() {
+		let eventNum = $(this).attr("data-eventNum");
+		$(".paramEventNum").val(eventNum);
+		// let eventCategory = $(this).attr("data-eventCategory");
+		let eventCategory = $(this).closest("tr").find("td:eq(3)").html();
+		$(".paramEventCategory").val(eventCategory);
+		// console.log(eventCategory);
+		
+		let query = "eventNum="+eventNum+"&eventCategory="+eventCategory;
+		let url = "${pageContext.request.contextPath}/event/showWinningList";
+		
+		// console.log(query);
+		
+		let fn = function(data) {
+			let status = data.status;
+			// console.log(data);			
+			if(status != "yet") {
+				$(".lottoWin").attr("disabled", true);
+			}
+			
+			$(".noticeList tbody").empty();
+			var winningList = data.list;
+			
+			if(status == "true") {
+				let out = "당첨자 리스트";
+				
+				for(let i = 0; i<winningList.length ; i++) {
+					let info = "";
+					if(eventCategory == "group") {
+						info += "고유번호: "+winningList[i].studyNum+"<br>이름: "+winningList[i].studyName;
+					} else {
+						info += "당첨 유저 id: "+winningList[i].userId
+					}
+					out += "<tr class='text-center'>";
+					out += "	<td>"+(i+1)+"등"+"</td>";
+					out += "	<td>"+ info +"</td>";
+					out += "</tr>";
+				}
+				
+				$(".noticeList tbody").append(out);
+			}
+		}
+		ajaxFun(url, "post", query, "json", fn);
+		
+	});
+});
+
+$(function() {
+	$("body").on("click", ".lottoWin", function() {
+		let eventNum = $(".paramEventNum").val();
+		let quantity = $(".quantity").val();
+		let eventCategory = $(".paramEventCategory").val();
+		// console.log(eventNum)
+		var query = "eventNum="+eventNum+"&quantity="+quantity+"&eventCategory="+eventCategory;
+		var url = "${pageContext.request.contextPath}/studyManage/winning";
+		var fn = function(data) {
+			// console.log(data);
+			var status = data.status;
+			var winningList = data.winningList;
+			
+			$(".noticeList tbody").empty();
+			
+			if(status == "true") {
+				alert("추첨이 완료되었습니다.");
+				location.href = "${pageContext.request.contextPath}/studyManage/lotto";
+			} else if(status == "none") {
+				var out = "<p class='text-center'>응모한 유저/스터디가 없습니다.</p>";
+				
+				$(".noticeList tbody").append(out);
+			}
+			
+			$(".quantity").val("");
+			
+		};
+		ajaxFun(url, "post", query, "json", fn);
+	});
+})
 
 </script>

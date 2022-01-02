@@ -61,7 +61,7 @@
 				<input type="text" class="form-control" name="keyword" placeholder="검색">                                          
 			</div>
 			<div class="col-md-1">                                                     
-				<button type="button" class="btn btn-primary me-1 mb-1" onclick="listSearchBtn()">검색</button>
+				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="listSearchBtn()">검색</button>
 			</div>				                                                   
 			<div class="col-md-4 text-center justify-content-end">
 			<c:if test="${studyDto.role > 0}">
@@ -70,7 +70,7 @@
 		</div>
         </div>
 	</div>
-	</div>
+</div>
 </form>
 
 <script type="text/javascript">

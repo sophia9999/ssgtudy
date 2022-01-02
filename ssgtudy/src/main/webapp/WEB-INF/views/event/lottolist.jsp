@@ -6,9 +6,84 @@
 <script type="text/javascript">
 function search() {
 	var f = document.searchForm;
-	f.action = "${pageContext.request.contextPath}/studyManage/lotto";
+	f.action = "${pageContext.request.contextPath}/event/list";
 	f.submit();
 }
+function login() {
+	location.href="${pageContext.request.contextPath}/member/login";
+}
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+			isRun = false;
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패했습니다.");
+				return false;
+			}
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+$(function() {
+	$("body").on("click", ".checkWinningList", function() {
+		let eventNum = $(this).attr("data-eventNum");
+		let eventCategory = $(this).attr("data-eventCategory");
+		// console.log(eventCategory);
+		
+		let query = "eventNum="+eventNum+"&eventCategory="+eventCategory;
+		let url = "${pageContext.request.contextPath}/event/showWinningList";
+		
+		// console.log(query);
+		
+		let fn = function(data) {
+			let status = data.status;
+			console.log(data);			
+
+			$(".noticeList tbody").empty();
+			
+			var winningList = data.list;
+			
+			if(status == "true") {
+				let out = "당첨자 리스트";
+				
+				for(let i = 0; i<winningList.length ; i++) {
+					let info = "";
+					if(eventCategory == "group") {
+						info += "고유번호: "+winningList[i].studyNum+"<br>이름: "+winningList[i].studyName;
+					} else {
+						info += "당첨 유저 id: "+winningList[i].userId
+					}
+					out += "<tr class='text-center'>";
+					out += "	<td>"+(i+1)+"등"+"</td>";
+					out += "	<td>"+ info +"</td>";
+					out += "</tr>";
+				}
+				
+				$(".noticeList tbody").append(out);
+			} else if (status =="yet") {
+				let out = "아직 발표되지 않았습니다.";
+				$(".noticeList tbody").append(out);
+			}
+		}
+		ajaxFun(url, "post", query, "json", fn);
+		
+	});
+});
 </script>
 
 <div class="page-title">
@@ -47,7 +122,7 @@ function search() {
                                         	<td class="text-bold-500">${dto.lottoDate}</td>
                                         	<td class="text-bold-500">${dto.eventCategory == 'group' ? '그룹':'개인'}</td>
 											<td class="text-bold-500">
-												<button type="button" class="btn btn-primary" data-eventNum="${dto.eventNum}"  data-bs-toggle="modal" data-bs-target="#checkEvent">확인</button>
+												<button type="button" class="btn btn-primary checkWinningList" data-eventNum="${dto.eventNum}" data-eventCategory="${dto.eventCategory}"  data-bs-toggle="modal" data-bs-target="#checkEvent">확인</button>
 											</td>
                                     	</tr>
                                     	</c:forEach>
@@ -99,11 +174,8 @@ function search() {
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        	<table class="table table-lg">
+	        	<table class="table table-lg noticeList">
 	        		<thead>
-	        			<tr class="text-center">
-	        				<td>아직 발표되지 않았습니다.</td>
-	        			</tr>
 	        		</thead>
 	        		<tbody>
 	        		</tbody>

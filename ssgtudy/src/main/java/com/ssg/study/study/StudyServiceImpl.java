@@ -664,6 +664,16 @@ public class StudyServiceImpl implements StudyService {
 		}
 		return dto;
 	}
+
+	@Override
+	public List<Study> winningList(int eventNum) {
+		List<Study> list = null;
+		try {
+			list = dao.selectList("study.winningList", eventNum);
+		} catch (Exception e) {
+		}
+		return list;
+	}
 	
 	
 	

@@ -435,11 +435,11 @@
 		WHERE userId = #{userId} and role = 20 and studyStatus = 0
 	</select>
 	
-	<select id="soloEventDataCount" parameterType="Integer">
+	<select id="soloEventDataCount" parameterType="Integer" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM soloEvent
 		WHERE eventNum = #{eventNum}
 	</select>
-	<select id="studyEventDataCount" parameterType="Integer">
+	<select id="studyEventDataCount" parameterType="Integer" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM studyEvent
 		WHERE eventNum = #{eventNum}
 	</select>
@@ -451,10 +451,23 @@
 	<select id="winning" parameterType="map" resultType="com.ssg.study.study.Study">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
-		        SELECT eventNum, userId 
+		        SELECT eventNum
+		        <if test="table == 'soloEvent'">
+		        , userId
+		        </if>
+		        <if test="table == 'studyEvent'">
+		        , studyNum
+		        </if>
 		        FROM ${table}
 		        where eventNum = #{eventNum}
 		    ) tb 
 		) WHERE rnum = #{winning}
+	</select>
+	
+	<select id="winningList" parameterType="Integer" resultType="com.ssg.study.study.Study">
+		SELECT eventNum, userId, s.studyNum, studyName FROM event_winning ew 
+		LEFT OUTER JOIN study s ON s.studyNum = ew.studyNum
+		WHERE eventNum = #{eventNum}
+		ORDER BY winNum 
 	</select>
 </mapper>
