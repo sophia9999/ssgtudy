@@ -56,7 +56,7 @@
                                     <div class="card-header">
                                     	<a href="${pageContext.request.contextPath}/notice/list">
                                     	<h4>
-                                    	<i class="bi bi-hand-thumbs-up fs-3"></i>
+                                    	<span style="color: skyblue;"><i class="icofont-thumbs-up"></i></span>
                                         공지사항
                                         </h4>
                                         </a>
@@ -103,7 +103,7 @@
                                     <div class="card-header">
                                        <a href="${pageContext.request.contextPath}/study/ad">
                                         <h4>
-                                        <i class="bi bi-pencil fs-3"></i>
+                                       <span style="color : black"><i class="icofont-pencil-alt-2"></i></span> 
                                         	스터디 홍보
                                         </h4>
                                         </a>
@@ -145,7 +145,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h4>
-	                                        <i class="bi bi-check2-circle fs-3"></i>
+	                                       <span style="color : red"><i class="bi bi-check2-circle fs-3"></i></span> 
 	                                        오늘의 문제
                                         </h4>
                                     </div>
