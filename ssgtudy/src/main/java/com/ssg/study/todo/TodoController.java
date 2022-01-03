@@ -80,21 +80,12 @@ public class TodoController {
 			
 		List<Todo> list = service.listTodo(map);
 		
-		// 리스트 번호
-		Date endDate = new Date();
-		long gap;
 		int listNum, n=0;
 		for(Todo dto : list) {
 			listNum = dataCount - (start + n -1);
 			dto.setListNum(listNum);
 			
-			SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
-			Date beginDate = formatter.parse(dto.getReg_date());
-			
-			gap = (endDate.getTime() - beginDate.getTime()) / (60*60*1000);
-			dto.setGap(gap);
-			
-			dto.setReg_date(dto.getReg_date().substring(0, 10));
+		
 			n++;
 			
 		}
@@ -224,6 +215,7 @@ public class TodoController {
 		model.addAttribute("mode", "update");
 		model.addAttribute("page", page);
 		model.addAttribute("listFile", listFile);
+		
 
 		return ".todo.write";
 	}
@@ -234,10 +226,9 @@ public class TodoController {
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		
 		try {
 			String root = session.getServletContext().getRealPath("/");
-			String pathname = root + File.separator + "uploads" + File.separator;
+			String pathname = root + "uploads" + File.separator + "todo";
 			
 			dto.setUserId(info.getUserId());
 			service.updateTodo(dto, pathname);
@@ -276,7 +267,7 @@ public class TodoController {
 	@ResponseBody
 	public Map<String, Object> deleteFile(@RequestParam int fileNum, HttpSession session) throws Exception{
 		String root = session.getServletContext().getRealPath("/");
-		String pathname = root = "uploads" + File.separator + "todo";
+		String pathname = root + "uploads" + File.separator + "todo";
 		
 		Todo dto = service.readFile(fileNum);
 		if(dto != null) {
@@ -309,6 +300,7 @@ public class TodoController {
 		if(dto != null) {
 			String saveFilename = dto.getSaveFilename();
 			String originalFilename = dto.getOriginalFilename();
+			System.out.println("====================================="+dto.getfileNum()+"====================================================");
 			
 			b = fileManager.doFileDownload(saveFilename, originalFilename, pathname, resp);
 			

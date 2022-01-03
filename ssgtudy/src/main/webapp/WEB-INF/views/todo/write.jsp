@@ -32,7 +32,8 @@ function sendOk() {
 		f.content.focus();
 		return;
 	}
-
+	
+	console.log(f.todoNum.value);
 	f.action = "${pageContext.request.contextPath}/todo/${mode}";
 	f.submit();
 }
@@ -41,7 +42,7 @@ function sendOk() {
 	function deleteFile(fileNum){
 		var url = "${pageContext.request.contextPath}/todo/deleteFile";
 		$.post(url, {fileNum : fileNum}, function(data){
-			$("#f"+fileNum).remove();
+			$(".f"+fileNum).remove();
 		}, "json");
 	}
 </c:if>
@@ -89,15 +90,15 @@ function sendOk() {
 							
 							<c:if test="${mode=='update'}">
 								<c:forEach var="vo" items="${listFile}">
-									<div id="f${vo.fileNum}">
-										<div class="col-md-2">
+									
+										<div class="col-md-2 f${vo.fileNum}">
 											<label>첨부된 파일</label>
 										</div>
-										<div class="col-md-10 form-group">
-											<p><a href="javasript:deleteFile('${vo.fileNum}');"></a>
-											${vo.originalFilename}</p>
+										<div class="col-md-10 form-group f${vo.fileNum}">
+											<p><a href="javascript:deleteFile('${vo.fileNum}');">${vo.originalFilename}</a>
+											</p>
 										</div>
-									</div>
+									
 								</c:forEach>
 							</c:if>
 							<div class="col-sm-12 d-flex justify-content-end">
@@ -106,7 +107,7 @@ function sendOk() {
 									onclick="location.href='${pageContext.request.contextPath}/todo/list';">${mode=="update"?"수정취소":"등록취소"}</button>	
 								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
 								<c:if test="${mode=='update'}">
-									<input type="hidden" name="bbsNum" value="${dto.todoNum}">
+									<input type="hidden" name="todoNum" value="${dto.todoNum}">
 									<input type="hidden" name="page" value="${page}">
 								</c:if>
 							</div>

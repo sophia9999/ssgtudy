@@ -14,8 +14,8 @@
 	
 	<sql id="where-list">
 		<choose>
-			<when test="condition=='all'">
-				(
+			<when test="condition=='all'">	<!-- 제목+내용 -->
+				(				
 					INSTR(subject, #{keyword} ) &gt; 0 OR
 						DBMS_LOB.INSTR(content,#{keyword}) &gt;0
 				)	
@@ -48,11 +48,11 @@
 	</select>
 	
 	
-	<select id="listTodo" parameterType="map" resultType="com.ssg.study.todo.Todo">
+	<select id="listTodo" parameterType="map" resultType="com.ssg.study.todo.Todo"> <!-- parameterType이 map인 경우는  where 절 에서만 필요, where절의 수가 2이상인 경우-->
 		SELECT * FROM (
 			SELECT ROWNUM rnum, th.* FROM (
 				SELECT t.todoNum, subject, content, 
-					TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date
+					TO_CHAR(reg_date, 'YYYY-MM-DD') reg_date
 			FROM todo t	
 			JOIN member_detail m ON t.userId = m.userId
 			<where>
@@ -123,6 +123,8 @@
 		INSERT INTO todoNum_file ( fileNum, originalFilename, saveFilename, todoNum, fileSize )
 		VALUES (todo_file_seq.NEXTVAL, #{originalFilename}, #{saveFilename}, #{todoNum}, #{fileSize})
 	</select>
+	
+	
 	
 	<select id="listFile" parameterType="Integer" resultType="com.ssg.study.todo.Todo">
 		SELECT fileNum, originalFilename, saveFilename, todoNum, fileSize

@@ -98,11 +98,13 @@ public class TodoServiceImpl implements TodoService{
 
 	@Override
 	public void updateTodo(Todo dto, String pathname) throws Exception {
-
+		
 		try {
-			dao.updateData("todo.updateTodo", dto);
 			
+			dao.updateData("todo.updateTodo", dto);
 			if( ! dto.getSelectFile().isEmpty()) {
+				
+				
 				for(MultipartFile mf : dto.getSelectFile()) {
 					String saveFilename = fileManager.doFileUpload(mf, pathname);
 					if(saveFilename == null) {
@@ -114,10 +116,11 @@ public class TodoServiceImpl implements TodoService{
 					
 					dto.setOriginalFilename(originalFilename);
 					dto.setSaveFilename(saveFilename);
-					dto.setFileSize(fileSize);
+					dto.setFileSize(fileSize);					
 					
 					insertFile(dto);
 				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

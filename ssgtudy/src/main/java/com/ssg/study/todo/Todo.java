@@ -20,7 +20,7 @@ public class Todo {
 	private String saveFilename;
 	private String originalFilename;
 	private List<MultipartFile> selectFile;
-	private long gap;
+	
 
 	
 	public String getNickName() {
@@ -94,12 +94,6 @@ public class Todo {
 	}
 	public void setSelectFile(List<MultipartFile> selectFile) {
 		this.selectFile = selectFile;
-	}
-	public long getGap() {
-		return gap;
-	}
-	public void setGap(long gap) {
-		this.gap = gap;
 	}
 	
 	
