@@ -295,7 +295,7 @@ function ajaxfun(type,url,query,fn){
 		},
 		error:function(jqXHR) {
 			
-	    	
+	    	console.log(jqXHR);
 			console.log(jqXHR.responseText);
 		}
 	});
@@ -305,7 +305,7 @@ function ajaxfun(type,url,query,fn){
 function memberOk() {
 	const f = document.memberForm;
 	var str;
-/* 
+
 	str = f.userId.value;
 	if( !/^[a-z][a-z0-9_]{4,9}$/i.test(str) ) { 
 		alert("아이디를 다시 입력 하세요. ");
@@ -377,7 +377,7 @@ function memberOk() {
         alert("상세 주소을 입력하세요. ");
         f.addr2.focus();
         return;
-    } */
+    } 
 	
 	f.action = "${pageContext.request.contextPath}/member/${mode}";
     f.submit();
@@ -431,15 +431,26 @@ $("body").on('click','#findSchool',function(){
 			$(".schoolresult div").remove();
 			const list = data.schoolInfo.row;
 			console.log(list.length);
+			if(list.length>0){
 			for(const sch of list){
-			const el = '<div class="form-group position-relative has-icon-left input-group mb-3">'
-		  				+'<h5 class="mx-3 my-2">'+sch.SCHUL_NM+'</h5>'
-		  				+'<input type="hidden" value="'+sch.SD_SCHUL_CODE+'">'
-						+'<button class="btn btn-outline-secondary setSchool" type="button" >적용</button>'	                                                    
-		  		 		+'</div>';
-		  		 		
-		  	$(".schoolresult").append(el);
+				const el = '<div class="form-group position-relative has-icon-left input-group mb-3">'
+			  				+'<h5 class="mx-3 my-2">'+sch.SCHUL_NM+'</h5>'
+			  				+'<input type="hidden" value="'+sch.SD_SCHUL_CODE+'">'
+							+'<button class="btn btn-outline-secondary setSchool" type="button" >적용</button>'	                                                    
+			  		 		+'</div>';
+			  		 		
+			  	$(".schoolresult").append(el);
+				}
 			}
+			else{
+			const el = '<div class="form-group position-relative has-icon-left input-group mb-3">'
+			  				+'<h5 class="mx-3 my-2">'+list.SCHUL_NM+'</h5>'
+			  				+'<input type="hidden" value="'+list.SD_SCHUL_CODE+'">'
+							+'<button class="btn btn-outline-secondary setSchool" type="button" >적용</button>'	                                                    
+			  		 		+'</div>';
+			  		 		
+			  $(".schoolresult").append(el);
+			}	
 		}else {
 			
 			const el = '<div class="form-group position-relative has-icon-left input-group mb-3">'

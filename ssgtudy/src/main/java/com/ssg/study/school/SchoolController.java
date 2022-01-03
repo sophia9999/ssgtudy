@@ -26,7 +26,7 @@ public class SchoolController {
 			@RequestParam String schoolName
 			) throws Exception{
 		String result = null;
-		
+		System.out.println("gg");
 		
 		
 		String spec= "https://open.neis.go.kr/hub/schoolInfo";
@@ -44,7 +44,7 @@ public class SchoolController {
 				spec+="?KEY="+serviceKey+"&pSize="+pSize+"&pIndex="+pIndex;
 				spec+="&SCHUL_NM="+schoolName+"&SCHUL_KND_SC_NM="+schoolType;
 				spec+="&Type="+dataType;
-
+				
 				System.out.println(spec);
 				
 				result = apiSerializer.receiveXmlToJson(spec);
