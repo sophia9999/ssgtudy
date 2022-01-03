@@ -11,6 +11,7 @@ public class Mock {
 	private String testName;
 	private String testDate;
 	private String subName;
+	private String isOdd;
 	private String content;
 	private int hitCount;
 	private String reg_date;
@@ -65,6 +66,14 @@ public class Mock {
 
 	public void setSubName(String subName) {
 		this.subName = subName;
+	}
+
+	public String getIsOdd() {
+		return isOdd;
+	}
+
+	public void setIsOdd(String isOdd) {
+		this.isOdd = isOdd;
 	}
 
 	public String getContent() {
@@ -171,4 +180,5 @@ public class Mock {
 		this.replyCount = replyCount;
 	}
 
+	
 }

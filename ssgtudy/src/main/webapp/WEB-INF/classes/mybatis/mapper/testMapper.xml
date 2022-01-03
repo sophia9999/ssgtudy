@@ -6,8 +6,8 @@
 		SELECT test_seq.NEXTVAL FROM dual
 	</select>
 	<insert id="insertBoard" parameterType="com.ssg.study.test.Mock">
-		INSERT INTO test(testNum, testName, testDate, subName, content, reg_date, userId, hitCount)
-			VALUES (#{testNum}, #{testName}, #{testDate},#{subName},#{content},SYSDATE, #{userId}, 0)
+		INSERT INTO test(testNum, testName, testDate, subName, isOdd, content, reg_date, userId, hitCount)
+			VALUES (#{testNum}, #{testName}, #{testDate},#{subName},#{isOdd},#{content},SYSDATE, #{userId}, 0)
 	</insert>
  
 	<sql id="where-list">
@@ -47,7 +47,7 @@
 	<select id="listBoard" parameterType="map" resultType="com.ssg.study.test.Mock">
 		SELECT * FROM ( 
 			SELECT ROWNUM rnum, th.* FROM (    
-				SELECT t.testNum, testName, subName, nickName, content, hitCount, 
+				SELECT t.testNum, testName, subName, isOdd, nickName, content, hitCount, 
 					TO_CHAR(testDate, 'YYYY-MM-DD') testDate,
 					TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date,
 					NVL(fileCount,0) fileCount
@@ -74,7 +74,7 @@
 
 	<select id="readBoard" parameterType="Integer"
 		resultType="com.ssg.study.test.Mock">
-		SELECT t.testNum,  testName, subName, nickName, content, hitCount, t.userId, saveFilename, originalFilename,
+		SELECT t.testNum,  testName, subName, isOdd, nickName, content, hitCount, t.userId, saveFilename, originalFilename,
 			TO_CHAR(testDate, 'YYYY-MM-DD') testDate,
 			TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date
 		FROM test t
@@ -90,7 +90,7 @@
 	<select id="preReadBoard" parameterType="map"
 		resultType="com.ssg.study.test.Mock">
 		SELECT * FROM (
-			SELECT testNum, testName, subName
+			SELECT testNum, testName, subName, isOdd
 			FROM test t
 			JOIN member_detail m ON t.userId = m.userId
 			<where>
@@ -106,7 +106,7 @@
 	<select id="nextReadBoard" parameterType="map"
 		resultType="com.ssg.study.test.Mock">
 		SELECT * FROM (
-			SELECT testNum, testName, subName
+			SELECT testNum, testName, subName, isOdd
 			FROM test t
 			JOIN member_detail m ON t.userId = m.userId
 			<where>
@@ -120,7 +120,7 @@
 	</select>
  	
 	<update id="updateBoard" parameterType="com.ssg.study.test.Mock">
-		UPDATE test SET testName=#{testName}, subName=#{subName}, content=#{content}, originalFilename=#{originalFilename}
+		UPDATE test SET testName=#{testName}, subName=#{subName}, isOdd=#{isOdd}, content=#{content}, originalFilename=#{originalFilename}
 		WHERE testNum = #{testNum}
 	</update>
 	<delete id="deleteBoard" parameterType="Integer">

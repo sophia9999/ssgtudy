@@ -49,7 +49,7 @@ function searchList(){
 	                                    	<tr>
 	                                        	<td class="text-bold-500">${dto.listNum}</td> 
 	                                        	<td>
-	                                        		<a href="${articleUrl}&testNum=${dto.testNum}">${dto.testName} - ${dto.subName}</a>
+	                                        		<a href="${articleUrl}&testNum=${dto.testNum}">${dto.testName} - ${dto.subName}(${dto.isOdd})</a>
 	                                        	</td>
 	                                        	<td class="text-bold-500">${dto.nickName}</td>
 												<td>${dto.reg_date}</td>

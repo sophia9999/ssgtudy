@@ -15,9 +15,9 @@
 	min-height : 70px;
 	min-width: 1000px;
 }
-.pdfpreviewer{
-	width : 700px;
-	height : 1000px;
+.testFrame{
+	width : 100%;
+	height : 700px;
 }
 </style>
 <script type="text/javascript">
@@ -277,7 +277,7 @@ $(function(){
                    <div class="table-responsive">
                        <table class="table table-lg">
                            <tr>
-	                           <td colspan="2" align="center">${dto.testName} - ${dto.subName}</td>
+	                           <td colspan="2" align="center">${dto.testName} - ${dto.subName}(${dto.isOdd})</td>
                            </tr>
                            <tr>
                            		<td width="50%">
@@ -291,9 +291,11 @@ $(function(){
                            		</td>
                            </tr> 
                            <tr style="border-bottom:white">
-	                           <td colspan="2" height="300px">${dto.content}</td>
-	                           <embed id="pdfpreviewer" class="pdfpreviewer" src="${pageContext.request.contextPath}/uploads/mock/${dto.saveFilename}" type="application/pdf">
-                          	   <!-- <iframe src="${pageContext.request.contextPath}/resources/pdf/${dto.originalFilename}" class="testFrame" frameborder="0"></iframe> -->
+	                           <td colspan="2" height="300px">
+	                           		 <iframe src="${pageContext.request.contextPath}/uploads/mock/${dto.saveFilename}" class="testFrame" frameborder="0"></iframe> 
+                           				<hr>
+                           			${dto.content}
+                           		</td>
                            </tr>
                            <c:forEach var="vo" items="${listFile}">
                            		<tr>

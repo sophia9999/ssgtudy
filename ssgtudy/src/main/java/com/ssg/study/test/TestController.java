@@ -223,7 +223,7 @@ public class TestController {
 			Mock dto,
 			@RequestParam String page,
 			HttpSession session) throws Exception {
-		
+		 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		try {

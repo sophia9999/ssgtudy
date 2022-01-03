@@ -13,6 +13,11 @@
     flex-flow: row nowrap;
     align-items: center;
 }
+.fileBtn {
+	background: white;
+	color : #ce4848;
+	border : none;
+}
 </style>
 <script type="text/javascript">
 function sendOk() {
@@ -89,19 +94,22 @@ function sendOk() {
 								<input type="file" class="form-control" name="selectFile" multiple="multiple">
 							</div>
 							
+							<div class="col-md-2">
+								<label>첨부된 파일</label>
+							</div>
+							<div class="col-md-10">
 							<c:if test="${mode=='update'}">
 								<c:forEach var="vo" items="${listFile}">
 									<div id="f${vo.bbs_fileNum}">
-										<div class="col-md-2">
-											<label>첨부된 파일</label>
-										</div>
-										<div class="col-md-10 form-group">
-											<p><a href="javasript:deleteFile('${vo.bbs_fileNum}');"></a>
-											${vo.originalFilename}</p>
-										</div>
+										<p class="form-control-plaintext">
+											<a href="javascript:deleteFile('${vo.bbs_fileNum}');">
+											${vo.originalFilename}&nbsp<label style="color:#b41758">X</label>
+											</a>
+										</p>
 									</div>
 								</c:forEach>
 							</c:if>
+							</div>
 							<div class="col-sm-12 d-flex justify-content-end">
 								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시입력</button>
 								<button type="button" class="btn btn-light-secondary me-1 mb-1"
@@ -110,6 +118,7 @@ function sendOk() {
 								<c:if test="${mode=='update'}">
 									<input type="hidden" name="bbsNum" value="${dto.bbsNum}">
 									<input type="hidden" name="page" value="${page}">
+									<input type="hidden" name="bbs_fileNum" value="${dto.bbs_fileNum}">
 								</c:if>
 							</div>
 							
