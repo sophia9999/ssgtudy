@@ -84,19 +84,7 @@
                                 </li>                                                                                  
                             </ul>
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class="sidebar-link">
-								<i class="icofont-school-bag"></i>
-								<span>신고글 관리</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/bbs/reportlist">신고글 관리</a>
-                                </li>                                                       
-                            </ul>
-                        </li>
-                        
+        
                          <li class="sidebar-item  has-sub">
                             <a href="#" class="sidebar-link">
 								<i class="icofont-group-students"></i>

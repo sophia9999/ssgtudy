@@ -202,13 +202,7 @@
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/chat/main">자유채팅방</a>
                                 </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/chat/team">단체채팅방</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/chat/private">1:1채팅방</a>
-                                </li>  
-                                                    
+                                                      
                             </ul>
                         </li>
                         
@@ -218,19 +212,11 @@
                                 <span>모의고사</span>
                             </a>
                             <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/test/subject">과목멸 모의고사</a>
-                                </li>  
+                                
                                 <li class="submenu-item ">
                                     <a href="${pageContext.request.contextPath}/test/mock">평가원 모의고사</a>
                                 </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/test/real">수능 문제풀이</a>
-                                </li>  
-                                <li class="submenu-item ">
-                                    <a href="${pageContext.request.contextPath}/test/my">푼 모의고사</a>
-                                </li>  
-                                                    
+                                                      
                             </ul>
                         </li>
                         
