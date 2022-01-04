@@ -409,7 +409,7 @@ public class StudyManageController {
 					
 					int check = 0;
 					for(int j = 0; j < winningList.size(); j++) {
-						if (winningList.get(j) == dto) { // 리스트에 있으면
+						if (winningList.get(j).getStudyNum() == dto.getStudyNum()) { // 리스트에 있으면
 							check = j;
 							break; // 다시 뽑아라
 						}
@@ -478,7 +478,7 @@ public class StudyManageController {
 					
 					int check = 0;
 					for(int j = 0; j < winningList.size(); j++) {
-						if (winningList.get(j) == dto) { // 리스트에 있으면
+						if (winningList.get(j).getUserId() == dto.getUserId()) { // 리스트에 있으면
 							check = j;
 							break; // 다시 뽑아라
 						}
