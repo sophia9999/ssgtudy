@@ -1255,7 +1255,7 @@ public class StudyController {
 			Model model) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		String userId = info.getUserId();
-	
+		
 		Study dto = service.readArticleByCategory(boardNum);
 		
 		// 작성자가 아니면
@@ -1268,6 +1268,7 @@ public class StudyController {
 		vo.setBoardNum(boardNum);
 		vo.setSubject(subject);
 		vo.setContent(content);
+		vo.setCategoryNum(categoryNum);
 		service.updateArticleByCategory(vo);
 		
 		return "study/homelist";

@@ -400,11 +400,27 @@ public class StudyManageController {
 				for(int i = 0; i < quantity; i++) {
 					int winning = (int)(Math.random() * groupDataCount)+1;
 					paramMap.put("winning", winning);
-					Study dto = service.winning(paramMap);
+					Study dto = service.winning(paramMap); // 뽑은 것이
+					
 					if(dto == null) {
 						i--;
 						continue;
-					} 	
+					}
+					
+					int check = 0;
+					for(int j = 0; j < winningList.size(); j++) {
+						if (winningList.get(j) == dto) { // 리스트에 있으면
+							check = j;
+							break; // 다시 뽑아라
+						}
+						check = 0; // 없었으면 check는 0
+					}
+					
+					// 리스트에 있을 때 j의 값을 check에 넣어주므로 0 이 아니면 중복 값이 있단 것 
+					if(check != 0) { 
+						i--;
+						continue;
+					}
 					winningList.add(dto);				
 				}
 				
@@ -458,7 +474,23 @@ public class StudyManageController {
 					if(dto == null) {
 						i--;
 						continue;
-					} 	
+					}
+					
+					int check = 0;
+					for(int j = 0; j < winningList.size(); j++) {
+						if (winningList.get(j) == dto) { // 리스트에 있으면
+							check = j;
+							break; // 다시 뽑아라
+						}
+						check = 0; // 없었으면 check는 0
+					}
+					
+					// 리스트에 있을 때 j의 값을 check에 넣어주므로 0 이 아니면 중복 값이 있단 것 
+					if(check != 0) { 
+						i--;
+						continue;
+					}
+					
 					winningList.add(dto);				
 				}
 				

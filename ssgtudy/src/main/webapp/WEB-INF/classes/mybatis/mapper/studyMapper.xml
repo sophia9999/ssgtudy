@@ -308,7 +308,7 @@
 	</insert>
 	
 	<update id="updateArticleByCategory" parameterType="com.ssg.study.study.Study">
-		UPDATE study_board SET subject=#{subject}, content=#{content}
+		UPDATE study_board SET subject=#{subject}, content=#{content}, categoryNum=#{categoryNum}
 		WHERE boardNum = #{boardNum}
 	</update>
 	
