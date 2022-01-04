@@ -407,17 +407,17 @@ public class StudyManageController {
 						continue;
 					}
 					
-					int check = 0;
+					int check = -1;
 					for(int j = 0; j < winningList.size(); j++) {
 						if (winningList.get(j).getStudyNum() == dto.getStudyNum()) { // 리스트에 있으면
 							check = j;
 							break; // 다시 뽑아라
 						}
-						check = 0; // 없었으면 check는 0
+						check = -1; // 없었으면 check는 0
 					}
 					
 					// 리스트에 있을 때 j의 값을 check에 넣어주므로 0 이 아니면 중복 값이 있단 것 
-					if(check != 0) { 
+					if(check > -1) { 
 						i--;
 						continue;
 					}
@@ -476,17 +476,17 @@ public class StudyManageController {
 						continue;
 					}
 					
-					int check = 0;
+					int check = -1;
 					for(int j = 0; j < winningList.size(); j++) {
-						if (winningList.get(j).getUserId() == dto.getUserId()) { // 리스트에 있으면
+						if (dto.getUserId().equals(winningList.get(j).getUserId() ) )  { // 리스트에 있으면
 							check = j;
 							break; // 다시 뽑아라
 						}
-						check = 0; // 없었으면 check는 0
+						check = -1; // 없었으면 check는 0
 					}
 					
 					// 리스트에 있을 때 j의 값을 check에 넣어주므로 0 이 아니면 중복 값이 있단 것 
-					if(check != 0) { 
+					if(check > -1) { 
 						i--;
 						continue;
 					}
