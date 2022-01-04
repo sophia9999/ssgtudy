@@ -87,7 +87,7 @@ function searchList(){
 						</div>				                                                   
 						<div class="col-md-2 justify-content-end">
 							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/todo/write';">등록</button>
-							<button type="reset" class="btn btn-outline-primary me-1 mb-1">취소</button>
+							<button type="reset" class="btn btn-outline-primary me-1 mb-1">새로고침</button>
 						</div>
 					</div>
 				</div>
