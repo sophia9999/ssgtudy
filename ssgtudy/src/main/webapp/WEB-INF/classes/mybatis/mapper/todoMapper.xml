@@ -7,7 +7,7 @@
 		SELECT todo_seq.NEXTVAL FROM dual
 	</select>
 	
-	<insert id="insertTodo" parameterType="com.ssg.study.todo.Todo">
+	<insert id="insertTodo" parameterType="com.ssg.study.todo.Todo"> <!-- id는 이름 parameterType은  필요한것 -->
 		INSERT INTO todo(todoNum, subject, content, reg_date, userId)
 			VALUES (#{todoNum}, #{subject}, #{content}, SYSDATE, #{userId})
 	</insert>
@@ -16,26 +16,27 @@
 		<choose>
 			<when test="condition=='all'">	<!-- 제목+내용 -->
 				(				
-					INSTR(subject, #{keyword} ) &gt; 0 OR
+					INSTR(subject, #{keyword} ) &gt; 0 OR				<!-- INSTR 검색, 제목이 0이상이거나 내용이 0 이상이면  검색 -->
 						DBMS_LOB.INSTR(content,#{keyword}) &gt;0
 				)	
 			</when>	
-			<when test="condition=='content'">
+			<when test="condition=='content'">							<!--  content가 0이상이면 검색 -->
 				DBMS_LOB.INSTR(content,#{keyword}) &gt;0
 			</when>
-			<when test="condition=='reg_date'">
+			<when test="condition=='reg_date'">							<!--  reg_date 키워드가 'YYYY-MM-DD' 또는 YYYYMMDD 면 검색-->
 				(
 					TO_CHAR(t.reg_date, 'YYYY-MM-DD') = #{keyword} OR
 						TO_CHAR(t.reg_date, 'YYYYMMDD') = #{keyword}
 				)
 			</when>
 			<otherwise>
-				INSTR(${condition}, #{keyword}) &gt; 0
+				INSTR(${condition}, #{keyword}) &gt; 0					<!-- condition 키워드가  0이상이면 검색-->
 			</otherwise>			
 		</choose>
 	</sql>
 	
-	<select id="dataCount" parameterType="map" resultType="Integer">
+	<!-- id dataCount map이 필요 (map은 where사용시 필요) 결과는 integer(why? count이기에) nvl(null이면 0으로 바꿈) , todo 테이블에서  키워드가 널이 아니고 키워드가 공백이 아니면 where-list실행이고 아니면  userId에 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">		
 		SELECT NVL(COUNT(*), 0)
 		FROM todo t
 		JOIN member_detail m ON t.userId = m.userId
@@ -43,11 +44,11 @@
 			<if test="keyword!=null and keyword!=''">
 				<include refid="where-list"/>
 			</if>
-			AND t.userId = #{userId}
+			AND t.userId = #{userId}   	<!--  @@@@이부분 머라고 읽어야 하지; -->
 		</where>
 	</select>
 	
-	
+	<!--  rnum, th.* = 가로*세로  -->
 	<select id="listTodo" parameterType="map" resultType="com.ssg.study.todo.Todo"> <!-- parameterType이 map인 경우는  where 절 에서만 필요, where절의 수가 2이상인 경우-->
 		SELECT * FROM (
 			SELECT ROWNUM rnum, th.* FROM (
@@ -65,8 +66,10 @@
 			) th WHERE ROWNUM &lt;= #{end}
 		)WHERE rnum &gt;= #{start}
 	</select>
+	<!-- rownum(세로줄)<end 까지인 todoNum 내림차순 / rnum > start == start이상이고 end 이하인 todoNum을 내림차순 정렬.  -->
 	
 	
+	<!-- integer why? todoNum ... read는 todo에 있는 모든 게시글 불러옴? -->
 	<select id="readTodo" parameterType="Integer" resultType="com.ssg.study.todo.Todo">
 		SELECT t.todoNum, t.userId, subject, content, 
 			TO_CHAR(t.reg_date, 'YYYY-MM-DD') reg_date	
@@ -89,7 +92,9 @@
 			ORDER BY todoNum ASC
 		) WHERE ROWNUM = 1
 	</select>
-	
+	<!-- rnum이 1 이고 todonum을 오름차순으로 정렬인데  현재 todoNum보다 큰 todoNum == 현재글 보다 큰 수의 게시글. -->
+
+	<!-- pre와 비슷; -->	
 	<select id="nextReadTodo" parameterType="map"
 		resultType="com.ssg.study.todo.Todo">
 		SELECT * FROM ( 
@@ -106,6 +111,7 @@
 		) WHERE ROWNUM = 1 
 	</select>
 	
+	
 	<update id="updateTodo" parameterType="com.ssg.study.todo.Todo">
 		UPDATE todo SET subject=#{subject}, content=#{content}
 		WHERE todoNum = #{todoNum}
@@ -115,6 +121,7 @@
 		DELETE FROM todo WHERE todoNum=#{todoNum}
 	</delete>
 	
+	<!--  필드? -->
 	<delete id="deleteFile" parameterType="map">
 		DELETE FROM todoNum_file WHERE ${field}=#{todoNum}	
 	</delete>

@@ -43,13 +43,14 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="page-box">
+							${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+						</div>
                     </div>
                 </div>
             </div>
             
-			<div class="page-box">
-				${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
-			</div>
+			
 			
 		</div>
 	</section>
