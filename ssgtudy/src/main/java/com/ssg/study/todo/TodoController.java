@@ -173,10 +173,12 @@ public class TodoController {
 		
 		dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 		
+		String userId = info.getUserId();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("todoNum", todoNum);
-		map.put("condition", condition);
-		map.put("keyword", keyword);
+		map.put("userId", userId);
+		
+		
 		
 		Todo preReadDto = service.preReadTodo(map);
 		Todo nextReadDto = service.nextReadTodo(map);
@@ -300,7 +302,6 @@ public class TodoController {
 		if(dto != null) {
 			String saveFilename = dto.getSaveFilename();
 			String originalFilename = dto.getOriginalFilename();
-			System.out.println("====================================="+dto.getfileNum()+"====================================================");
 			
 			b = fileManager.doFileDownload(saveFilename, originalFilename, pathname, resp);
 			

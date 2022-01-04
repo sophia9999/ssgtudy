@@ -44,7 +44,7 @@
 			<if test="keyword!=null and keyword!=''">
 				<include refid="where-list"/>
 			</if>
-			AND t.userId = #{userId}   	<!--  @@@@이부분 머라고 읽어야 하지; -->
+			AND t.userId = #{userId}   	<!--  접속자 id를 비교, 작성자만 봐야하니까. -->
 		</where>
 	</select>
 	
@@ -86,14 +86,16 @@
 			<where>
 				<if test="keyword!=null and keyword!='' ">
 					<include refid="where-list"/>
-				</if>
+				</if>	
 				AND (todoNum &gt; #{todoNum} )
+				AND t.userId = #{userId} 
 			</where>
 			ORDER BY todoNum ASC
 		) WHERE ROWNUM = 1
 	</select>
 	<!-- rnum이 1 이고 todonum을 오름차순으로 정렬인데  현재 todoNum보다 큰 todoNum == 현재글 보다 큰 수의 게시글. -->
-
+	<!-- 게시글 리스트의 오름,내림차순에 따라 이전글 다음글의 대소관계가 바뀔수 있다.(큰수가 최신글  -->
+	
 	<!-- pre와 비슷; -->	
 	<select id="nextReadTodo" parameterType="map"
 		resultType="com.ssg.study.todo.Todo">
@@ -106,6 +108,7 @@
 					<include refid="where-list"/>
 				</if>
 				AND (todoNum &lt; #{todoNum} )
+				AND t.userId = #{userId} 
 			</where>
 			ORDER BY todoNum DESC
 		) WHERE ROWNUM = 1 
