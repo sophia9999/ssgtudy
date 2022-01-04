@@ -145,8 +145,8 @@ function ajaxFun(url, method, query, dataType, fn) {
 								<input type="hidden" name="content">
 							</div>
 							<div class="col-sm-12 d-flex justify-content-end">
-								<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시작성</button>
+								<button type="button" class="btn btn-light-secondary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/study/ad';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
 								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정하기':'등록하기'}<i class="bi bi-check2"></i></button>
 								<c:if test="${mode=='update'}">
 									<input type="hidden" name="boardNum" value="${dto.boardNum}">

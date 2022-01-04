@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<script src="https://kit.fontawesome.com/a8b55df315.js" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
 function search() {
@@ -189,30 +190,28 @@ function printRank(data) {
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                         <form class="form form-horizontal" name="searchForm" method="post">
-							<div class="form-body">
-								<div class="row">
-									<div class="col-md-2 form-group">
-									</div> 
-									<div class="col-md-2 form-group">
-									<div class="col-auto">
-									<div style="width:120px;" class="text-end">
-										<select name="condition" class="form-select">
-											<option value="studyName" ${condition=="studyName"?"selected='selected'":""}>스터디이름</option>
-										</select>
-									</div>
-									</div>                                                      
-									</div>                                      
-									<div class="col-md-3 form-group">
-										<input type="text" id="" class="form-control" name="keyword" value="${keyword}">                                          
-									</div>
-									<div class="col-md-2 form-group">                                                     
-										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>
-									</div>				                                                   
-									<div class="col-md-2"></div>
+       				<div class="row">
+								<div class="col-md-2 text-start">
+								</div> 
+								<div class="col-md-8 text-center">
+									<form class="row" name="searchForm" method="post">
+										<div class="col-auto p-1">
+											<select name="condition" class="form-select">
+												<option value="studyName" ${condition=="studyName"?"selected='selected'":""}>스터디이름</option>
+											</select>
+										</div>                                                                                         
+										<div class="col-auto p-1">
+											<input type="text" id="" class="form-control" name="keyword" value="${keyword}">                                          
+										</div>
+										<div class="col-auto p-1">                                                     
+											<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()"><i class="bi bi-search"></i></button>
+										</div>
+									</form> 		
+								</div>		                                                   
+								<div class="col-md-2 text-end">
 								</div>
-							</div>
-						</form>   
+					</div>
+											  
                             <div class="form-body">
                                 <div class="row" id="listRank" style="display: none;">
 	                                <div class='list-header'>

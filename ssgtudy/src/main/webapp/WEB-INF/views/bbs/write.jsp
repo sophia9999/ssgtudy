@@ -113,8 +113,8 @@ function sendOk() {
 							<div class="col-sm-12 d-flex justify-content-end">
 								<button type="reset" class="btn btn-light-secondary me-1 mb-1">다시입력</button>
 								<button type="button" class="btn btn-light-secondary me-1 mb-1"
-									onclick="location.href='${pageContext.request.contextPath}/bbs/list';">${mode=="update"?"수정취소":"등록취소"}</button>	
-								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
+									onclick="location.href='${pageContext.request.contextPath}/bbs/list';">${mode=="update"?"수정취소":"등록취소"}&nbsp;<i class="bi bi-x"></i></button>	
+								<button type="button" class="btn btn-primary me-1 mb-1" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}&nbsp;<i class="bi bi-check2"></i></button>
 								<c:if test="${mode=='update'}">
 									<input type="hidden" name="bbsNum" value="${dto.bbsNum}">
 									<input type="hidden" name="page" value="${page}">

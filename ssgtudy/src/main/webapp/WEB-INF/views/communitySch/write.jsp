@@ -256,9 +256,9 @@ $(function(){
 				<table class="table table-borderless">
  					<tr>
 						<td class="text-center">
-							<button type="button" class="btn btn-dark" onclick="sendOk();">${mode=='update'?'수정완료':'일정등록'}&nbsp;<i class="bi bi-check2"></i></button>
-							<button type="reset" class="btn btn-light">다시입력</button>
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/communitySch/main';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
+							<button type="reset" class="btn btn-light-secondary">다시입력</button>
+							<button type="button" class="btn btn-light-secondary" onclick="location.href='${pageContext.request.contextPath}/communitySch/main';">${mode=='update'?'수정취소':'등록취소'}&nbsp;<i class="bi bi-x"></i></button>
+							<button type="button" class="btn btn-primary" onclick="sendOk();">${mode=='update'?'수정완료':'일정등록'}&nbsp;<i class="bi bi-check2"></i></button>
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="scheduleNum" value="${dto.scheduleNum}">
 							</c:if>

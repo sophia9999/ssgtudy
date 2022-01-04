@@ -40,38 +40,37 @@
 	</c:if>
 </div>
 
-<form class="form form-horizontal" name="listSearch" method="post">
-<div class="form-body">
-	<div class="row"> 
-		<div class="col-md-4">                                                           
+
+	<div class="row board-list-footer">
+		<div class="col-md-4 text-start">                                                           
 		</div>
-        <div class="input-group">
-        	<div class="col-md-3">                                                           
-			</div>
-        	<div class="col-md-2" >
-				<select name="condition" class="form-select" style="width: 70%">
-					<option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
-					<option value="userName" ${condition=="nickName"?"selected='selected'":""}>작성자</option>
-					<option value="reg_date" ${condition=="reg_date"?"selected='selected'":""}>등록일</option>
-					<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
-					<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
-				</select>
-			</div>
-            <div class="col-md-2">
-				<input type="text" class="form-control" name="keyword" placeholder="검색">                                          
-			</div>
-			<div class="col-md-1">                                                     
-				<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="listSearchBtn()">검색</button>
-			</div>				                                                   
-			<div class="col-md-4 text-center justify-content-end">
+	
+		<div class="col-md-5 text-center">
+			<form class="row" name="listSearch" method="post">
+	        	<div class="col-auto p-1">
+					<select name="condition" class="form-select">
+						<option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
+						<option value="userName" ${condition=="nickName"?"selected='selected'":""}>작성자</option>
+						<option value="reg_date" ${condition=="reg_date"?"selected='selected'":""}>등록일</option>
+						<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
+						<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
+					</select>
+				</div>
+	            <div class="col-auto p-1" style="width:200px;">
+					<input type="text" class="form-control" name="keyword" placeholder="검색">                                          
+				</div>
+				<div class="col-auto p-1">                                                     
+					<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="listSearchBtn()"><i class="bi bi-search"></i></button>
+				</div>	
+			</form>
+		</div>	                                                   
+		<div class="col-md-3 text-end">
 			<c:if test="${studyDto.role > 0}">
-				<button type="button" class="btn btn-primary me-1 mb-1" onclick="writeArticle()">등록</button>
+				<button type="button" class="btn btn-primary me-1 mb-1" onclick="writeArticle()">등록하기</button>
 			</c:if>
 		</div>
-        </div>
-	</div>
-</div>
-</form>
+      </div>
+
 
 <script type="text/javascript">
 function writeArticle() {

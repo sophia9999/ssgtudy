@@ -193,7 +193,7 @@ $("body").on("click",".update",function(){
 	                                   <div class="buttons px-4">
 	                          
 	                                    	<a class='btn btn-sm btn-outline-primary' href="${pageContext.request.contextPath}/note/noteWrite?userId=${vo.userId}&nickName=${vo.nickName}" >쪽지쓰기 </a>
-	                                       	<button class='btn btn-sm btn-outline-primary delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>	                             			
+	                                       	<button class='btn btn-sm btn-outline-danger delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>	                             			
 	                                    </div>
                                 	</div>
                                 </c:forEach>
@@ -234,7 +234,7 @@ $("body").on("click",".update",function(){
 	                                    </div>
 	                                    <div class="buttons px-4">
 	                                    	<button class='btn btn-sm btn-outline-primary update'data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >수락</button>	                              
-	                                    	<button class='btn btn-sm btn-outline-primary delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>
+	                                    	<button class='btn btn-sm btn-outline-danger delete' data-registered="${sessionScope.member.userId}" data-registrant="${vo.userId}" >삭제</button>
 	                                    </div>
                                 	</div>
                                 </c:forEach>
@@ -256,7 +256,7 @@ $("body").on("click",".update",function(){
 		                                    <h6 class="text-muted mb-0">${vo.userId}</h6>                                                                        
 	                                    </div>
 	                                    <div class="buttons px-4">
-	                                    	<button data-registrant="${sessionScope.member.userId}" data-registered="${vo.userId}" class='btn btn-sm btn-outline-primary delete'>삭제</button>
+	                                    	<button data-registrant="${sessionScope.member.userId}" data-registered="${vo.userId}" class='btn btn-sm btn-outline-danger delete'>삭제</button>
 	                                    </div>
 	                                           	                                    
                                 	</div>

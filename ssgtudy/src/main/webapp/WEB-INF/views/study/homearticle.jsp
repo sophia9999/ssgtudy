@@ -57,10 +57,7 @@
 				</c:choose>
 		    	
 				<c:choose>
-		    		<c:when test="${studyDto.role >= 10}">
-		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard('${dto.boardNum}');">삭제</button>
-		    		</c:when>
-		    		<c:when test="${sessionScope.member.userId==dto.userId}">
+		    		<c:when test="${studyDto.role >= 10 || sessionScope.member.userId==dto.userId}}">
 		    			<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="deleteBoard('${dto.boardNum}');">삭제</button>
 		    		</c:when>
 		    		<c:otherwise>

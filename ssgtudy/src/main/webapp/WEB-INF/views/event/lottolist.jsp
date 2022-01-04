@@ -97,10 +97,10 @@ $(function() {
 <section class="section">
 	<div class="row" id="basic-table">
 		<div class="col-12 col-md-12">
+			<div>
+		        ${dataCount}개(${page}/${total_page} 페이지)
+		    </div>
            	<div class="card">
-            	<div class="card-header">
-		        	${dataCount}개(${page}/${total_page} 페이지)
-		        </div>
                    <div class="card-content">
                    	<div class="card-body">
                        	<div class="table-responsive">
@@ -134,32 +134,33 @@ $(function() {
 							</div>
                                
                            </div>
-                           <form class="form form-horizontal" name="searchForm" method="post">
-							<div class="form-body">
-								<div class="row">
-									<div class="col-md-2 form-group">
-									</div> 
-									<div class="col-md-2 form-group">
-									<div class="col-auto">
-									<div style="width:120px;" class="text-end">
-										<select name="condition" class="form-select">
-											<option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
-											<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
-											<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
-										</select>
-									</div>
-									</div>                                                      
-									</div>                                      
-									<div class="col-md-3 form-group">
-										<input type="text" id="" class="form-control" name="keyword" value="${keyword}">                                          
-									</div>
-									<div class="col-md-1 form-group">                                                     
-										<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()">검색</button>
-									</div>				                                                   
-									<div class="col-md-4 justify-content-end text-end"></div>
-								</div>
-							</div>
-						</form>   
+                           
+                      <div class="row board-list-footer">
+                           <div class="col-md-4">
+                           </div>
+                           
+                           <div class="col-md-4 text-center">
+	                           <form class="row" name="searchForm" method="post">
+										<div class="col-auto p-1">
+											<select name="condition" class="form-select">
+												<option value="all" ${condition=="all"?"selected='selected'":""}>제목+내용</option>
+												<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
+												<option value="content" ${condition=="content"?"selected='selected'":""}>내용</option>
+											</select>
+										</div>                                  
+										<div class="col-auto p-1" style="width:200px;">
+											<input type="text" class="form-control" name="keyword" value="${keyword}">                                          
+										</div>
+										<div class="col-auto p-1">                                                     
+											<button type="button" class="btn btn-outline-primary me-1 mb-1 btnSearch" onclick="search()"><i class="bi bi-search"></i></button>
+										</div>				                                                  
+							</form>
+						</div>
+						<div class="col-md-4">
+						</div>
+					</div>
+						
+						
                        </div>
                    </div>
                </div>

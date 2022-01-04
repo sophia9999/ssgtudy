@@ -104,7 +104,7 @@ $(function() {
 				out += "		<td>"+(list[i].questCount - list[i].usedCount)+"</td>";
 				out += "</tr>";
 			}
-			// console.log(out);
+			console.log(out);
 			$(".eventStudyList tbody").append(out);
 		};
 		ajaxFun(url, "get", query, "json", fn);
@@ -116,26 +116,6 @@ function btnGroup() {
 	// console.log(studyNum);
 	var hasPoint = $(".eventStudyList input:checked").closest("tr").find("td:eq(2)").html();
 	// console.log(hasPoint);
-	var date = new Date();
-	var nowY = date.getFullYear();
-	var nowM = date.getMonth()+1;
-	var nowD = date.getDate();
-	
-	var lottoDate = "${dto.lottoDate}";
-	var lottoY = lottoDate.substring(0, 4);
-	var lottoM = lottoDate.substring(5, 7);
-	var lottoD = lottoDate.substring(8, 10);
-
-	if(nowY > lottoY) {
-		alert("지난 이벤트에 응모할 수 없습니다.");
-		return false;
-	} else if(nowY == lottoY && nowM > lottoM) {
-		alert("지난 이벤트에 응모할 수 없습니다.");
-		return false;
-	} else if(nowY == lottoY && nowM == lottoM && nowD > lottoD) {
-		alert("지난 이벤트에 응모할 수 없습니다.");
-		return false;
-	}
 	if( hasPoint < ${dto.needPoint}) {
 		alert("포인트가 부족합니다.");
 	} else {

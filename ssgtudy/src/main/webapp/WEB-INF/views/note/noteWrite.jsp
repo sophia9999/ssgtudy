@@ -262,9 +262,9 @@ $(function(){
 						<table class="table table-borderless">
 		 					<tr>
 								<td class="text-center">
-									<button type="button" class="btn btn-dark" onclick="sendOk();">보내기&nbsp;<i class="bi bi-check2"></i></button>
-									<button type="reset" class="btn btn-light">다시입력</button>
-									<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/note/send/noteForm';">취소&nbsp;<i class="bi bi-x"></i></button>
+									<button type="reset" class="btn btn-light-secondary">다시입력</button>
+									<button type="button" class="btn btn-light-secondary" onclick="location.href='${pageContext.request.contextPath}/note/send/noteForm';">취소&nbsp;<i class="bi bi-x"></i></button>
+									<button type="button" class="btn btn-primary" onclick="sendOk();">보내기&nbsp;<i class="bi bi-check2"></i></button>
 									<div id="forms-receiver-list">	
 										
 										<c:if test="${not empty userId}">

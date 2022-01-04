@@ -138,7 +138,7 @@ $(function(){
 							</form>
 						</div>
 						<div class="col-md-4 text-end">
-							<button type="button" class="btn btn-outline-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/write';">글올리기</button>
+							<button type="button" class="btn btn-primary me-1 mb-1" onclick="location.href='${pageContext.request.contextPath}/community/write';">글올리기</button>
 						</div>
 					</div>
            

@@ -12,10 +12,10 @@
 	    </div>
 	</div>
 	<section class="section">
+		 <div>
+	        ${dataCount}개(${page}/${total_page} 페이지)
+	     </div>
 	    <div class="card">
-	        <div class="card-header">
-	        	${dataCount}개(${page}/${total_page} 페이지)
-	        </div>
 	        <div class="card-body">
 	            <table class="table table-lg" id="table1">
 	                <thead>

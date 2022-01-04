@@ -75,8 +75,8 @@ function search() {
 											<option value="0" ${dto.role == '0' ? "selected='selected'":"" }>대기멤버</option>
 										</c:when>
 										<c:otherwise>
-											<option value="1" ${dto.role == '1' ? "selected='selected'":"" }>일반멤버</option>
-											<option value="0" ${dto.role == '0' ? "selected='selected'":"" }>대기멤버</option>
+											<option value="1">일반멤버</option>
+											<option value="0">대기멤버</option>
 										</c:otherwise>
 									</c:choose>
 								</select>

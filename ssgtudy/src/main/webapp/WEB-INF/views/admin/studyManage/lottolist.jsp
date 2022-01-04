@@ -47,7 +47,7 @@ function search() {
                                         	<td class="text-bold-500">${dto.lottoDate}</td>
 											<td class="text-bold-500" data-eventCategory="${dto.eventCategory}">${dto.eventCategory}</td>
                                         	<td class="text-bold-500">
-                                        		<button type="button" class="btn btn-primary checkWinningList" data-lottoDate="${dto.lottoDate}" data-eventNum="${dto.eventNum}" data-bs-toggle="modal" data-bs-target="#checkWinning">확인</button>
+                                        		<button type="button" class="btn btn-primary checkWinningList" data-eventNum="${dto.eventNum}" data-bs-toggle="modal" data-bs-target="#checkWinning">확인</button>
                                         	</td>
                                     	</tr>
                                     	</c:forEach>
@@ -110,7 +110,6 @@ function search() {
 	        						<input type="number" placeholder="숫자를 입력하세요." class="form-control quantity" name="quantity">
 	        						<input type="hidden" name="eventNum" class="paramEventNum" value="">
 	        						<input type="hidden" name="eventCategory" class="paramEventCategory" value="">
-	        						<input type="hidden" name="lottoDate" class="paramLottoDate" value = "">
 	        						<button type="button" class="lottoWin btn btn-primary" style="width: 160px;" >당첨자뽑기</button>
 	        					</div>
 	        				</td>
@@ -175,8 +174,6 @@ $(function() {
 		let eventCategory = $(this).closest("tr").find("td:eq(3)").html();
 		$(".paramEventCategory").val(eventCategory);
 		// console.log(eventCategory);
-		let lottoDate = $(this).attr("data-lottoDate");
-		$(".paramLottoDate").val(lottoDate);
 		
 		let query = "eventNum="+eventNum+"&eventCategory="+eventCategory;
 		let url = "${pageContext.request.contextPath}/event/showWinningList";
@@ -219,28 +216,6 @@ $(function() {
 
 $(function() {
 	$("body").on("click", ".lottoWin", function() {
-		var date = new Date();
-		var nowY = date.getFullYear();
-		var nowM = date.getMonth()+1;
-		var nowD = date.getDate();
-		
-		var lottoDate = $(".paramLottoDate").val();
-		// console.log(lottoDate);
-		var lottoY = lottoDate.substring(0, 4);
-		var lottoM = lottoDate.substring(5, 7);
-		var lottoD = lottoDate.substring(8, 10);
-
-		if(nowY < lottoY) {
-			alert("마감일 전입니다. 마감일 수정 후 추첨해주세요.");
-			return false;
-		} else if(nowY == lottoY && nowM < lottoM) {
-			alert("마감일 전입니다. 마감일 수정 후 추첨해주세요.");
-			return false;
-		} else if(nowY == lottoY && nowM == lottoM && nowD < lottoD) {
-			alert("마감일 전입니다. 마감일 수정 후 추첨해주세요.");
-			return false;
-		}
-		
 		let eventNum = $(".paramEventNum").val();
 		let quantity = $(".quantity").val();
 		let eventCategory = $(".paramEventCategory").val();

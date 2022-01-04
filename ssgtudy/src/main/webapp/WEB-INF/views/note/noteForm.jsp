@@ -74,7 +74,7 @@ $(function() {
  	 				</td>
  	 				
  	 				<td align="right">
- 	 					<button type="button" class="btn btn-light" onclick="javascript:location.href='${pageContext.request.contextPath}/note/noteWrite';">쪽지 쓰기</button>
+ 	 					<button type="button" class="btn btn-primary" onclick="javascript:location.href='${pageContext.request.contextPath}/note/noteWrite';">쪽지 쓰기</button>
  	 				</td>
  	 				
  	 			</tr>
@@ -122,12 +122,12 @@ $(function() {
  	 	</div>
  	 	
  	 	<div class="row board-list-footer">
- 	 		<div class="col">
+ 	 		<div class="col-md-4 text-center">
  	 			<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/note/${menuItem}/noteForm/';">
  	 				<i class="bi bi-arrow-counterclockwise"></i>
  	 			</button>
  	 		</div>
- 	 		<div class="col-6 text-center">
+ 	 		<div class="col-md-4 text-center">
  	 			<form class="row" name="searchForm" action="${pageContext.request.contextPath}/note/${menuItem}/noteForm" method="post">
  	 				<div class="col-auto p-1">
  	 					<select name="condition" class="form-select">
@@ -144,16 +144,15 @@ $(function() {
 							</c:choose> 	 					
  	 					</select>	 				
  	 				</div>
- 	 				<div class="col-auto p-1">
+ 	 				<div class="col-auto p-1" style="width:200px;">
  	 					<input type="text" name="keyword" value="${keyword}" class="form-control">
  	 				</div>				
  	 				<div class="col-auto p-1">
- 	 					<button type="button" class="btn btn-light" onclick="searchList()"><i class="bi bi-search"></i> </button>
+ 	 					<button type="button" class="btn btn-outline-primary" onclick="searchList()"><i class="bi bi-search"></i> </button>
  	 				</div>				
  	 			</form> 	 		
  	 		</div>
- 	 		<div class="col text-end">
- 	 			&nbsp;
+ 	 		<div class="col-md-4">
  	 		</div>
  	 	  </div>
  	 	  	</div>
