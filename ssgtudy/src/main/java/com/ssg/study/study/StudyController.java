@@ -615,7 +615,7 @@ public class StudyController {
 		
 		String cp = req.getContextPath();
 
-		int rows = 20; // 한 화면에 보여주는 게시물 수
+		int rows = 10; // 한 화면에 보여주는 게시물 수
 		int total_page = 0;
 		int dataCount = 0;
 

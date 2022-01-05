@@ -188,16 +188,19 @@
 	</select>
 	
 	<select id="rankList" parameterType="map" resultType="com.ssg.study.study.Study">
-        SELECT * FROM ( 
-	        SELECT s.studyNum, studyName, studyGoal, questCount, usedCount, RANK() OVER(ORDER BY questCount DESC) rank
-	        FROM times t
-	        JOIN study s ON s.studyNum= t.studyNum
-			WHERE studyStatus = 0
-		) <where> 
-			<if test="keyword != null and keyword != '' ">
-			    AND INSTR(studyName, #{keyword}) &gt;= 1
-			</if>
-		  </where>
+	    SELECT * FROM (
+	        SELECT ROWNUM rnum, tb.* FROM ( 
+		        SELECT s.studyNum, studyName, studyGoal, questCount, usedCount, RANK() OVER(ORDER BY questCount DESC) rank
+		        FROM times t
+		        JOIN study s ON s.studyNum= t.studyNum
+				WHERE studyStatus = 0
+				<where> 
+					<if test="keyword != null and keyword != '' ">
+					    AND INSTR(studyName, #{keyword}) &gt;= 1
+					</if>
+				</where>
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
 	
 	<select id="rankDataCount" resultType="Integer" parameterType="map">
