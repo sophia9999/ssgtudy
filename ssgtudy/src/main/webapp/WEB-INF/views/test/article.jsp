@@ -311,7 +311,7 @@ $(function(){
                            		<td colspan="2">
                            			이전글 :
                            			<c:if test="${not empty preReadDto}">
-                           				<a href="${pageContext.request.contextPath}/test/article?testNum=${preReadDto.testNum}&${query}">${dto.testName} - ${dto.subName}</a>
+                           				<a href="${pageContext.request.contextPath}/test/article?testNum=${preReadDto.testNum}&${query}">${preReadDto.testName} - ${preReadDto.subName}(${preReadDto.isOdd})</a>
                            			</c:if>
                            		</td>
                            </tr>  
@@ -319,7 +319,7 @@ $(function(){
                            		<td colspan="2">
                            			다음글 :
                            			<c:if test="${not empty nextReadDto}">
-                           				<a href="${pageContext.request.contextPath}/test/article?testNum=${nextReadDto.testNum}&${query}">${dto.testName} - ${dto.subName}</a>
+                           				<a href="${pageContext.request.contextPath}/test/article?testNum=${nextReadDto.testNum}&${query}">${nextReadDto.testName} - ${nextReadDto.subName}(${nextReadDto.isOdd})</a>
                            			</c:if>
                            		</td>
                            </tr>  
