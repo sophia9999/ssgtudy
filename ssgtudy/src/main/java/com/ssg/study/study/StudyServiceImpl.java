@@ -255,37 +255,8 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public List<Study> rankList(Map<String, Object> map) throws Exception {
 		List<Study> rankList = null;
-		String keyword = (String)map.get("keyword");
 		try {
 			rankList = dao.selectList("study.rankList", map);
-			
-			// 검색했으면, 검색한 것에 해당하는 것들만 나오도록
-			
-			rankList.sort(new rankComparator() ); // questCount 수에 따른 오름차순 정렬
-			
-			// 오름차순 정렬되있으므로 순위를 매겨준다.
-			int rank = 1;
-			for(int i = 0; i < rankList.size(); i++) {
-				rankList.get(i).setRank(rank++);
-			}
-			
-			// 검색에 부합하는 것들만 나옴
-			if(keyword != null && keyword != "") {
-				int size = rankList.size();
-				for(int i = 0; i < size; i++) {
-					String studyName = rankList.get(i).getStudyName();
-
-					// System.out.println(studyName);
-					
-					if (! studyName.contains(keyword)) { // 키워드없으면 지워라
-						rankList.remove(i);
-						size = rankList.size(); // 지우면 리스트의 사이즈가 바뀌므로 다시설정해준다.
-						i--;
-					}
-				}			
-			}
-			
-			
 		} catch (Exception e) {
 		}
 		return rankList;

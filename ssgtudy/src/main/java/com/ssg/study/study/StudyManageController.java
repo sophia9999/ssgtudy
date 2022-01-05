@@ -482,10 +482,10 @@ public class StudyManageController {
 							check = j;
 							break; // 다시 뽑아라
 						}
-						check = -1; // 없었으면 check는 0
+						check = -1; // 없었으면 check는  -1
 					}
 					
-					// 리스트에 있을 때 j의 값을 check에 넣어주므로 0 이 아니면 중복 값이 있단 것 
+					// 리스트에 있을 때 j의 값을 check에 넣어주므로 -1 이 아니면 중복 값이 있단 것 
 					if(check > -1) { 
 						i--;
 						continue;
