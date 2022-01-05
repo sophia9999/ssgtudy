@@ -52,6 +52,7 @@ function finduserName(){
 		dataType:"json",
 		success:function(data) {
 			 $("#findlist").empty();
+			 console.log(data);
 			for(let vo of data.list){
 				createEl(vo);
 			}

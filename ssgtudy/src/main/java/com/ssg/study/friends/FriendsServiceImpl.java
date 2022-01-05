@@ -1,6 +1,7 @@
 package com.ssg.study.friends;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,10 +57,10 @@ public class FriendsServiceImpl implements FriendsService{
 
 
 	@Override
-	public List<Friends> readUserName(String userName) throws Exception {
+	public List<Friends> readUserName(Map<String, Object> map) throws Exception {
 		List<Friends> list =null;
 		try {
-			list = dao.selectList("friends.readUserName",userName);
+			list = dao.selectList("friends.readUserName",map);
 		} catch (Exception e) {
 		}
 		return list;		

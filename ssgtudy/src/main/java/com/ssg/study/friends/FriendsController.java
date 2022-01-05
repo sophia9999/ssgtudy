@@ -46,11 +46,17 @@ public class FriendsController {
 	
 	@RequestMapping(value="finduserName" ,method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> findUserName(String userName) {
+	public Map<String, Object> findUserName(String userName,HttpSession session) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> val = new HashMap<String, Object>();
 		List<Friends> list = null;
 		try {			
-			list = service.readUserName(userName);
+			
+			SessionInfo info = (SessionInfo)session.getAttribute("member");	
+			val.put("userName", userName);
+			val.put("userId", info.getUserId());
+			
+			list = service.readUserName(val);
 		} catch (Exception e) {
 		}
 		

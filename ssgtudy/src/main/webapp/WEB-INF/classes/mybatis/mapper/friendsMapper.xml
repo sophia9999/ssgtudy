@@ -24,13 +24,15 @@
 		INSERT INTO friends(num, registrant, registered, reg_date, accept) VALUES(friends_seq.NEXTVAL, #{registrant}, #{registered}, SYSDATE, 'N')
 	</insert>
 	
-	<select id="readUserName" parameterType="String" resultType="com.ssg.study.friends.Friends">
-		 SELECT  userId,nickName,userName 
-		 FROM member_detail
-		 WHERE  NOT userId IN (SELECT userId
-				FROM member_detail m,friends f
-				WHERE userName=#{userName} AND (f.registrant=m.userId OR f.registered=m.userId)) 
-		        AND userName=#{userName}
+	<select id="readUserName" parameterType="map" resultType="com.ssg.study.friends.Friends">
+		        SELECT  userId,nickName,userName 
+				 FROM member_detail
+				 WHERE  NOT userId IN (
+		               SELECT userId FROM friends f,member_detail m
+		                WHERE (registrant = #{userId} AND ACCEPT = 'Y' AND f.registered=m.userId) OR (registered=#{userId}
+		                AND ACCEPT = 'Y'AND registrant=m.userId)
+		                ) 
+		        AND userName= #{userName}
 	</select>
 	
 	<update id="updateregistered"  parameterType="com.ssg.study.friends.Friends">
