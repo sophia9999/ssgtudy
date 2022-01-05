@@ -220,6 +220,11 @@ $(function() {
 		let quantity = $(".quantity").val();
 		let eventCategory = $(".paramEventCategory").val();
 		// console.log(eventNum)
+		
+		if(! quantity) {
+			alert("뽑을 수를 입력하세요.");
+			return false;
+		}
 		var query = "eventNum="+eventNum+"&quantity="+quantity+"&eventCategory="+eventCategory;
 		var url = "${pageContext.request.contextPath}/studyManage/winning";
 		var fn = function(data) {

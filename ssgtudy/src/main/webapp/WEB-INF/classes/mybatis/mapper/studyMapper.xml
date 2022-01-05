@@ -242,7 +242,7 @@
 						</if>
 						and s.studyNum = #{studyNum}
 					 </where>
-		            ORDER BY role DESC
+					  ORDER BY ROLE DESC, MEMBERNUM DESC
 		    ) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>

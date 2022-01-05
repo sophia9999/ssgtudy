@@ -1107,9 +1107,26 @@ public class StudyController {
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH) + 1;
 		int date = cal.get(Calendar.DATE);
-		
-		String SYSDATE = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date);
-		// System.out.println(SYSDATE);
+		String smonth = "";
+		String sdate = "";
+		String SYSDATE = "";
+		if(Integer.toString(month).length() < 2 && Integer.toString(date).length() < 2) {
+			smonth = "0"+ Integer.toString(month);
+			sdate = "0" + Integer.toString(date);
+			SYSDATE = Integer.toString(year)+"-"+smonth+"-"+sdate;
+		} else if(Integer.toString(date).length() < 2) {
+			sdate = "0"+ Integer.toString(date);
+			SYSDATE = Integer.toString(year)+"-"+Integer.toString(month)+"-"+sdate;
+		} else if(Integer.toString(month).length() < 2 ) {
+			smonth = "0"+ Integer.toString(month);
+			SYSDATE = Integer.toString(year)+"-"+smonth+"-"+Integer.toString(date);
+		} else {
+			SYSDATE = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date);
+		}
+		System.out.println(year);
+		System.out.println(month);
+		System.out.println(date);
+		System.out.println(SYSDATE);
 		// 아직 한번도 목표달성한적이 없을경우 null 로되어있으므로 그 전날을 설정해준다.
 		if(vo.getUpdateDate() == null) {
 			String updateDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date-1);

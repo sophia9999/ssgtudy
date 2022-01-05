@@ -21,7 +21,7 @@
 	                <thead>
 	                    <tr class="text-center">
 	                    	<th class="col-md-1">번호</th>
-	                        <th class="col-md-3">스터디이름</th>
+	                        <th class="col-md-2">스터디이름</th>
 	                        <th class="col-auto">스터디목표</th>
 	                        <th class="col-md-1">상태</th>
 	                    </tr>
@@ -45,7 +45,7 @@
 			                			</td>
 	                				</c:otherwise>
 	                			</c:choose>
-	                			<td class="text-truncate">${dto.studyGoal}</td>
+	                			<td class="text-truncate"><textarea class="text-truncate" style="resize: none; border: none; width: 100%; background: #fff" readonly="readonly" disabled="disabled">${dto.studyGoal}</textarea></td>
 	                			<c:choose>
 	                				<c:when test="${dto.studyStatus > 0 }">
 	                					<td class="text-center"><a href="#" onclick="alert('스터디 상태에 관해서는 관리자에게 문의하세요.')" class="btn icon btn-danger"><i data-feather="times"></i></a></td>
