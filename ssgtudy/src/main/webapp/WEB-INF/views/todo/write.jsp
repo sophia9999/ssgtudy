@@ -19,6 +19,7 @@ function sendOk() {
 	var f = document.todoForm;
 	var str;
 	
+
 	str = f.subject.value.trim();
 	if(!str) {
 		alert("제목을 입력하세요");
@@ -33,7 +34,6 @@ function sendOk() {
 		return;
 	}
 	
-	console.log(f.todoNum.value);
 	f.action = "${pageContext.request.contextPath}/todo/${mode}";
 	f.submit();
 }
@@ -109,6 +109,7 @@ function sendOk() {
 								<c:if test="${mode=='update'}">
 									<input type="hidden" name="todoNum" value="${dto.todoNum}">
 									<input type="hidden" name="page" value="${page}">
+									<input type="hidden" name="fileNum" value="${dto.fileNum}">
 								</c:if>
 							</div>
 							
