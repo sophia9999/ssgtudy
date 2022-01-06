@@ -35,7 +35,7 @@
 					<c:choose>
 		         		<c:when test="${dto.role > 10 }">
 			           		<div class="buttons text-center p-2">
-			           		<hr>
+			           		<hr><h4>${dto.studyName}</h4>
 			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
 			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button><br>
@@ -48,37 +48,39 @@
 			         			<p class="m-3 fw-bold">스터디 삭제 시 모든 정보들이 삭제됩니다.</p>
 			         			<button type="button" class="btn btn-dark" onclick="inactiveStudy('${dto.studyNum}')">스터디 비활성화</button>
 			         			<button type="button" class="btn btn-dark" onclick="deleteStudy('${dto.studyNum}')">스터디 삭제</button>
+			         			<br>고유번호: ${dto.studyNum}
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role > 1 }">
 			           		<div class="buttons text-center p-2">
-			           		<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
+			           		<hr><h4>${dto.studyName}</h4>
+			           			<h6><span class="align-middle"><i class="bi bi-gear-wide-connected"></i></span> 관리자 메뉴</h6>
 			           			<button type="button" class="btn btn-danger btnAddQuestCount">목표달성</button>
 			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button><br>
 			           			<button type="button" class="btn btn-primary btnManageMember">구성원관리</button>
 				           		<hr>
-			           			<h4>${dto.studyName}</h4>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
+			           			<br>고유번호: ${dto.studyNum}
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${dto.role == '1' }">
 		           			<div class="text-center p-2">
-		           				<hr>
-			           			<h4>${dto.studyName}</h4>
+		           				<hr><h4>${dto.studyName}</h4>
 			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
+			           			<br>고유번호: ${dto.studyNum}
 			           		</div>
 			           	</c:when>
 			           	<c:when test="${mode=='visit'}">
 			           		<div class="text-center p-2">
-			        	   		<hr>	
+			        	   		<hr><h4>${dto.studyName}</h4>
 			           			<h4><span class="align-middle"><i class="bi bi-exclamation-square"></i></span> 일반멤버가 아니므로 기능이 제한됩니다.</h4>
 			           			<hr>
-			           			<h4>${dto.studyName}</h4>
 			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes" >달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
+			           			<br>고유번호: ${dto.studyNum}
 			           		</div>
 			           	</c:when>
 						<c:otherwise> <!-- 대기일때 dto.role 이 0이라서.. -->
@@ -90,6 +92,7 @@
 			           			<button type="button" class="btn btn-success btnCheckTimes" data-bs-toggle="modal" data-bs-target="#checkTimes">달성회수확인</button>
 			           			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">스터디신고</button>
 			           			<button type="button" class="btn btn-primary btnWithdraw">스터디탈퇴</button>
+			           			<br>고유번호: ${dto.studyNum}
 			           		</div>
 			           	</c:otherwise>
 		           	</c:choose>

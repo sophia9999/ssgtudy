@@ -32,16 +32,16 @@
 	                			<td>${dto.listNum}</td>
 	                			<c:choose>
 	                				<c:when test="${dto.studyStatus > 0 }">
-	                					<td>${dto.studyName}</td>
+	                					<td>${dto.studyName}<br>고유번호: ${dto.studyNum}</td>
 	                				</c:when>
 	                				<c:when test="${dto.role == '0' }">
 	                					<td>
-	                						<a href="${articleUrl}/${dto.studyNum}">${dto.studyName}</a>
+	                						<a href="${articleUrl}/${dto.studyNum}">${dto.studyName}</a><br>고유번호: ${dto.studyNum}
 	                					</td>
 	                				</c:when>
 	                				<c:otherwise>
 		                				<td>
-			                				<a href="${articleUrl}/${dto.studyNum}">${dto.studyName}</a>
+			                				<a href="${articleUrl}/${dto.studyNum}">${dto.studyName}</a><br>고유번호: ${dto.studyNum}
 			                			</td>
 	                				</c:otherwise>
 	                			</c:choose>
