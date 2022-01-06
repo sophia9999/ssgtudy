@@ -106,6 +106,7 @@ function search() {
 	        						<input type="number" placeholder="숫자를 입력하세요." class="form-control quantity" name="quantity">
 	        						<input type="hidden" name="eventNum" class="paramEventNum" value="">
 	        						<input type="hidden" name="eventCategory" class="paramEventCategory" value="">
+	        						<input type="hidden" name="lottoDate" class="paramlottoDate" value="">
 	        						<button type="button" class="lottoWin btn btn-primary" style="width: 160px;" >당첨자뽑기</button>
 	        					</div>
 	        				</td>
@@ -169,6 +170,8 @@ $(function() {
 		// let eventCategory = $(this).attr("data-eventCategory");
 		let eventCategory = $(this).closest("tr").find("td:eq(3)").html();
 		$(".paramEventCategory").val(eventCategory);
+		let lottoDate = $(this).closest("tr").find("td:eq(2)").html();
+		$(".paramlottoDate").val(lottoDate);
 		// console.log(eventCategory);
 		
 		let query = "eventNum="+eventNum+"&eventCategory="+eventCategory;
@@ -216,6 +219,27 @@ $(function() {
 		let quantity = $(".quantity").val();
 		let eventCategory = $(".paramEventCategory").val();
 		// console.log(eventNum)
+		var date = new Date();
+		var nowY = date.getFullYear();
+		var nowM = date.getMonth()+1;
+		var nowD = date.getDate();
+		
+		var lottoDate = $(".paramlottoDate").val();
+		
+		var lottoY = lottoDate.substring(0, 4);
+		var lottoM = lottoDate.substring(5, 7);
+		var lottoD = lottoDate.substring(8, 10);
+	
+		if(nowY < lottoY) {
+			alert("마감일이 지나지 않았습니다.");
+			return false;
+		} else if(nowY == lottoY && nowM < lottoM) {
+			alert("마감일이 지나지 않았습니다.");
+			return false;
+		} else if(nowY == lottoY && nowM == lottoM && nowD <= lottoD) {
+			alert("마감일이 지나지 않았습니다.");
+			return false;
+		}
 		
 		if(! quantity) {
 			alert("뽑을 수를 입력하세요.");

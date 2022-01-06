@@ -126,8 +126,16 @@ function sendOk() {
                                         <label>이벤트 마감일</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="date" class="form-control lottoDate"
-                                            name="lottoDate" value="${dto.lottoDate}">
+                                    	<c:choose>
+                                    	<c:when test="${not empty list}">
+	                                        <input type="date" class="form-control lottoDate"
+	                                            name="lottoDate" value="${dto.lottoDate}" disabled="disabled">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="date" class="form-control lottoDate"
+	                                            name="lottoDate" value="${dto.lottoDate}">
+                                        </c:otherwise>
+                                    	</c:choose>
                                     </div>
                                     <div class="col-md-4">
                                         <label>이벤트 내용</label>

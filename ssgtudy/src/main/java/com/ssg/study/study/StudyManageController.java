@@ -291,9 +291,12 @@ public class StudyManageController {
 		}
 
 		Study dto = service.readEvent(eventNum);
-		
+		List<Study> list = service.winningList(eventNum);
 		if(dto == null) {
 			return "redirect:/studyManage/lotto";
+		}
+		if(list != null) {
+			model.addAttribute("list", list);			
 		}
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");

@@ -1123,10 +1123,7 @@ public class StudyController {
 		} else {
 			SYSDATE = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date);
 		}
-		System.out.println(year);
-		System.out.println(month);
-		System.out.println(date);
-		System.out.println(SYSDATE);
+		
 		// 아직 한번도 목표달성한적이 없을경우 null 로되어있으므로 그 전날을 설정해준다.
 		if(vo.getUpdateDate() == null) {
 			String updateDate = Integer.toString(year)+"-"+Integer.toString(month)+"-"+Integer.toString(date-1);
