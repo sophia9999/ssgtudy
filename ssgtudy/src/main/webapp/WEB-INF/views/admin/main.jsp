@@ -34,18 +34,18 @@ $("body").on("click","#findAdmin",function(){
 	
 	const admins = $("#admins").children();
 	const userId = $(".userId").val();
-	let adminlist = "";
+	let adminlist = ",";
 	
 	for(const admin of admins){
-		console.log($(admin).find('h6').text());
+		
 		adminlist += $(admin).find('h6').text()+","; 
 	}
 	
 	adminlist = adminlist.replace(userId,"");
-	
+	console.log(adminlist);
 	const bool = adminlist.indexOf(",,")>=-1 ? true:false;
 	
-	if(bool){
+	if(!bool){
 		alert("현재 관리자로 설정된 계정입니다.");
 		return false;
 	}
