@@ -154,9 +154,9 @@
 	                                    	<div class="question m-2">
 	                                    		<p class="font-bold mb-4" style="margin-bottom: 70px">기출 : 2021 6월 모의고사 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 과목 : 영어 </p> 	                                    		
 	                                    		<img src="${pageContext.request.contextPath}/resources/images/test1.jpg" alt="Face test1" 
-	                                    			style="margin-left : 80px">	                                    		
+	                                    			style="margin-left : 120px">	                                    		
 	                                    	</div>
-                                    	<div class="buttons text-center" style="margin: 70px auto 40px">
+                                    	<div class="buttons text-center" style="margin: 60px auto 30px">
                                     		<a href="#" class="btn btn-outline-primary m-4">문제 풀러 가기</a>
                                     	</div>
                                     </div>
