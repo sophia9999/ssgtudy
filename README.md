@@ -7,10 +7,6 @@
 ![ssgtudy](https://user-images.githubusercontent.com/77396551/148881075-d53db973-f76c-4feb-be12-2f8d38783733.png)
 
 
-## 📌 목차
-[개발환경](## Development-Environment-/-개발환경)
-
-
 ## 📌Development Environment / 개발환경
 
 * Java
@@ -61,7 +57,7 @@
 
 
 
-## 📌개발자 
+## 📌참여자 정보
 
 ### 안종대
 
