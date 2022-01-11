@@ -1,10 +1,10 @@
-# SSGtudy
+# ![ssgtudy](https://user-images.githubusercontent.com/77396551/148881075-d53db973-f76c-4feb-be12-2f8d38783733.png)
 
 > 쓱터디(SSGtudy)는 
 >
 > ‘모임도 쉽게 쓱, 시험도 가볍게 쓱, 같이 스터디 해요!’ 의 모토를 가지고 만든 웹 프로젝트입니다. 스터디 별로 자신의 웹페이지를 가지고, 그 속에서 스터디원끼리 서로 연결되는 것을 도와주는 플랫폼입니다. 스터디원 모집 및 구성, 포인트 지급을 통한 목표달성 지원, 일정관리, 친목도모, 정보공유 등의 기능이 있습니다.
 
-![ssgtudy](https://user-images.githubusercontent.com/77396551/148881075-d53db973-f76c-4feb-be12-2f8d38783733.png)
+
 
 
 ## 📌Development Environment / 개발환경
